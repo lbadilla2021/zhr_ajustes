@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Acción servidor -->
+    <record id="employee_field_usage_action_server" model="ir.actions.server">
+        <field name="name">Generar Reporte Campos Empleado</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">action = env['employee.field.usage.report'].create({}).action_generate_report()
+        </field>
+    </record>
+
+    <!-- Menú universal (funciona SIEMPRE) -->
+    <menuitem id="menu_employee_field_usage_root"
+              name="Reporte de Campos Usados"
+              parent="base.menu_users"
+              action="employee_field_usage_action_server"
+              sequence="99"/>
+
+</odoo>

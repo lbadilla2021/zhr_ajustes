@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_employee_list_custom" model="ir.ui.view">
+        <field name="name">hr.employee.list.custom</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//tree" position="inside">
+
+                <!-- Campos visibles adicionales -->
+                <field name="departure_date" string="Fecha de Salida"/>
+                <field name="first_contract_date" string="Fecha de Ingreso"/>
+                <field name="identification_id" string="RUT"/>
+
+                <!-- Campos sugeridos para exportación -->
+                <field name="passport_id" optional="hide"/>
+                <field name="category_ids" widget="many2many_tags" optional="show"/>
+                <field name="coach_id" optional="hide"/>
+                <field name="parent_id" widget="many2one_avatar_user" optional="show"/>
+
+                <field name="active" optional="hide"/>
+                <field name="address_id" optional="hide"/>
+                <field name="birthday" optional="show"/>
+                <field name="certificate" optional="hide"/>
+                <field name="company_id" optional="show"/>
+                <field name="country_id" optional="hide"/>
+                <field name="department_id" optional="show"/>
+                <field name="employee_type" optional="show"/>
+                <field name="gender" optional="show"/>
+                <field name="job_id" optional="show"/>
+                <field name="job_title" optional="show"/>
+                <field name="marital" optional="show"/>
+                <field name="resource_calendar_id" optional="hide"/>
+                <field name="resume_line_ids" optional="hide"/>
+                <field name="work_contact_id" optional="hide"/>
+                <field name="work_email" optional="show"/>
+
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

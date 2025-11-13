@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="employee_add_dates" model="ir.ui.view">
+        <field name="name">employee.add.dates</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Inserta Fechas Laborales en Work Information -->
+            <xpath expr="//page[@name='public']//div[@id='o_work_employee_main']" position="inside">
+                <group string="Fechas Laborales">
+                    <field name="first_contract_date" string="Fecha de Ingreso"/>
+                    <field name="departure_date" string="Fecha de Salida"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
