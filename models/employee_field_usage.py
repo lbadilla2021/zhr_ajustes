@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import fields, models
 import base64
 import io
 import csv
@@ -55,3 +55,12 @@ class EmployeeFieldUsageReport(models.TransientModel):
             'url': f"/web/content/{attachment.id}?download=1",
             'target': 'self',
         }
+
+
+class HrEmployee(models.Model):
+    _inherit = 'hr.employee'
+
+    apellido_paterno = fields.Char(string='Apellido Paterno')
+    apellido_materno = fields.Char(string='Apellido Materno')
+    nombres = fields.Char(string='Nombres')
+    nombre_preferido = fields.Char(string='Nombre Preferido')
