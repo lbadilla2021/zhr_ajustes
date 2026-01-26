@@ -55,3 +55,4 @@ class EmployeeFieldUsageReport(models.TransientModel):
             'url': f"/web/content/{attachment.id}?download=1",
             'target': 'self',
         }
+

@@ -16,4 +16,22 @@
 
         </field>
     </record>
+
+    <record id="employee_add_name_fields" model="ir.ui.view">
+        <field name="name">employee.add.name.fields</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='mobile_phone']/ancestor::group[1]" position="before">
+                <group string="Nombre">
+                    <field name="apellido_paterno"/>
+                    <field name="apellido_materno"/>
+                    <field name="nombres"/>
+                    <field name="nombre_preferido"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
 </odoo>
