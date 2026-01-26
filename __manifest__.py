@@ -1,7 +1,7 @@
 {
     'name': 'Personalizaciones al Modulo HR',
     'version': '1.0',
-    'depends': ['hr'],
+    'depends': ['hr', 'hr_contract'],
     'data': [
         'security/ir.model.access.csv',
         'views/employee_field_usage_view.xml',
