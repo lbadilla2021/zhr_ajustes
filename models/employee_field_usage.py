@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import fields, models
 import base64
 import io
 import csv
