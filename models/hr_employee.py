@@ -2,7 +2,7 @@ from odoo import fields, models
 
 
 class HrEmployee(models.Model):
-    _inherit = 'hr.employee'
+    _inherit = ['hr.employee', 'analytic.mixin']
 
     apellido_paterno = fields.Char(string='Apellido Paterno')
     apellido_materno = fields.Char(string='Apellido Materno')

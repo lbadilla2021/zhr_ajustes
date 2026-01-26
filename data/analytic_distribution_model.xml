@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="analytic_distribution_model_hr_employee" model="account.analytic.distribution.model">
+        <field name="name">Employees</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+    </record>
+</odoo>
