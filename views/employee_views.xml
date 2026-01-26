@@ -17,6 +17,20 @@
         </field>
     </record>
 
+    <record id="employee_add_cost_center" model="ir.ui.view">
+        <field name="name">employee.add.cost.center</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='public']//field[@name='job_id']" position="after">
+                <field name="analytic_distribution" string="Centro de Costo"
+                       widget="analytic_distribution"/>
+            </xpath>
+
+        </field>
+    </record>
+
     <record id="employee_add_name_fields" model="ir.ui.view">
         <field name="name">employee.add.name.fields</field>
         <field name="model">hr.employee</field>
