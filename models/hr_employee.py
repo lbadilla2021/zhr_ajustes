@@ -8,3 +8,4 @@ class HrEmployee(models.Model):
     apellido_materno = fields.Char(string='Apellido Materno')
     nombres = fields.Char(string='Nombres')
     nombre_preferido = fields.Char(string='Nombre Preferido')
+    analytic_distribution = fields.Json(string='Centro de Costo')

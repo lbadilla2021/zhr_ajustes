@@ -12,6 +12,9 @@
                     <field name="first_contract_date" string="Fecha de Ingreso"/>
                     <field name="departure_date" string="Fecha de Salida"/>
                 </group>
+                <group string="Centro de Costo">
+                    <field name="analytic_distribution" widget="analytic_distribution"/>
+                </group>
             </xpath>
 
         </field>
