@@ -34,4 +34,17 @@
 
         </field>
     </record>
+
+    <record id="employee_add_cost_center" model="ir.ui.view">
+        <field name="name">employee.add.cost.center</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='job_id']" position="after">
+                <field name="analytic_account_id"/>
+            </xpath>
+
+        </field>
+    </record>
 </odoo>
