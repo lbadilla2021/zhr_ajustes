@@ -14,3 +14,35 @@ class HrEmployee(models.Model):
         domain="[('plan_id.name', '=', 'Barca SpA')]",
         help='Seleccione el centro de costo dentro del plan analítico de la empresa.',
     )
+    afp_id = fields.Many2one('hr.afp', string='AFP')
+    health_system_id = fields.Many2one('hr.health_system', string='Sistema de Salud')
+    system_schedule = fields.Char(
+        string='Sistema Horario',
+        related='resource_calendar_id.system_schedule',
+        store=True,
+        readonly=True,
+    )
+    state = fields.Selection(
+        [('active', 'Activo'), ('inactive', 'Inactivo')],
+        string='Estado',
+        default='active',
+        required=True,
+    )
+    accreditation_ids = fields.One2many(
+        'hr.employee.accreditation',
+        'employee_id',
+        string='Acreditaciones',
+    )
+
+    def action_open_termination_wizard(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Dar de Baja',
+            'res_model': 'hr.employee.termination.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_employee_id': self.id,
+            },
+        }

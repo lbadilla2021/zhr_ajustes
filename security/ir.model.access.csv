@@ -1,2 +1,7 @@
 id,name,model_id:id,group_id,perm_read,perm_write,perm_create,perm_unlink
 access_employee_field_usage_report,access_employee_field_usage_report,model_employee_field_usage_report,,1,1,1,1
+access_hr_afp,access_hr_afp,base.model_hr_afp,,1,1,1,1
+access_hr_health_system,access_hr_health_system,base.model_hr_health_system,,1,1,1,1
+access_hr_accreditation_type,access_hr_accreditation_type,base.model_hr_accreditation_type,,1,1,1,1
+access_hr_employee_accreditation,access_hr_employee_accreditation,base.model_hr_employee_accreditation,,1,1,1,1
+access_hr_employee_termination_wizard,access_hr_employee_termination_wizard,base.model_hr_employee_termination_wizard,,1,1,1,1
