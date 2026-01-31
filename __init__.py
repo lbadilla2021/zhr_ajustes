@@ -2,3 +2,5 @@
 # Esto le dice a Odoo que debe cargar la carpeta 'models'
 from . import models
 from . import wizards
+from .wizards import employee_reactivation_wizard
+from .wizards import employee_termination_wizard
