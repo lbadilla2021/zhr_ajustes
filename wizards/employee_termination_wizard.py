@@ -15,11 +15,13 @@ class HrEmployeeTerminationWizard(models.TransientModel):
         string='Motivo de Salida',
         required=True,
     )
+    fecha_termino = fields.Date(string='Fecha Término')
 
     def action_confirm(self):
         self.ensure_one()
         self.employee_id.write({
             'state': 'inactive',
             'departure_reason_id': self.departure_reason_id.id,
+            'fecha_termino': self.fecha_termino,
         })
         return {'type': 'ir.actions.act_window_close'}
