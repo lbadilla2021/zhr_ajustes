@@ -70,7 +70,7 @@
 
     <menuitem id="menu_hr_associations_root"
               name="Asociaciones"
-              parent="hr.menu_hr_configuration"
+              parent="hr.menu_hr_configuration_root"
               sequence="45"/>
     <menuitem id="menu_hr_afp"
               name="AFP"
