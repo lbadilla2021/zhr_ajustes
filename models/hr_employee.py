@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HrEmployee(models.Model):
@@ -22,6 +22,10 @@ class HrEmployee(models.Model):
         store=True,
         readonly=True,
     )
+    is_active_employee = fields.Boolean(
+        compute='_compute_is_active_employee',
+        store=False,
+    )
     state = fields.Selection(
         [('active', 'Activo'), ('inactive', 'Inactivo')],
         string='Estado',
@@ -33,6 +37,11 @@ class HrEmployee(models.Model):
         'employee_id',
         string='Acreditaciones',
     )
+
+    @api.depends('state')
+    def _compute_is_active_employee(self):
+        for rec in self:
+            rec.is_active_employee = rec.state == 'active'
 
     def action_open_termination_wizard(self):
         self.ensure_one()

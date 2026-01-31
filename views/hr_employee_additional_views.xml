@@ -38,7 +38,8 @@
                         string="Dar de Baja"
                         type="object"
                         class="btn-danger"
-                        attrs="{'invisible': [('state', '!=', 'active')]}"/>
+                        t-if="record.is_active_employee"/>
+                <field name="is_active_employee" invisible="1"/>
                 <field name="state"
                        widget="statusbar"
                        statusbar_visible="active,inactive"/>
