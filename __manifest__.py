@@ -10,6 +10,7 @@
         'views/hr_employee_list_custom.xml',
         'views/hr_prevision_config_views.xml',
         'views/hr_accreditation_views.xml',
+        'views/hr_contract_views.xml',
         'views/resource_calendar_views.xml',
         'views/hr_employee_termination_wizard_views.xml',
     ],
