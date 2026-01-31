@@ -6,4 +6,4 @@ from . import hr_afp
 from . import hr_contract
 from . import hr_employee
 from . import hr_health_system
-from . import resource_calendar
+from . import hr_system_schedule

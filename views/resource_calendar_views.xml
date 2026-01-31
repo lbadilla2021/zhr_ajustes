@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="resource_calendar_tree_system_schedule" model="ir.ui.view">
-        <field name="name">resource.calendar.tree.system.schedule</field>
-        <field name="model">resource.calendar</field>
+    <record id="hr_system_schedule_tree" model="ir.ui.view">
+        <field name="name">hr.system.schedule.tree</field>
+        <field name="model">hr.system.schedule</field>
         <field name="arch" type="xml">
             <list>
                 <field name="name"/>
-                <field name="system_schedule"/>
-                <field name="company_id"/>
+                <field name="active"/>
             </list>
         </field>
     </record>
 
-    <record id="resource_calendar_action_system_schedule" model="ir.actions.act_window">
-        <field name="name">Sistemas Horario</field>
-        <field name="res_model">resource.calendar</field>
-        <field name="view_mode">list,form</field>
-    </record>
-
-    <record id="resource_calendar_form_inherit_system_schedule" model="ir.ui.view">
-        <field name="name">resource.calendar.form.system.schedule</field>
-        <field name="model">resource.calendar</field>
-        <field name="inherit_id" ref="resource.resource_calendar_form"/>
+    <record id="hr_system_schedule_form" model="ir.ui.view">
+        <field name="name">hr.system.schedule.form</field>
+        <field name="model">hr.system.schedule</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='name']" position="after">
-                <field name="system_schedule"/>
-            </xpath>
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 
-    <menuitem id="menu_hr_resource_calendar"
+    <record id="hr_system_schedule_action" model="ir.actions.act_window">
+        <field name="name">Sistemas Horario</field>
+        <field name="res_model">hr.system.schedule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hr_system_schedule"
               name="Sistemas Horario"
               parent="menu_hr_tables_root"
-              action="resource_calendar_action_system_schedule"
+              action="hr_system_schedule_action"
               sequence="30"/>
 </odoo>

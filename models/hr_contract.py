@@ -5,8 +5,7 @@ from odoo import fields, models
 class HrContract(models.Model):
     _inherit = 'hr.contract'
 
-    system_schedule = fields.Char(
+    system_schedule_id = fields.Many2one(
+        'hr.system.schedule',
         string='Sistema Horario',
-        related='resource_calendar_id.system_schedule',
-        readonly=True,
     )
