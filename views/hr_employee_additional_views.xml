@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_employee_prevision_tab" model="ir.ui.view">
+        <field name="name">hr.employee.prevision.tab</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Previsión" name="prevision">
+                    <group>
+                        <field name="afp_id"/>
+                        <field name="health_system_id"/>
+                        <field name="system_schedule"/>
+                    </group>
+                </page>
+                <page string="Acreditaciones" name="accreditations">
+                    <field name="accreditation_ids">
+                        <list editable="bottom">
+                            <field name="accreditation_type_id"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="active"/>
+                            <field name="attachment_id"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_state_button" model="ir.ui.view">
+        <field name="name">hr.employee.state.button</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_open_termination_wizard"
+                        string="Dar de Baja"
+                        type="object"
+                        class="btn-danger"
+                        attrs="{'invisible': [('state', '!=', 'active')]}"/>
+                <field name="state"
+                       widget="statusbar"
+                       statusbar_visible="active,inactive"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
