@@ -14,7 +14,6 @@
                     <group>
                         <field name="afp_id"/>
                         <field name="health_system_id"/>
-                        <field name="system_schedule"/>
                     </group>
                 </page>
 
@@ -55,6 +54,20 @@
                        widget="statusbar"
                        statusbar_visible="active,inactive"/>
 
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ========================= -->
+    <!-- Sistema Horario en Información de trabajo -->
+    <!-- ========================= -->
+    <record id="hr_employee_system_schedule_work_info" model="ir.ui.view">
+        <field name="name">hr.employee.system.schedule.work.info</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='resource_calendar_id']" position="after">
+                <field name="system_schedule"/>
             </xpath>
         </field>
     </record>
