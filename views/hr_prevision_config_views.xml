@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+
+    <!-- ========================= -->
+    <!-- AFP -->
+    <!-- ========================= -->
     <record id="hr_afp_tree_view" model="ir.ui.view">
         <field name="name">hr.afp.tree</field>
         <field name="model">hr.afp</field>
@@ -34,6 +38,9 @@
         <field name="view_mode">list,form</field>
     </record>
 
+    <!-- ========================= -->
+    <!-- SALUD -->
+    <!-- ========================= -->
     <record id="hr_health_system_tree_view" model="ir.ui.view">
         <field name="name">hr.health.system.tree</field>
         <field name="model">hr.health_system</field>
@@ -68,18 +75,17 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="menu_hr_associations_root"
-              name="Asociaciones"
-              parent="hr.menu_hr_configuration"
-              sequence="45"/>
+
     <menuitem id="menu_hr_afp"
               name="AFP"
-              parent="menu_hr_associations_root"
+              parent="menu_hr_tables_root"
               action="hr_afp_action"
               sequence="10"/>
+
     <menuitem id="menu_hr_health_system"
               name="Salud"
-              parent="menu_hr_associations_root"
+              parent="menu_hr_tables_root"
               action="hr_health_system_action"
               sequence="20"/>
+
 </odoo>

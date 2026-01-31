@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+
+    <!-- ========================= -->
+    <!-- Pestañas Previsión y Acreditaciones -->
+    <!-- ========================= -->
     <record id="hr_employee_prevision_tab" model="ir.ui.view">
         <field name="name">hr.employee.prevision.tab</field>
         <field name="model">hr.employee</field>
@@ -13,6 +17,7 @@
                         <field name="system_schedule"/>
                     </group>
                 </page>
+
                 <page string="Acreditaciones" name="accreditations">
                     <field name="accreditation_ids">
                         <list editable="bottom">
@@ -28,22 +33,30 @@
         </field>
     </record>
 
+    <!-- ========================= -->
+    <!-- Botón Dar de Baja + Estado -->
+    <!-- ========================= -->
     <record id="hr_employee_state_button" model="ir.ui.view">
         <field name="name">hr.employee.state.button</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
+
+                <!-- Botón visible SOLO si el estado es activo -->
                 <button name="action_open_termination_wizard"
                         string="Dar de Baja"
                         type="object"
                         class="btn-danger"
-                        t-if="record.is_active_employee"/>
-                <field name="is_active_employee" invisible="1"/>
+                        modifiers="{'invisible': [('state', '=', 'inactive')]}"/>
+
+                <!-- Statusbar del estado -->
                 <field name="state"
                        widget="statusbar"
                        statusbar_visible="active,inactive"/>
+
             </xpath>
         </field>
     </record>
+
 </odoo>
