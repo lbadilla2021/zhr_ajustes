@@ -11,7 +11,7 @@ class HrEmployee(models.Model):
     analytic_account_id = fields.Many2one(
         'account.analytic.account',
         string='Centro de Costo',
-        #domain="[ '|', ('company_id', '=', company_id), ('company_id', '=', False) ]",
+        domain="[('plan_id', 'child_of', plan_id)]",
         help='Seleccione el centro de costo dentro del plan analítico de la empresa.',
     )
     afp_id = fields.Many2one('hr.afp', string='AFP')

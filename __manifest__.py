@@ -1,7 +1,7 @@
 {
     'name': 'Barca Ajustes Modulo HR',
     'version': '1.0',
-    'depends': ['hr', 'hr_contract', 'hr_skills', 'analytic'],
+    'depends': ['hr', 'hr_contract', 'hr_skills', 'account'],
     'data': [
         'security/ir.model.access.csv',
         'views/employee_field_usage_view.xml',
