@@ -12,6 +12,7 @@
         'views/hr_accreditation_views.xml',
         'views/resource_calendar_views.xml',
         'views/hr_employee_termination_wizard_views.xml',
+        'views/hr_employee_reactivation_wizard_views.xml',
     ],
     'installable': True,
     'application': False,

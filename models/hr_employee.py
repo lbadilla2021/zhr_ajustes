@@ -37,6 +37,9 @@ class HrEmployee(models.Model):
         'employee_id',
         string='Acreditaciones',
     )
+    fecha_ingreso = fields.Date(string='Fecha de Ingreso')
+    fecha_salida = fields.Date(string='Fecha de Salida')
+    fecha_termino = fields.Date(string='Fecha Término')
 
     @api.depends('state')
     def _compute_is_active_employee(self):
@@ -49,6 +52,19 @@ class HrEmployee(models.Model):
             'type': 'ir.actions.act_window',
             'name': 'Dar de Baja',
             'res_model': 'hr.employee.termination.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_employee_id': self.id,
+            },
+        }
+
+    def action_open_reactivation_wizard(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Dar de Alta',
+            'res_model': 'hr.employee.reactivation.wizard',
             'view_mode': 'form',
             'target': 'new',
             'context': {
