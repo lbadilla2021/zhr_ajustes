@@ -67,7 +67,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="priority">90</field>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='public']//field[@name='resource_calendar_id']" position="after">
+            <xpath expr="//page[@name='public']//div[@id='o_work_employee_main']//field[@name='resource_calendar_id']" position="after">
                 <field name="system_schedule"/>
             </xpath>
         </field>
