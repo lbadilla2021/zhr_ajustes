@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ========================= -->
+    <!-- Sistema Horario en Contratos -->
+    <!-- ========================= -->
+    <record id="hr_contract_system_schedule_form" model="ir.ui.view">
+        <field name="name">hr.contract.system.schedule.form</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='resource_calendar_id']" position="after">
+                <field name="system_schedule"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

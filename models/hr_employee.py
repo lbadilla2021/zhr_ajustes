@@ -16,11 +16,9 @@ class HrEmployee(models.Model):
     )
     afp_id = fields.Many2one('hr.afp', string='AFP')
     health_system_id = fields.Many2one('hr.health_system', string='Sistema de Salud')
-    system_schedule = fields.Char(
+    system_schedule = fields.Many2one(
+        'hr.system.schedule',
         string='Sistema Horario',
-        related='resource_calendar_id.system_schedule',
-        store=True,
-        readonly=True,
     )
     is_active_employee = fields.Boolean(
         compute='_compute_is_active_employee',
