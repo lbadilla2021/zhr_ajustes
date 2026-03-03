@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="hr_payment_concept_tree_view" model="ir.ui.view">
+        <field name="name">hr.payment.concept.tree</field>
+        <field name="model">hr.payment.concept</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_payment_concept_form_view" model="ir.ui.view">
+        <field name="name">hr.payment.concept.form</field>
+        <field name="model">hr.payment.concept</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_payment_concept_action" model="ir.actions.act_window">
+        <field name="name">Conceptos de Pago</field>
+        <field name="res_model">hr.payment.concept</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hr_payment_concept"
+              name="Conceptos de Pago"
+              parent="menu_hr_tables_root"
+              action="hr_payment_concept_action"
+              sequence="50"/>
+
+</odoo>

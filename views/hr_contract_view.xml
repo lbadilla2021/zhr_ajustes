@@ -25,6 +25,15 @@
                     class="btn-primary"
                 />
             </xpath>
+
+            <xpath expr="//field[@name='contract_type_id']" position="after">
+                <field name="employee_payment_concept_ids" nolabel="1">
+                    <list editable="bottom">
+                        <field name="payment_concept_id"/>
+                        <field name="amount"/>
+                    </list>
+                </field>
+            </xpath>
         </field>
     </record>
 
