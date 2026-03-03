@@ -9,7 +9,197 @@
         <field name="print_report_name">'Contrato Ejecutivo - %s' % (object.name)</field>
     </record>
 
-    <template id="contract_employee_template_ejecutivo">
-        <t t-call="zhr_ajustes.contract_employee_template_base"/>
+<template id="contract_employee_template_ejecutivo">
+       <t t-call="web.external_layout">
+            <main>
+                <t t-foreach="docs" t-as="contract">
+                    <div class="page">
+
+                        <p>CONTRATO DE TRABAJO Ejecutivo</p>
+                            <p>
+                                En Cabrero, a 
+                                <span t-field="contract.date_start"/> 
+                                entre Servicios Barca Spa, R.U.T.: 76.766.106 - 1,
+                                con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
+                                y don 
+                                <strong><span t-esc="contract.employee_id.name"/></strong>,
+                                R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>,
+                                de nacionalidad chilena,
+                                nacido el <span t-field="contract.employee_id.birthday"/>,
+                                domiciliado en <span t-esc="contract.employee_id.private_street or ''"/>,
+                                comuna de <span t-esc="contract.employee_id.private_city or ''"/>,
+                                de estado civil <span t-esc="contract.employee_id.marital or ''"/>,
+                                se ha convenido el siguiente Contrato de trabajo,
+                                para cuyos efectos las partes convienen en denominarse,
+                                respectivamente, Empleador y Trabajador.
+                            </p>
+
+                            <p><strong>PRIMERO: Cargo del Trabajador</strong></p>
+                            <p>
+                                El Trabajador se compromete a ejecutar la labor de 
+                                <strong><span t-esc="contract.job_id.name or ''"/></strong>,
+                                o labores similares, en dependencias de Celulosa Arauco y Constitución,
+                                planta Arauco ubicada en Los Horcones S/N, Comuna de Arauco,
+                                pudiendo ser trasladado según necesidades de la empresa,
+                                sin que ello importe menoscabo para el trabajador.
+                            </p>
+
+                            <p><strong>SEGUNDO: Jornada de Trabajo</strong></p>
+                            <p>
+                                La jornada de trabajo será de 44 horas semanales,
+                                distribuida de la siguiente manera:
+                                <span t-esc="contract.resource_calendar_id.name or ''"/>,
+                                con ½ hora destinada para colación imputable a la jornada laboral.
+                            </p>
+
+                            <p><strong>TERCERO: Sueldo Base, Asignaciones</strong></p>
+                            <p>
+                                El Empleador se compromete a remunerar al Trabajador con:
+                                Sueldo base por la cantidad de 
+                                $<span t-esc="contract.wage"/>
+                                <t t-if="contract.employee_payment_concept_ids">
+                                    <br/>
+                                    Asignaciones:
+                                    <t t-foreach="contract.employee_payment_concept_ids" t-as="concept_line">
+                                        <br/>• <span t-esc="concept_line.payment_concept_id.name"/>:
+                                        $<span t-esc="concept_line.amount"/>
+                                    </t>
+                                </t>
+                            </p>
+
+                            <p><strong>CUARTO: Fecha de pago</strong></p>
+                            <p>
+                                Las remuneraciones se pagarán el día 06 del mes siguiente
+                                por períodos vencidos, mediante transferencia electrónica,
+                                efectuándose las deducciones legales correspondientes.
+                            </p>
+
+                            <p><strong>QUINTO: Gratificación</strong></p>
+                            <p>
+                                El Empleador pagará al Trabajador la gratificación establecida
+                                en el artículo 50 del Código del Trabajo,
+                                equivalente al 25% de lo devengado,
+                                con tope legal de 4,75 ingresos mínimos mensuales.
+                            </p>
+                            <p><strong>SEXTO: Beneficios en el caso de labores de Aseo Industrial en empresas mandantes</strong></p>
+                            <p>
+                               El Empleador se compromete a suministrar al Trabajador los siguientes 
+                               beneficios que aprecian las partes en la forma que se indica: 
+                            </p>
+                                <table style="width:100%; border-collapse: collapse;" border="1">
+                                    <thead>
+                                        <tr>
+                                            <th style="padding:8px; text-align:left;">
+                                                Bono Localidad
+                                            </th>
+                                            <th style="padding:8px; text-align:right;">
+                                                Valor Bruto Diario
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding:6px;">
+                                                Oficinas Centrales Cabrero / Planta Placas Masonite, Cabrero
+                                            </td>
+                                            <td style="padding:6px; text-align:right;">
+                                                $ 0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:6px;">
+                                                Celulosa CMPC Santa Fé Nacimiento / Celulosa Arauco Nueva Aldea
+                                            </td>
+                                            <td style="padding:6px; text-align:right;">
+                                                $ 2.040
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:6px;">
+                                                Celulosa Horcones, Arauco / Colbún, Coronel / Planta Paneles Masisa, Coronel
+                                            </td>
+                                            <td style="padding:6px; text-align:right;">
+                                                $ 3.570
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:6px;">
+                                                Celulosa Arauco Licancel, Constitución, Teno
+                                            </td>
+                                            <td style="padding:6px; text-align:right;">
+                                                $ 10.400
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:6px;">
+                                                Planta Valdivia
+                                            </td>
+                                            <td style="padding:6px; text-align:right;">
+                                                $ 14.000
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                               
+                            <p>
+                            Bono Lavado Agua Alta Presión. (Bono LAAP) Se pagará un bono denominado Bono LAAP Supervisor de $1.000 por cada hora 
+                            maquina efectivamente trabajada, con un mínimo de 6 Horas LAAP por turno. En caso de que el turno completo esté todo 
+                            el tiempo a la espera en un turno, no se pagará bono LAAP.
+                            </p>  
+
+                            <p><strong>SEPTIMO: Descuentos Legales</strong></p>
+                            <p>
+                            Todos los pagos y beneficios en dinero, materia del presente Contrato de Trabajo, 
+                            se expresan en valores brutos, 
+                            por lo tanto, están afectos a la imponibilidad previsional y 
+                            tributaria correspondiente de cargo del trabajador.
+                            </p>                            
+                            
+                            <p><strong>OCTAVO: Obligaciones y/o Prohibiciones</strong></p>
+                            <p>
+                               Las siguientes son obligaciones y/o prohibiciones esenciales del presente Contrato, sin perjuicio de las que emanen de su propia naturaleza:
+
+                            a) La dedicación exclusiva y diligente a las funciones del cargo en un nivel de eficiencia compatible con las exigencias de la organización y conforme a las políticas y metas de la Empresa y normas recibidas.
+                            b) El respeto irrestricto a las normas directivas de general aplicación en la Empresa, tales como Reglamento Interno o de Seguridad o Manuales de Procedimientos.
+                            c) La obligación de mantener reserva respecto de antecedentes e informaciones que la Empresa considere de carácter confidencial, o que por su naturaleza revistan este carácter.
+                            d) La prohibición al trabajador de realizar Negociaciones dentro del giro del negocio, tales como desarrollar actividades relacionadas con su trabajo para la competencia o en actividades profesionales externas remuneradas similares a la del Empleador y que pusiesen en peligro la exclusividad de la información que reciba en el ejercicio de su cargo.
+
+                            </p>
+
+
+                            <p><strong>NOVENO:</strong></p>
+                            <p>
+                                El presente Contrato tendrá duración hasta 
+                                <t t-if="contract.date_end">
+                                    <span t-field="contract.date_end"/>
+                                </t>
+                                <t t-else="">
+                                    por tiempo indefinido
+                                </t>.
+
+                                Se deja constancia que la fecha de ingreso del trabajador es 
+                                <span t-field="contract.date_start"/>.
+                            </p>
+
+                            <br/><br/>
+
+                            <table width="100%" style="margin-top:50px;">
+                                <tr>
+                                    <td width="50%" style="text-align:center;">
+                                        ___________________________<br/>
+                                        <span t-esc="contract.employee_id.name"/><br/>
+                                        R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+                                    </td>
+                                    <td width="50%" style="text-align:center;">
+                                        ___________________________<br/>
+                                        Servicios Barca SPA.<br/>
+                                        R.U.T.: 76.766.106 – 1
+                                    </td>
+                                </tr>
+                            </table>
+                    </div>
+                </t>
+            </main>
+        </t>
     </template>
 </odoo>
