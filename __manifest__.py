@@ -7,6 +7,7 @@
         'report/contract_report.xml',
         'views/hr_accreditation_views.xml',
         'views/hr_prevision_config_views.xml',
+        'views/hr_payment_concept_views.xml',
         'views/hr_contract_view.xml',
         'views/employee_field_usage_view.xml',
         'views/employee_views.xml',

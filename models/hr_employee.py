@@ -38,6 +38,12 @@ class HrEmployee(models.Model):
         string='Acreditaciones',
     )
 
+    payment_concept_line_ids = fields.One2many(
+        'hr.employee.payment.concept',
+        'employee_id',
+        string='Conceptos de Pago',
+    )
+
     @api.depends('state')
     def _compute_is_active_employee(self):
         for rec in self:

@@ -7,3 +7,4 @@ from . import hr_employee
 from . import hr_health_system
 from . import resource_calendar
 from . import hr_contract
+from . import hr_payment_concept
