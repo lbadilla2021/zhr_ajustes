@@ -10,6 +10,45 @@
         <field name="print_report_name">'Contrato - %s' % (object.name)</field>
     </record>
 
+    <record id="action_report_contract_employee_operador" model="ir.actions.report">
+        <field name="name">Contrato Empleado (Operador)</field>
+        <field name="model">hr.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zhr_ajustes.contract_employee_template_operador</field>
+        <field name="report_file">zhr_ajustes.contract_employee_template_operador</field>
+        <field name="print_report_name">'Contrato Operador - %s' % (object.name)</field>
+    </record>
+
+    <record id="action_report_contract_employee_profesional" model="ir.actions.report">
+        <field name="name">Contrato Empleado (Profesional)</field>
+        <field name="model">hr.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zhr_ajustes.contract_employee_template_profesional</field>
+        <field name="report_file">zhr_ajustes.contract_employee_template_profesional</field>
+        <field name="print_report_name">'Contrato Profesional - %s' % (object.name)</field>
+    </record>
+
+    <record id="action_report_contract_employee_ejecutivo" model="ir.actions.report">
+        <field name="name">Contrato Empleado (Ejecutivo)</field>
+        <field name="model">hr.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zhr_ajustes.contract_employee_template_ejecutivo</field>
+        <field name="report_file">zhr_ajustes.contract_employee_template_ejecutivo</field>
+        <field name="print_report_name">'Contrato Ejecutivo - %s' % (object.name)</field>
+    </record>
+
+    <template id="contract_employee_template_operador">
+        <t t-call="zhr_ajustes.contract_employee_template"/>
+    </template>
+
+    <template id="contract_employee_template_profesional">
+        <t t-call="zhr_ajustes.contract_employee_template"/>
+    </template>
+
+    <template id="contract_employee_template_ejecutivo">
+        <t t-call="zhr_ajustes.contract_employee_template"/>
+    </template>
+
     <template id="contract_employee_template">
        <t t-call="web.external_layout">
             <main>
@@ -58,6 +97,14 @@
                                 El Empleador se compromete a remunerar al Trabajador con:
                                 Sueldo base por la cantidad de 
                                 $<span t-esc="contract.wage"/>
+                                <t t-if="contract.employee_payment_concept_ids">
+                                    <br/>
+                                    Asignaciones:
+                                    <t t-foreach="contract.employee_payment_concept_ids" t-as="concept_line">
+                                        <br/>• <span t-esc="concept_line.payment_concept_id.name"/>:
+                                        $<span t-esc="concept_line.amount"/>
+                                    </t>
+                                </t>
                             </p>
 
                             <p><strong>CUARTO: Fecha de pago</strong></p>
