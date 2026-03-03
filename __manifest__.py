@@ -5,6 +5,9 @@
     'data': [
         'security/ir.model.access.csv',
         'report/contract_report.xml',
+        'report/operador.xml',
+        'report/profesional.xml',
+        'report/ejecutivo.xml',
         'views/hr_accreditation_views.xml',
         'views/hr_prevision_config_views.xml',
         'views/hr_payment_concept_views.xml',

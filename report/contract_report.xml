@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-
-    <record id="action_report_contract_employee" model="ir.actions.report">
-        <field name="name">Contrato Empleado</field>
-        <field name="model">hr.contract</field>
-        <field name="report_type">qweb-pdf</field>
-        <field name="report_name">zhr_ajustes.contract_employee_template</field>
-        <field name="report_file">zhr_ajustes.contract_employee_template</field>
-        <field name="print_report_name">'Contrato - %s' % (object.name)</field>
-    </record>
-
-    <template id="contract_employee_template">
+    <template id="contract_employee_template_base">
        <t t-call="web.external_layout">
             <main>
                 <t t-foreach="docs" t-as="contract">
@@ -58,6 +48,14 @@
                                 El Empleador se compromete a remunerar al Trabajador con:
                                 Sueldo base por la cantidad de 
                                 $<span t-esc="contract.wage"/>
+                                <t t-if="contract.employee_payment_concept_ids">
+                                    <br/>
+                                    Asignaciones:
+                                    <t t-foreach="contract.employee_payment_concept_ids" t-as="concept_line">
+                                        <br/>• <span t-esc="concept_line.payment_concept_id.name"/>:
+                                        $<span t-esc="concept_line.amount"/>
+                                    </t>
+                                </t>
                             </p>
 
                             <p><strong>CUARTO: Fecha de pago</strong></p>
@@ -152,10 +150,10 @@
                             <p>
                                Las siguientes son obligaciones y/o prohibiciones esenciales del presente Contrato, sin perjuicio de las que emanen de su propia naturaleza:
 
-                            a)	La dedicación exclusiva y diligente a las funciones del cargo en un nivel de eficiencia compatible con las exigencias de la organización y conforme a las políticas y metas de la Empresa y normas recibidas.
-                            b)	El respeto irrestricto a las normas directivas de general aplicación en la Empresa, tales como Reglamento Interno o de Seguridad o Manuales de Procedimientos.
-                            c)	La obligación de mantener reserva respecto de antecedentes e informaciones que la Empresa considere de carácter confidencial, o que por su naturaleza revistan este carácter.
-                            d)	La prohibición al trabajador de realizar Negociaciones dentro del giro del negocio, tales como desarrollar actividades relacionadas con su trabajo para la competencia o en actividades profesionales externas remuneradas similares a la del Empleador y que pusiesen en peligro la exclusividad de la información que reciba en el ejercicio de su cargo.
+                            a) La dedicación exclusiva y diligente a las funciones del cargo en un nivel de eficiencia compatible con las exigencias de la organización y conforme a las políticas y metas de la Empresa y normas recibidas.
+                            b) El respeto irrestricto a las normas directivas de general aplicación en la Empresa, tales como Reglamento Interno o de Seguridad o Manuales de Procedimientos.
+                            c) La obligación de mantener reserva respecto de antecedentes e informaciones que la Empresa considere de carácter confidencial, o que por su naturaleza revistan este carácter.
+                            d) La prohibición al trabajador de realizar Negociaciones dentro del giro del negocio, tales como desarrollar actividades relacionadas con su trabajo para la competencia o en actividades profesionales externas remuneradas similares a la del Empleador y que pusiesen en peligro la exclusividad de la información que reciba en el ejercicio de su cargo.
 
                             </p>
 
@@ -195,5 +193,4 @@
             </main>
         </t>
     </template>
-
 </odoo>

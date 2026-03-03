@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_report_contract_employee_profesional" model="ir.actions.report">
+        <field name="name">Contrato Empleado Profesional</field>
+        <field name="model">hr.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zhr_ajustes.contract_employee_template_profesional</field>
+        <field name="report_file">zhr_ajustes.contract_employee_template_profesional</field>
+        <field name="print_report_name">'Contrato Profesional - %s' % (object.name)</field>
+    </record>
+
+    <template id="contract_employee_template_profesional">
+        <t t-call="zhr_ajustes.contract_employee_template_base"/>
+    </template>
+</odoo>
