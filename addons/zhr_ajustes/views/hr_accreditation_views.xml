@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Vistas -->
+    <record id="hr_accreditation_type_tree_view" model="ir.ui.view">
+        <field name="name">hr.accreditation.type.tree</field>
+        <field name="model">hr.accreditation.type</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_accreditation_type_form_view" model="ir.ui.view">
+        <field name="name">hr.accreditation.type.form</field>
+        <field name="model">hr.accreditation.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción -->
+    <record id="hr_accreditation_type_action" model="ir.actions.act_window">
+        <field name="name">Tipo Acreditaciones</field>
+        <field name="res_model">hr.accreditation.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menú TABLA (nuevo, limpio, estable) -->
+    <menuitem id="menu_hr_tables_root"
+              name="Tablas"
+              parent="hr.menu_hr_root"
+              sequence="30"/>
+
+    <!-- Opción Tipo Acreditaciones -->
+    <menuitem id="menu_hr_accreditation_type"
+              name="Tipo Acreditaciones"
+              parent="menu_hr_tables_root"
+              action="hr_accreditation_type_action"
+              sequence="40"/>
+
+</odoo>

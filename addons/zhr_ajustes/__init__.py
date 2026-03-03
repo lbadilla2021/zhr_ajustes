@@ -1,0 +1,4 @@
+# -*- coding: utf-8 -*-
+# Esto le dice a Odoo que debe cargar la carpeta 'models'
+from . import models
+from . import wizards
