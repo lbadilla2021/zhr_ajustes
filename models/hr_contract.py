@@ -26,6 +26,6 @@ class HrContract(models.Model):
         }
         report_xml_id = report_by_structure.get(
             (structure_name or '').strip().lower(),
-            'zhr_ajustes.action_report_contract_employee',
+            'zhr_ajustes.action_report_contract_employee_operador',
         )
         return self.env.ref(report_xml_id).report_action(self)
