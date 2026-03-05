@@ -6,6 +6,7 @@ class HrPaymentConcept(models.Model):
     _description = 'Concepto de Pago'
 
     name = fields.Char(string='Nombre', required=True)
+    description = fields.Text(string='Descripcion')
     active = fields.Boolean(default=True)
 
 
