@@ -12,18 +12,42 @@
                 <button
                     name="action_print_contract"
                     type="object"
-                    string="Imprimir Contrato"
-                    class="btn-primary"
+                    string="Contrato"
+                    icon="fa-print"
+                    class="btn-primary btn-sm"
+                    help="Imprime el contrato de trabajo del empleado"
                 />
             </xpath>
 
             <xpath expr="//header" position="inside">
                 <button
-                    name="action_print_contract"
+                    name="action_print_anexo_planta"
                     type="object"
-                    string="Imprimir Anexo Planta"
-                    class="btn-primary"
+                    string="Anexo Planta"
+                    icon="fa-print"
+                    class="btn-secondary btn-sm"
+                    help="Imprime el anexo de planta del trabajador"
                 />
+            </xpath>
+
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_print_pacto_he"
+                    type="object"
+                    string="Pacto HE"
+                    icon="fa-print"
+                    class="btn-secondary btn-sm"
+                    help="Imprime el pacto de horas extraordinarias"/>
+             </xpath>
+
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_print_actualizacion"
+                    type="object"
+                    string="Actualización"
+                    icon="fa-print"
+                    class="btn-secondary btn-sm"
+                    help="Imprime actualización de contrato"/>
             </xpath>
 
             <xpath expr="//field[@name='contract_type_id']" position="after">

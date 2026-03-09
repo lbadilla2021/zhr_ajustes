@@ -1,6 +1,5 @@
 from odoo import api, fields, models
 
-
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
@@ -61,3 +60,11 @@ class HrEmployee(models.Model):
                 'default_employee_id': self.id,
             },
         }
+
+    # --- método correcto dentro de la clase ---
+    def get_marital_label(self):
+        self.ensure_one()
+        # obtenemos las opciones de selección del campo 'marital'
+        selection_dict = dict(self.fields_get(['marital'], ['selection'])['marital']['selection'])
+        # devolvemos la etiqueta correspondiente al valor actual
+        return selection_dict.get(self.marital, '')
