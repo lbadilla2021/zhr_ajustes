@@ -129,14 +129,14 @@
 
 <br/><br/><br/>
 
-                            <table width="100%" style="margin-top:50px;">
+                            <table width="100%" style="margin-top:50px; border:none; border-collapse:collapse;">
                                 <tr>
-                                    <td width="50%" style="text-align:center;">
+                                    <td width="50%" style="text-align:center; border:none;">
                                         ___________________________<br/>
                                         <span t-esc="contract.employee_id.name"/><br/>
                                         R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
                                     </td>
-                                    <td width="50%" style="text-align:center;">
+                                    <td width="50%" style="text-align:center; border:none;">
                                         ___________________________<br/>
                                         Servicios Barca SPA.<br/>
                                         R.U.T.: 76.766.106 – 1

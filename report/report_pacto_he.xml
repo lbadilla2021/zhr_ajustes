@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
     <record id="action_report_pacto_he" model="ir.actions.report">
@@ -16,14 +17,114 @@
 
                     <div class="page">
 
-                        <h2>Pacto de Horas Extraordinarias</h2>
+                    <p style="text-align:center;">
+                        <b>PACTO HORAS EXTRAORDINARIAS</b>
+                    </p>
 
-                        <p>
-                            Trabajador:
-                            <span t-esc="doc.employee_id.name"/>
-                        </p>
+                    <br/>
 
-                    </div>
+                    <p style="text-align:justify;">
+                        En Cabrero, a 
+                        <span t-esc="doc.format_date_es(doc.date_start)"/>
+                        entre <b>Barca SPA, R.U.T.: 76.706.106-1,
+                        representada legalmente por Claudio Barrales Espinoza,
+                        RUT: 12.702.854-0,</b> con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
+                        y la persona trabajadora
+                        <b><span t-esc="doc.employee_id.name"/>,
+                        R.U.T.: <span t-esc="doc.employee_id.identification_id"/></b>,
+                        se ha convenido el siguiente Pacto de Horas Extraordinarias:
+                    </p>
+
+
+                    <p style="text-align:justify;">
+                        <b>PRIMERO:</b> La persona trabajadora prestará servicios en horas
+                        extraordinarias de trabajo en las oportunidades que el empleador
+                        así lo requiera y por el tiempo que en cada caso se acuerde, con el
+                        tope máximo señalado por la ley, dentro de los tres meses siguientes
+                        a esta fecha, siempre que se configuren circunstancias excepcionales
+                        que así lo requieran, tales como:
+                    </p>
+
+
+                    <ul>
+                        <li>
+                            <b>Ausencias Imprevistas de Personal Clave:</b> Situaciones en
+                            las que personal esencial no pueda presentarse a trabajar debido
+                            a enfermedad, accidentes o emergencias personales, y su labor
+                            deba ser cubierta de manera urgente.
+                        </li>
+
+                        <li>
+                            <b>Emergencias Operacionales:</b> Situaciones donde se requiera
+                            una respuesta inmediata para continuar con la operación de la
+                            empresa, como podría ser una falla crítica de maquinaria,
+                            un corte de suministro esencial o problemas de infraestructura
+                            significativos.
+                        </li>
+
+                        <li>
+                            <b>Emergencias:</b> Para atender situaciones de emergencia
+                            o fuerza mayor.
+                        </li>
+
+                        <li>
+                            <b>Demandas de Servicios Inesperados:</b> Periodos en los que se
+                            requieran esfuerzos adicionales debido a un aumento repentino
+                            de la demanda de servicios de la empresa.
+                        </li>
+
+                        <li>
+                            <b>Proyectos Especiales o Temporales:</b> Proyectos con un
+                            alcance y duración definidos que requieren un esfuerzo
+                            extraordinario.
+                        </li>
+
+                        <li>
+                            <b>Situaciones de Crisis o Contingencias:</b> Como desastres
+                            naturales, pandemias, o situaciones de seguridad que afecten
+                            las operaciones normales de la empresa y requieran respuestas
+                            inmediatas para mitigar riesgos o daños.
+                        </li>
+
+                        <li>
+                            <b>Cumplimiento de Plazos Críticos:</b> Situaciones donde el
+                            cumplimiento de plazos con clientes sea crítico y se requiera
+                            un esfuerzo adicional para asegurar que la entrega del servicio
+                            se realice a tiempo.
+                        </li>
+                    </ul>
+
+
+                    <p style="text-align:justify;">
+                        <b>SEGUNDO:</b> El presente acuerdo tiene una duración de tres
+                        meses a contar de esta fecha y en consecuencia expira el día
+                        31 de diciembre de 2025 o en la fecha de término de contrato
+                        si fuera anterior a esta.
+                    </p>
+
+                    <p style="text-align:justify;">
+                        En señal de aceptación y conformidad firman las partes en
+                        dos ejemplares de igual tenor.
+                    </p>
+
+                    <br/><br/><br/>
+
+                            <table width="100%" style="margin-top:50px; border:none; border-collapse:collapse;">
+                                <tr>
+                                    <td width="50%" style="text-align:center; border:none;">
+                                        ___________________________<br/>
+                                        <span t-esc="doc.employee_id.name"/><br/>
+                                        R.U.T.: <span t-esc="doc.employee_id.identification_id or ''"/>
+                                    </td>
+                                    <td width="50%" style="text-align:center; border:none;">
+                                        ___________________________<br/>
+                                        Servicios Barca SPA.<br/>
+                                        R.U.T.: 76.766.106 – 1
+                                    </td>
+                                </tr>
+                            </table>
+
+                </div>
 
                 </t>
             </t>

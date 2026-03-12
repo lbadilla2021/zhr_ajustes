@@ -31,6 +31,19 @@ class HrContract(models.Model):
 
         return self.env.ref(report_xml_id).report_action(self)
 
+    schedule_details = fields.Char(
+        compute="_compute_schedule_details"
+    )
+
+    def _compute_schedule_details(self):
+        
+        for rec in self:
+            if rec.resource_calendar_id and rec.resource_calendar_id.attendance_ids:
+                att = rec.resource_calendar_id.attendance_ids[0]
+                rec.schedule_details = rec.resource_calendar_id.system_schedule
+            else:
+                rec.schedule_details = ""
+    
     # ✅ NUEVO MÉTODO
     def action_print_anexo_planta(self):
         self.ensure_one()

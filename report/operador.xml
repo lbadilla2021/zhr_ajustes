@@ -40,7 +40,7 @@
         </p>
 
 
-    <p><strong>PRIMERO: Cargo del Trabajador</strong></p>
+    <p style="margin:0;"><strong>PRIMERO: Cargo del Trabajador</strong></p>
 
     <p style="text-align:justify;">
     El Trabajador se compromete a ejecutar la labor de Operador de Servicio AAP/AAV,
@@ -52,16 +52,13 @@
     </p>
 
 
-    <p><strong>SEGUNDO: Jornada de Trabajo</strong></p>
+    <p style="margin:0;"><strong>SEGUNDO: Jornada de Trabajo</strong></p>
 
     <p style="text-align:justify;">
-    La jornada de trabajo será de 44 horas semanales distribuida de la siguiente manera:
-    Lunes a Jueves de 08:00 a 17:00 Hrs y Viernes de 08:00 a 16:00 Hrs
-    con ½ Hora destinada para colación, imputable a la jornada laboral.
+    <span t-esc="contract.schedule_details"/>...
     </p>
 
-
-    <p><strong>TERCERO: Sueldo Base y Asignaciones</strong></p>
+    <p style="margin:0;"><strong>TERCERO: Sueldo Base y Asignaciones</strong></p>
 
     <p>El Empleador se compromete a remunerar al Trabajador con los siguientes conceptos:</p>
 
@@ -74,8 +71,11 @@
             <br/>
             <li>
             <strong>Gratificación:</strong>
-            Monto establecido en el artículo 50 del Código del Trabajo,
-            esto es el 25% de lo devengado con tope de 4,75 ingresos mínimos mensuales.
+            El <strong>Empleador</strong> pagará al <strong>Trabajador</strong> por concepto de <strong>Gratificación</strong> el monto establecido en el artículo 50 
+            del Código del Trabajo, esto es, el 25% (veinticinco por ciento) de lo devengado en el respectivo ejercicio 
+            comercial por concepto de remuneraciones mensuales, entendiéndose con ello que para todos los efectos legales 
+            queda eximido de la obligación establecida en el artículo 47 del Código del Trabajo, sea cual fuere la utilidad líquida que obtuviere. 
+            El monto a pagar por este concepto no excederá en total de 4,75 Ingresos Mínimos Mensuales.
             </li>
             <br/>
 
@@ -143,7 +143,15 @@
                 <strong>
                 <span t-esc="line.payment_concept_id.name"/>:
                 </strong>
-                <span t-esc="line.payment_concept_id.description"/>
+
+                <t t-if="line.amount &gt; 0">
+                    <span t-esc="line.payment_concept_id.description"/> 
+                    <span t-esc="' ${:,.0f}'.format(line.amount).replace(',', '.')"/>
+                    .-
+                </t>
+                <t t-else="">
+                    <span t-esc="line.payment_concept_id.description"/>
+                </t>
                 </li>
                 <br/>
             </t>
@@ -151,7 +159,7 @@
         </t>
     </ul>
 
-<p><strong>CUARTO: Fecha de pago de las Remuneraciones</strong></p>
+<p style="margin:0;"><strong>CUARTO: Fecha de pago de las Remuneraciones</strong></p>
 
 <p>
 Las remuneraciones se pagarán el día 06 del mes siguiente por iguales períodos vencidos,
@@ -159,7 +167,7 @@ mediante transferencia electrónica, efectuando el empleador las deducciones leg
 </p>
 
 
-<p><strong>QUINTO: Descuentos Legales</strong></p>
+<p style="margin:0;"><strong>QUINTO: Descuentos Legales</strong></p>
 
 <p>
 Todos los pagos y beneficios en dinero se expresan en valores brutos y están afectos
@@ -167,7 +175,7 @@ a la imponibilidad previsional y tributaria correspondiente.
 </p>
 
 
-<p><strong>SEXTO: Obligaciones y/o Prohibiciones</strong></p>
+<p style="margin:0;"><strong>SEXTO: Obligaciones y/o Prohibiciones</strong></p>
 
 <ol style="list-style-type: lower-alpha;">
 
@@ -205,14 +213,14 @@ a la imponibilidad previsional y tributaria correspondiente.
 
 <br/><br/><br/>
 
-                            <table width="100%" style="margin-top:50px;">
+                            <table width="100%" style="margin-top:50px; border:none; border-collapse:collapse;">
                                 <tr>
-                                    <td width="50%" style="text-align:center;">
+                                    <td width="50%" style="text-align:center; border:none;">
                                         ___________________________<br/>
                                         <span t-esc="contract.employee_id.name"/><br/>
                                         R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
                                     </td>
-                                    <td width="50%" style="text-align:center;">
+                                    <td width="50%" style="text-align:center; border:none;">
                                         ___________________________<br/>
                                         Servicios Barca SPA.<br/>
                                         R.U.T.: 76.766.106 – 1
