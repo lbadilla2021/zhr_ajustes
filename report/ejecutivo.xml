@@ -69,7 +69,11 @@
             <li>
             <strong>Sueldo Base:</strong>
             Valor fijo mensual por la cantidad de
-            <strong>$<span t-esc="contract.wage"/></strong>
+            <strong>
+            $<span t-esc="'{:,}'.format(int(contract.wage)).replace(',', '.')"/>.-</strong>
+            <span>
+            (<span t-esc="contract.wage_text"/>s)
+            </span>
             </li>
             <br/>
             <li style="text-align:justify;">
@@ -251,16 +255,15 @@ a la imponibilidad previsional y tributaria correspondiente.
 
     <t t-if="contract.date_end">
         hasta el <strong>
-            <span t-esc="contract.format_date_es(contract.date_end)"/>
-        </strong>.
+            <span t-esc="contract.format_date_es(contract.date_end)"/>.
+        </strong>
     </t>
     <t t-else="">
         por periodo Indefinido.
     </t>
 
-    Se deja constancia que la fecha de ingreso del trabajador es
-    <strong>
-        <span t-esc="contract.format_date_es(contract.date_start)"/>
+    Se deja constancia que la fecha de ingreso del trabajador es<strong>
+        <span t-esc="contract.format_date_es(contract.date_start)"/>.
     </strong>
 </p>
 

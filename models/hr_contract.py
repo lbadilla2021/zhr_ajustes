@@ -1,9 +1,19 @@
-from odoo import fields, models
+from odoo import fields, models, api
 from babel.dates import format_date
-
 
 class HrContract(models.Model):
     _inherit = 'hr.contract'
+
+    wage_text = fields.Char(compute="_compute_wage_text")
+
+    @api.depends('wage')
+    def _compute_wage_text(self):
+        for rec in self:
+            if rec.wage:
+                text = rec.company_id.currency_id.amount_to_text(rec.wage)
+                rec.wage_text = text.capitalize()
+            else:
+                rec.wage_text = ""    
 
     employee_payment_concept_ids = fields.One2many(
         related='employee_id.payment_concept_line_ids',
