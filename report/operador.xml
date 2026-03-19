@@ -65,7 +65,7 @@
     <ul>
             <li>
             <strong>Sueldo Base:</strong>
-            Valor fijo mensual por la cantidad de
+            Valor fijo <span t-esc="contract.schedule_pay_name"/> por la cantidad de
             <strong>
             $<span t-esc="'{:,}'.format(int(contract.wage)).replace(',', '.')"/>.-</strong>
             <span>
