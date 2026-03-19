@@ -11,6 +11,25 @@ class HrContract(models.Model):
 
     wage_text = fields.Char(compute="_compute_wage_text")
 
+    @api.depends('schedule_pay')
+    def _compute_schedule_pay_name(self):
+        schedule_pay_labels = {
+            'daily': 'diario',
+            'weekly': 'semanal',
+            'bi-weekly': 'quincenal',
+            'bi-monthly': 'bimensual',
+            'monthly': 'mensual',
+            'quarterly': 'trimestral',
+            'semi-annually': 'semestral',
+            'annually': 'anual',
+        }
+
+        for rec in self:
+            rec.schedule_pay_name = schedule_pay_labels.get(
+                rec.schedule_pay,
+                rec.schedule_pay or '',
+            )
+
     @api.depends('wage')
     def _compute_wage_text(self):
         for rec in self:
