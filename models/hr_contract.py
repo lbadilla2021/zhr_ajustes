@@ -8,7 +8,6 @@ class HrContract(models.Model):
         selection_add=[('daily', 'Diario')],
         ondelete={'daily': 'set default'},
     )
-    schedule_pay_name = fields.Char(compute="_compute_schedule_pay_name")
 
     wage_text = fields.Char(compute="_compute_wage_text")
 

@@ -65,7 +65,7 @@
     <ul>
             <li>
             <strong>Sueldo Base:</strong>
-            Valor fijo <span t-esc="contract.schedule_pay_name"/> por la cantidad de
+            Valor fijo <span t-esc="(dict(contract._fields['schedule_pay']._description_selection(contract.env)).get(contract.schedule_pay, contract.schedule_pay or '') or '').lower()"/> por la cantidad de
             <strong>
             $<span t-esc="'{:,}'.format(int(contract.wage)).replace(',', '.')"/>.-</strong>
             <span>
