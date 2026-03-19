@@ -4,6 +4,11 @@ from babel.dates import format_date
 class HrContract(models.Model):
     _inherit = 'hr.contract'
 
+    schedule_pay = fields.Selection(
+        selection_add=[('daily', 'Diario')],
+        ondelete={'daily': 'set default'},
+    )
+
     wage_text = fields.Char(compute="_compute_wage_text")
 
     @api.depends('wage')
