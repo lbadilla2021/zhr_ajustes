@@ -4,6 +4,7 @@
         <field name="name">Contrato Empleado Operador</field>
         <field name="model">hr.contract</field>
         <field name="report_type">qweb-pdf</field>
+        <field name="paperformat_id" ref="zhr_ajustes.paperformat_contrato"/>
         <field name="report_name">zhr_ajustes.contract_employee_template_operador</field>
         <field name="report_file">zhr_ajustes.contract_employee_template_operador</field>
         <field name="print_report_name">'Contrato Operador - %s' % (object.name)</field>
@@ -13,8 +14,7 @@
 
     <t t-call="web.html_container">
     <t t-foreach="docs" t-as="contract">
-    <t t-call="web.external_layout">
-
+    <t t-call="web.basic_layout">
     <div class="page">
 
     <p style="text-align:center;">CONTRATO DE TRABAJO</p>
@@ -41,21 +41,31 @@
 
 
     <p style="margin:0;"><strong>PRIMERO: Cargo del Trabajador</strong></p>
+    <t t-set="lugar_trabajo_line" t-value="contract.lugar_trabajo_line_ids[:1]"/>
+    <t t-if="lugar_trabajo_line and lugar_trabajo_line[0].lugar_trabajo_id.description">
+        <p style="text-align:justify;">
+                El Trabajador se compromete a ejecutar la labor de <strong><span t-esc="contract.job_id.name"/></strong>,
+                o labores similares,
+            <span t-esc="lugar_trabajo_line[0].lugar_trabajo_id.description"/>
+        </p>
+    </t>
+    <t t-else="">
 
     <p style="text-align:justify;">
-    El Trabajador se compromete a ejecutar la labor de Operador de Servicio AAP/AAV,
+    El Trabajador se compromete a ejecutar la labor de <strong><span t-esc="contract.job_id.name"/></strong>,
     o labores similares, en dependencias de Celulosa Arauco y Constitución,
     planta Arauco ubicada en Los Horcones S/N, comuna de Arauco,
     pudiendo ser trasladado a ruta Itata Km 21 Planta Nueva Aldea, comuna de Ranquil
     o a casa matriz de Barca ubicada en Cabrero,
     pudiendo ser trasladado dentro de la Región por causa justificada.
     </p>
+    </t>
 
 
     <p style="margin:0;"><strong>SEGUNDO: Jornada de Trabajo</strong></p>
 
     <p style="text-align:justify;">
-    <span t-esc="contract.schedule_details"/>...
+    <span t-esc="contract.schedule_details"/>
     </p>
 
     <p style="margin:0;"><strong>TERCERO: Sueldo Base y Asignaciones</strong></p>
@@ -73,7 +83,7 @@
             </span>
             </li>
             <br/>
-            <li>
+            <li style="text-align:justify;">
             <strong>Gratificación:</strong>
             El <strong>Empleador</strong> pagará al <strong>Trabajador</strong> por concepto de <strong>Gratificación</strong> el monto establecido en el artículo 50 
             del Código del Trabajo, esto es, el 25% (veinticinco por ciento) de lo devengado en el respectivo ejercicio 
@@ -143,7 +153,7 @@
             <!-- OTROS CONCEPTOS -->
             <t t-if="line.payment_concept_id.name != 'Bonos Localidad'">
 
-                <li>
+                <li style="text-align:justify;">
                 <strong>
                 <span t-esc="line.payment_concept_id.name"/>:
                 </strong>
@@ -165,7 +175,7 @@
 
 <p style="margin:0;"><strong>CUARTO: Fecha de pago de las Remuneraciones</strong></p>
 
-<p>
+<p style="text-align:justify;">
 Las remuneraciones se pagarán el día 06 del mes siguiente por iguales períodos vencidos,
 mediante transferencia electrónica, efectuando el empleador las deducciones legales.
 </p>
@@ -173,7 +183,7 @@ mediante transferencia electrónica, efectuando el empleador las deducciones leg
 
 <p style="margin:0;"><strong>QUINTO: Descuentos Legales</strong></p>
 
-<p>
+<p style="text-align:justify;">
 Todos los pagos y beneficios en dinero se expresan en valores brutos y están afectos
 a la imponibilidad previsional y tributaria correspondiente.
 </p>
@@ -194,7 +204,7 @@ a la imponibilidad previsional y tributaria correspondiente.
 </ol>
 
 
-<p>
+<p style="text-align:justify;">
     <strong>SEPTIMO:</strong>
     El presente contrato tendrá duración 
 
@@ -204,7 +214,7 @@ a la imponibilidad previsional y tributaria correspondiente.
         </strong>
     </t>
     <t t-else="">
-        por periodo Indefinido.
+        por tiempo Indefinido.
     </t>
 
     Se deja constancia que la fecha de ingreso del trabajador es<strong>
@@ -216,20 +226,21 @@ a la imponibilidad previsional y tributaria correspondiente.
 
 <br/><br/><br/>
 
-                            <table width="100%" style="margin-top:50px; border:none; border-collapse:collapse;">
-                                <tr>
-                                    <td width="50%" style="text-align:center; border:none;">
-                                        ___________________________<br/>
-                                        <span t-esc="contract.employee_id.name"/><br/>
-                                        R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
-                                    </td>
-                                    <td width="50%" style="text-align:center; border:none;">
-                                        ___________________________<br/>
-                                        Servicios Barca SPA.<br/>
-                                        R.U.T.: 76.766.106 – 1
-                                    </td>
-                                </tr>
-                            </table>
+<div style="width:100%; margin-top:50px;">
+	<div style="width:49%; display:inline-block; text-align:center;">
+		___________________________<br/>
+		<span t-esc="contract.employee_id.name"/><br/>
+		R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+	</div>
+
+	<div style="width:49%; display:inline-block; text-align:center; float:right;">
+		___________________________<br/>
+		Servicios Barca SPA.<br/>
+		R.U.T.: 76.766.106 – 1
+	</div>
+</div>
+
+
 
 
 </div>

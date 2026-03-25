@@ -45,6 +45,12 @@ class HrContract(models.Model):
         string='Conceptos de Pago',
     )
 
+    lugar_trabajo_line_ids = fields.One2many(
+        'hr.employee.lugar.trabajo',
+        'contract_id',
+        string='Lugares de trabajo',
+    )
+
     def action_print_contract(self):
         self.ensure_one()
 
@@ -94,11 +100,22 @@ class HrContract(models.Model):
 
     def action_print_actualizacion(self):
         self.ensure_one()
-        return self.env.ref(
-            'zhr_ajustes.action_report_actualizacion'
-        ).report_action(self)    
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Seleccionar anexo',
+            'res_model': 'hr.contract.actualizacion.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_contract_id': self.id,
+            },
+        }
 
     def format_date_es(self, fecha):
         if fecha:
             return format_date(fecha, format="d 'de' MMMM 'de' yyyy", locale='es')
         return ''
+
+    def format_today_es(self):
+        self.ensure_one()
+        return self.format_date_es(fields.Date.context_today(self))

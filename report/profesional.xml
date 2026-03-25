@@ -4,6 +4,7 @@
         <field name="name">Contrato Empleado Profesional</field>
         <field name="model">hr.contract</field>
         <field name="report_type">qweb-pdf</field>
+        <field name="paperformat_id" ref="zhr_ajustes.paperformat_contrato"/>
         <field name="report_name">zhr_ajustes.contract_employee_template_profesional</field>
         <field name="report_file">zhr_ajustes.contract_employee_template_profesional</field>
         <field name="print_report_name">'Contrato Profesional - %s' % (object.name)</field>
@@ -12,7 +13,7 @@
 <template id="contract_employee_template_profesional">
     <t t-call="web.html_container">
     <t t-foreach="docs" t-as="contract">
-    <t t-call="web.external_layout">
+    <t t-call="web.basic_layout">
 
     <div class="page">
 
@@ -40,21 +41,31 @@
 
 
     <p style="margin:0;"><strong>PRIMERO: Cargo del Trabajador</strong></p>
+    <t t-set="lugar_trabajo_line" t-value="contract.lugar_trabajo_line_ids[:1]"/>
+    <t t-if="lugar_trabajo_line and lugar_trabajo_line[0].lugar_trabajo_id.description">
+        <p style="text-align:justify;">
+                El Trabajador se compromete a ejecutar la labor de <strong><span t-esc="contract.job_id.name"/></strong>,
+                o labores similares,
+            <span t-esc="lugar_trabajo_line[0].lugar_trabajo_id.description"/>
+        </p>
+    </t>
+    <t t-else="">
 
     <p style="text-align:justify;">
-    El Trabajador se compromete a ejecutar la labor de Operador de Servicio AAP/AAV,
+    El Trabajador se compromete a ejecutar la labor de <strong><span t-esc="contract.job_id.name"/></strong>,
     o labores similares, en dependencias de Celulosa Arauco y Constitución,
     planta Arauco ubicada en Los Horcones S/N, comuna de Arauco,
     pudiendo ser trasladado a ruta Itata Km 21 Planta Nueva Aldea, comuna de Ranquil
     o a casa matriz de Barca ubicada en Cabrero,
     pudiendo ser trasladado dentro de la Región por causa justificada.
     </p>
+    </t>
 
 
     <p style="margin:0;"><strong>SEGUNDO: Jornada de Trabajo</strong></p>
 
     <p style="text-align:justify;">
-    <span t-esc="contract.schedule_details"/>...
+    <span t-esc="contract.schedule_details"/>
     </p>
 
 
@@ -65,7 +76,7 @@
     <ul>
             <li>
             <strong>Sueldo Base:</strong>
-            Valor fijo <span t-esc="contract.schedule_pay_name"/> por la cantidad de
+            Valor fijo <span t-esc="(dict(contract._fields['schedule_pay']._description_selection(contract.env)).get(contract.schedule_pay, contract.schedule_pay or '') or '').lower()"/> por la cantidad de
             <strong>
             $<span t-esc="'{:,}'.format(int(contract.wage)).replace(',', '.')"/>.-</strong>
             <span>
@@ -73,7 +84,7 @@
             </span>
             </li>
             <br/>
-            <li>
+            <li style="text-align:justify;">
             <strong>Gratificación:</strong>
             El <strong>Empleador</strong> pagará al <strong>Trabajador</strong> por concepto de <strong>Gratificación</strong> el monto establecido en el artículo 50 
             del Código del Trabajo, esto es, el 25% (veinticinco por ciento) de lo devengado en el respectivo ejercicio 
@@ -143,7 +154,7 @@
             <!-- OTROS CONCEPTOS -->
             <t t-if="line.payment_concept_id.name != 'Bonos Localidad'">
 
-                <li>
+                <li style="text-align:justify;">
                 <strong>
                 <span t-esc="line.payment_concept_id.name"/>:
                 </strong>
@@ -202,7 +213,7 @@ a la imponibilidad previsional y tributaria correspondiente.
 
 </ol>
 
-<p>
+<p style="text-align:justify;">
     <strong>SEPTIMO:</strong>
     En atención a su cargo y funciones, el Trabajador declara comprender que tendrá acceso y manejo de información y antecedentes estratégicos de propiedad del Empleador, teniendo éstos la calidad de confidenciales respecto a su utilización.
 </p>
@@ -215,17 +226,17 @@ a la imponibilidad previsional y tributaria correspondiente.
     Al terminar el presente Contrato, el Trabajador deberá devolver al Empleador toda información escrita en relación con el negocio, y no retendrá consigo ninguna copia, extracto, resumen u otro registro incluyendo toda forma de registro de información, incluida información digital.
 </p>
 
-<p>
+<p style="text-align:justify;">
     <strong>OCTAVO:</strong>
     El Trabajador se compromete a no realizar por cuenta propia o de terceros ninguna gestión o actividad relacionada directa o indirectamente con el área de negocios desarrollada por Indoor SpA. En atención a lo que dispone el art. 160 N° 2 del Código del Trabajo, se prohíbe expresamente al Trabajador efectuar negociaciones particulares dentro del giro del negocio del Empleador.
 </p>
 
-<p>
+<p style="text-align:justify;">
     <strong>NOVENO:</strong>
     El Trabajador cumplirá fiel, íntegra, cabal y oportunamente todas las leyes, normas, disposiciones, regulaciones, resoluciones y ordenanzas legales, administrativas, judiciales y/o de otro tipo, de aplicación general o especial. En caso de que el Trabajador incumpla cualquier tipo de disposiciones y principios legales, podrá ser sancionado por el Empleador, sin perjuicio de la eventual denuncia de los hechos a las autoridades respectivas según la naturaleza y gravedad de éstos.
 </p>
 
-<p>
+<p style="text-align:justify;">
     <strong>DECIMO:</strong>
     El Trabajador se compromete a cumplir las obligaciones establecidas en el presente Contrato de Trabajo, así como todas aquellas que emanen de la naturaleza de dicho Contrato, en relación con el contenido ético-jurídico del mismo y con el principio de buena fe contractual que establece el art. 1546 del Código Civil.
 </p>
@@ -238,14 +249,14 @@ a la imponibilidad previsional y tributaria correspondiente.
     Lo estipulado en esta cláusula es sin perjuicio de la responsabilidad civil y/o penal que pudiera hacerse efectiva en contra del Ejecutivo y de las indemnizaciones a que pudiere quedar obligado por los daños que su actividad ocasione a la Empresa.
 </p>
 
-<p>
+<p style="text-align:justify;">
     <strong>UNDECIMO:</strong>
     El Trabajador autoriza al Empleador a recolectar, procesar y transferir sus datos personales no sensibles, con el propósito de cumplir con sus obligaciones laborales, así como cualquier gestión interna de la empresa, como rendiciones de gastos, reserva de pasajes, entre otros.
 </p>
 
 
 
-<p>
+<p style="text-align:justify;">
     <strong>DUODECIMO:</strong>
     El presente contrato tendrá duración 
 
@@ -255,7 +266,7 @@ a la imponibilidad previsional y tributaria correspondiente.
         </strong>
     </t>
     <t t-else="">
-        por periodo Indefinido.
+        por tiempo Indefinido.
     </t>
 
     Se deja constancia que la fecha de ingreso del trabajador es<strong>
@@ -267,20 +278,20 @@ a la imponibilidad previsional y tributaria correspondiente.
 
 <br/><br/><br/>
 
-                            <table width="100%" style="margin-top:50px; border:none; border-collapse:collapse;">
-                                <tr>
-                                    <td width="50%" style="text-align:center; border:none;">
-                                        ___________________________<br/>
-                                        <span t-esc="contract.employee_id.name"/><br/>
-                                        R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
-                                    </td>
-                                    <td width="50%" style="text-align:center; border:none;">
-                                        ___________________________<br/>
-                                        Servicios Barca SPA.<br/>
-                                        R.U.T.: 76.766.106 – 1
-                                    </td>
-                                </tr>
-                            </table>
+    
+<div style="width:100%; margin-top:50px;">
+	<div style="width:49%; display:inline-block; text-align:center;">
+		___________________________<br/>
+		<span t-esc="contract.employee_id.name"/><br/>
+		R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+	</div>
+
+	<div style="width:49%; display:inline-block; text-align:center; float:right;">
+		___________________________<br/>
+		Servicios Barca SPA.<br/>
+		R.U.T.: 76.766.106 – 1
+	</div>
+</div>
 
 
 </div>

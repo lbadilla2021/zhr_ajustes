@@ -43,6 +43,12 @@ class HrEmployee(models.Model):
         string='Conceptos de Pago',
     )
 
+    lugar_trabajo_line_ids = fields.One2many(
+        'hr.employee.lugar.trabajo',
+        'employee_id',
+        string='Lugar de trabajo',
+    )
+
     @api.depends('state')
     def _compute_is_active_employee(self):
         for rec in self:

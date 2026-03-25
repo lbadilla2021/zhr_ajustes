@@ -58,6 +58,14 @@
                     </list>
                 </field>
             </xpath>
+
+            <xpath expr="//div[@id='resource_calendar_warning']" position="after">
+                    <field name="lugar_trabajo_line_ids" nolabel="1" colspan="2">
+                        <list editable="bottom">
+                            <field name="lugar_trabajo_id"/>
+                        </list>
+                    </field>
+            </xpath>
         </field>
     </record>
 

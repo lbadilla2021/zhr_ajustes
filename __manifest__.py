@@ -5,6 +5,7 @@
     'data': [
         'security/ir.model.access.csv',
         'report/contract_report.xml',
+        'report/paperformat.xml',
         'report/operador.xml',
         'report/profesional.xml',
         'report/ejecutivo.xml',
@@ -20,7 +21,9 @@
         'views/hr_employee_additional_views.xml',
         'views/hr_employee_list_custom.xml',
         'views/resource_calendar_views.xml',
+        'views/hr_contract_actualizacion_wizard_views.xml',
         'views/hr_employee_termination_wizard_views.xml',
+        'views/hr_lugares_trabajo_views.xml',
     ],
     'installable': True,
     'application': False,
