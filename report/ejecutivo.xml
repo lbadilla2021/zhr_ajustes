@@ -44,12 +44,11 @@
 
 
     <p style="margin:0;"><strong>PRIMERO: Cargo del Trabajador</strong></p>
-    <t t-set="lugar_trabajo_line" t-value="contract.lugar_trabajo_line_ids[:1]"/>
-    <t t-if="lugar_trabajo_line and lugar_trabajo_line[0].lugar_trabajo_id.description">
+    <t t-if="contract.lugar_trabajo_id and contract.lugar_trabajo_id.description">
         <p style="text-align:justify;">
                 El Trabajador se compromete a ejecutar la labor de <strong><span t-esc="contract.job_id.name"/></strong>,
                 o labores similares,
-            <span t-esc="lugar_trabajo_line[0].lugar_trabajo_id.description"/>
+            <span t-esc="contract.lugar_trabajo_id.description"/>
         </p>
     </t>
     <t t-else="">
@@ -95,11 +94,10 @@
             queda eximido de la obligación establecida en el artículo 47 del Código del Trabajo, sea cual fuere la utilidad líquida que obtuviere. 
             El monto a pagar por este concepto no excederá en total de 4,75 Ingresos Mínimos Mensuales.
             </li>
-            <br/>
 
         <!-- CONCEPTOS DINAMICOS -->
 
-            <t t-foreach="contract.employee_id.payment_concept_line_ids" t-as="line">
+            <t t-foreach="contract.employee_payment_concept_ids" t-as="line">
 
             <!-- SI ES BONO LOCALIDAD -->
             <t t-if="line.payment_concept_id.name == 'Bonos Localidad'">
@@ -151,7 +149,6 @@
                     </tr>
                     
                 </table>
-        <br/>
             </t>
 
             <!-- OTROS CONCEPTOS -->

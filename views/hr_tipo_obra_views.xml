@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_tipo_obra_tree_view" model="ir.ui.view">
+        <field name="name">hr.tipo.obra.tree</field>
+        <field name="model">hr.tipo.obra</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_tipo_obra_form_view" model="ir.ui.view">
+        <field name="name">hr.tipo.obra.form</field>
+        <field name="model">hr.tipo.obra</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_tipo_obra_action" model="ir.actions.act_window">
+        <field name="name">Nombre de la Obra</field>
+        <field name="res_model">hr.tipo.obra</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hr_tipo_obra"
+              name="Tipos de Obra"
+              parent="menu_hr_tables_root"
+              action="hr_tipo_obra_action"
+              sequence="70"/>
+</odoo>

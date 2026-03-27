@@ -40,9 +40,26 @@ class HrContract(models.Model):
                 rec.wage_text = ""    
 
     employee_payment_concept_ids = fields.One2many(
-        related='employee_id.payment_concept_line_ids',
-        readonly=False,
+        'hr.employee.payment.concept',
+        'contract_id',
         string='Conceptos de Pago',
+    )
+
+    tipo_obra_id = fields.Many2one(
+        'hr.tipo.obra',
+        string='Tipo de obra',
+    )
+
+    duracion_obra = fields.Char(
+        string='Duración de obra',
+    )
+    
+    lugar_trabajo_id = fields.Many2one(
+        'hr.lugar.trabajo',
+        string='Lugar de trabajo',
+    )
+    is_por_obra = fields.Boolean(
+        compute='_compute_is_por_obra',
     )
 
     lugar_trabajo_line_ids = fields.One2many(
@@ -50,6 +67,12 @@ class HrContract(models.Model):
         'contract_id',
         string='Lugares de trabajo',
     )
+
+    @api.depends('contract_type_id')
+    def _compute_is_por_obra(self):
+        for rec in self:
+            contract_type_name = (rec.contract_type_id.name or '').strip().lower()
+            rec.is_por_obra = 'obra' in contract_type_name
 
     def action_print_contract(self):
         self.ensure_one()

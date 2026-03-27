@@ -20,6 +20,9 @@ class HrContractActualizacionWizard(models.TransientModel):
         required=True,
         default='actualizacion',
     )
+    show_sueldo_base = fields.Boolean(string='Sueldo base', default=True)
+    show_cargo_actual = fields.Boolean(string='Cargo actual', default=True)
+    show_jornada_trabajo = fields.Boolean(string='Jornada de trabajo', default=True)
 
     def action_confirm(self):
         self.ensure_one()
@@ -27,4 +30,4 @@ class HrContractActualizacionWizard(models.TransientModel):
             'actualizacion': 'zhr_ajustes.action_report_actualizacion',
             'renovacion': 'zhr_ajustes.action_report_renovacion',
         }[self.report_type]
-        return self.env.ref(report_xml_id).report_action(self.contract_id)
+        return self.env.ref(report_xml_id).report_action(self)

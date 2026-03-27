@@ -2,25 +2,26 @@
 
     <record id="action_report_renovacion" model="ir.actions.report">
         <field name="name">Anexo Renovacion de Contrato</field>
-        <field name="model">hr.contract</field>
+        <field name="model">hr.contract.actualizacion.wizard</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">zhr_ajustes.report_renovacion</field>
         <field name="report_file">zhr_ajustes.report_renovacion</field>
-        <field name="print_report_name">'Renovacion Contrato - %s' % (object.employee_id.name)</field>
+        <field name="print_report_name">'Renovacion Contrato - %s' % (object.contract_id.employee_id.name)</field>
     </record>
 
     <record id="action_report_actualizacion" model="ir.actions.report">
         <field name="name">Actualizacion de Contrato</field>
-        <field name="model">hr.contract</field>
+        <field name="model">hr.contract.actualizacion.wizard</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">zhr_ajustes.report_actualizacion</field>
         <field name="report_file">zhr_ajustes.report_actualizacion</field>
-        <field name="print_report_name">'Actualizacion Contrato - %s' % (object.employee_id.name)</field>
+        <field name="print_report_name">'Actualizacion Contrato - %s' % (object.contract_id.employee_id.name)</field>
     </record>
 
     <template id="report_renovacion">
         <t t-call="web.html_container">
-            <t t-foreach="docs" t-as="contract">
+            <t t-foreach="docs" t-as="wizard">
+                <t t-set="contract" t-value="wizard.contract_id"/>
                 <t t-call="web.basic_layout">
                     <div class="page">
                         <p style="text-align:center;">ANEXO DE CONTRATO DE TRABAJO</p>
@@ -29,8 +30,8 @@
                         En Cabrero, a
                         <span t-esc="contract.format_today_es()"/>
                         entre <strong>Servicios Barca Spa,
-                        R.U.T.: 76.766.106 - 1,</strong>,
-                        representada legalmente por <strong> don Claudio Barrales Espinoza , RUT 12.702.854-0</strong>
+                        R.U.T.: 76.766.106 - 1,</strong>
+                        representada legalmente por <strong> don Claudio Barrales Espinoza, RUT 12.702.854-0</strong>
                         con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
                         y don <strong><span t-esc="contract.employee_id.name"/>,
                         R.U.T.: <span t-esc="contract.employee_id.identification_id"/>,</strong>
@@ -84,7 +85,8 @@
 
     <template id="report_actualizacion">
         <t t-call="web.html_container">
-            <t t-foreach="docs" t-as="contract">
+            <t t-foreach="docs" t-as="wizard">
+                <t t-set="contract" t-value="wizard.contract_id"/>
                 <t t-call="web.basic_layout">
                     <div class="page">
                         <p style="text-align:center;">ANEXO ACTUALIZACIóN AL CONTRATO DE TRABAJO</p>
@@ -93,8 +95,8 @@
                         En Cabrero, a
                         <span t-esc="contract.format_today_es()"/>
                         entre <strong>Servicios Barca Spa,
-                        R.U.T.: 76.766.106 - 1,</strong>,
-                        representada legalmente por <strong> don Claudio Barrales Espinoza , RUT 12.702.854-0</strong>
+                        R.U.T.: 76.766.106 - 1,</strong>
+                        representada legalmente por <strong> don Claudio Barrales Espinoza, RUT 12.702.854-0</strong>
                         con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
                         y don <strong><span t-esc="contract.employee_id.name"/>,
                         R.U.T.: <span t-esc="contract.employee_id.identification_id"/>,</strong>
@@ -109,21 +111,31 @@
 
                         <p style="margin:0; text-align:justify;"><strong>PRIMERO: </strong>
                         Se deja constancia que las condiciones contractuales vigentes son las siguientes:
-                        <li><strong>Sueldo base mensual: </strong>El sueldo base vigente es de
-                        <strong><span t-esc="contract.job_id.name"/></strong>.
+                        <t t-if="wizard.show_sueldo_base">
+                        <li><strong>Sueldo base: </strong>El sueldo base vigente
+                        <strong><span t-esc="(dict(contract._fields['schedule_pay']._description_selection(contract.env)).get(contract.schedule_pay, contract.schedule_pay or '') or '').lower()"/> 
+                        es                      
+                        $<span t-esc="'{:,}'.format(int(contract.wage)).replace(',', '.')"/>.-
+                        <span>
+                        (<span t-esc="contract.wage_text"/>s)
+                        </span></strong>.
                         </li>
-                        <li><strong>Su cargo actual es de:</strong> <strong><span t-esc="contract.job_id.name"/></strong>
+                        </t>
+                        <t t-if="wizard.show_cargo_actual">
+                        <li><strong>Su cargo actual es de:<span t-esc="contract.job_id.name"/></strong>.
                         </li>
-                        <li><strong><span t-esc="contract.schedule_details"/></strong>
+                        </t>
+                        <t t-if="wizard.show_jornada_trabajo">
+                        <li><strong><span t-esc="contract.schedule_details.replace('será', 'es')"/></strong>
                         </li>
+                        </t>
                         </p>
                         <br/>
 
                         <p style="margin:0; text-align:justify;"><strong>SEGUNDO: </strong>
                         Se deja constancia que todas las otras obligaciones del cargo, asi como los beneficios, bonos y clausulas derivadas del contrato original,
                         salvo los indicados en este anexo, suscrito el <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>, se
-                        mantienen vigentes Se deja constancia de la fecha de ingreso del trabajador es fecha del
-                        <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>
+                        mantienen vigentes Se deja constancia que la fecha de ingreso del trabajador es <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>.
                         </p>
                         <br/>
 

@@ -51,6 +51,12 @@
             </xpath>
 
             <xpath expr="//field[@name='contract_type_id']" position="after">
+                <field name="is_por_obra" invisible="1"/>
+                <field name="tipo_obra_id" invisible="not is_por_obra" required="is_por_obra"/>
+                <field name="duracion_obra" invisible="not is_por_obra" required="is_por_obra"/>
+            </xpath>
+
+            <xpath expr="//field[@name='contract_type_id']/.." position="after">
                 <field name="employee_payment_concept_ids" nolabel="1">
                     <list editable="bottom">
                         <field name="payment_concept_id"/>
@@ -60,11 +66,7 @@
             </xpath>
 
             <xpath expr="//div[@id='resource_calendar_warning']" position="after">
-                    <field name="lugar_trabajo_line_ids" nolabel="1" colspan="2">
-                        <list editable="bottom">
-                            <field name="lugar_trabajo_id"/>
-                        </list>
-                    </field>
+                    <field name="lugar_trabajo_id"/>
             </xpath>
         </field>
     </record>

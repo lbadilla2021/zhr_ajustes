@@ -14,11 +14,17 @@ class HrEmployeePaymentConcept(models.Model):
     _name = 'hr.employee.payment.concept'
     _description = 'Conceptos de pago por Empleado'
 
+    contract_id = fields.Many2one(
+        'hr.contract',
+        string='Contrato',
+        ondelete='cascade',
+    )
     employee_id = fields.Many2one(
         'hr.employee',
+        related='contract_id.employee_id',
         string='Empleado',
-        required=True,
-        ondelete='cascade',
+        store=True,
+        readonly=True,
     )
 
     payment_concept_id = fields.Many2one(

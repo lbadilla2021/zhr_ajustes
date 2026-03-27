@@ -10,244 +10,218 @@
         <field name="print_report_name">'Contrato Operador - %s' % (object.name)</field>
     </record>
 
-<template id="contract_employee_template_operador">
+    <template id="contract_employee_template_operador">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="contract">
+                <t t-call="web.basic_layout">
+                    <div class="page">
 
-    <t t-call="web.html_container">
-    <t t-foreach="docs" t-as="contract">
-    <t t-call="web.basic_layout">
-    <div class="page">
+                        <p style="text-align:center;">
+                            <t t-if="contract.is_por_obra">CONTRATO DE TRABAJO POR OBRA O FAENA</t>
+                            <t t-else="">CONTRATO DE TRABAJO</t>
+                        </p>
 
-    <p style="text-align:center;">CONTRATO DE TRABAJO</p>
+                        <p style="text-align:justify;">
+                        En Cabrero, a 
+                        <span t-esc="contract.format_date_es(contract.date_start)"/>
+                        entre <strong>Servicios Barca Spa,
+                        R.U.T.: 76.766.106 - 1,</strong>,
+                        representada legalmente por <strong> don Claudio Barrales Espinoza , RUT 12.702.854-0</strong>
+                         con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
+                        y don <strong><span t-esc="contract.employee_id.name"/>,
+                        R.U.T.: <span t-esc="contract.employee_id.identification_id"/>,</strong>
+                        de nacionalidad chilena, fecha nacimiento 
+                        <span t-esc="contract.format_date_es(contract.employee_id.birthday)"/>
+                        domiciliado en 
+                        <span t-esc="contract.employee_id.private_street"/>,
+                        de estado civil <span t-esc="contract.employee_id.get_marital_label()"/>,
+                        AFP: <span t-esc="contract.employee_id.afp_id.name"/>, 
+                        Salud: <span t-esc="contract.employee_id.health_system_id.name"/>,
+                        se ha convenido el siguiente Contrato de trabajo, para cuyos efectos las partes convienen en 
+                        denominarse, respectivamente,<strong> Empleador y Trabajador.</strong>
+                        </p>
 
-        <p style="text-align:justify;">
-        En Cabrero, a 
-        <span t-esc="contract.format_date_es(contract.date_start)"/>
-        entre <strong>Servicios Barca Spa,
-        R.U.T.: 76.766.106 - 1,</strong>,
-        representada legalmente por <strong> don Claudio Barrales Espinoza , RUT 12.702.854-0</strong>
-         con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
-        y don <strong><span t-esc="contract.employee_id.name"/>,
-        R.U.T.: <span t-esc="contract.employee_id.identification_id"/>,</strong>
-        de nacionalidad chilena, fecha nacimiento 
-        <span t-esc="contract.format_date_es(contract.employee_id.birthday)"/>
-        domiciliado en 
-        <span t-esc="contract.employee_id.private_street"/>,
-        de estado civil <span t-esc="contract.employee_id.get_marital_label()"/>,
-        AFP: <span t-esc="contract.employee_id.afp_id.name"/>, 
-        Salud: <span t-esc="contract.employee_id.health_system_id.name"/>,
-        se ha convenido el siguiente Contrato de trabajo, para cuyos efectos las partes convienen en 
-        denominarse, respectivamente,<strong> Empleador y Trabajador.</strong>
-        </p>
+                        <p style="margin:0;"><strong>PRIMERO: Cargo del Trabajador</strong></p>
+                        <t t-if="contract.lugar_trabajo_id and contract.lugar_trabajo_id.description">
+                            <p style="text-align:justify;">
+                                El Trabajador se compromete a ejecutar la labor de <strong><span t-esc="contract.job_id.name"/></strong>,
+                                o labores similares,
+                                <span t-esc="contract.lugar_trabajo_id.description"/>
+                            </p>
+                        </t>
+                        <t t-else="">
+                            <p style="text-align:justify;">
+                            El Trabajador se compromete a ejecutar la labor de <strong><span t-esc="contract.job_id.name"/></strong>,
+                            o labores similares, en dependencias de Celulosa Arauco y Constitucion,
+                            planta Arauco ubicada en Los Horcones S/N, comuna de Arauco,
+                            pudiendo ser trasladado a ruta Itata Km 21 Planta Nueva Aldea, comuna de Ranquil
+                            o a casa matriz de Barca ubicada en Cabrero,
+                            pudiendo ser trasladado dentro de la Region por causa justificada.
+                            </p>
+                        </t>
 
+                        <p style="margin:0;"><strong>SEGUNDO: Jornada de Trabajo</strong></p>
 
-    <p style="margin:0;"><strong>PRIMERO: Cargo del Trabajador</strong></p>
-    <t t-set="lugar_trabajo_line" t-value="contract.lugar_trabajo_line_ids[:1]"/>
-    <t t-if="lugar_trabajo_line and lugar_trabajo_line[0].lugar_trabajo_id.description">
-        <p style="text-align:justify;">
-                El Trabajador se compromete a ejecutar la labor de <strong><span t-esc="contract.job_id.name"/></strong>,
-                o labores similares,
-            <span t-esc="lugar_trabajo_line[0].lugar_trabajo_id.description"/>
-        </p>
-    </t>
-    <t t-else="">
+                        <p style="text-align:justify;">
+                        <span t-esc="contract.schedule_details"/>
+                        </p>
 
-    <p style="text-align:justify;">
-    El Trabajador se compromete a ejecutar la labor de <strong><span t-esc="contract.job_id.name"/></strong>,
-    o labores similares, en dependencias de Celulosa Arauco y Constitución,
-    planta Arauco ubicada en Los Horcones S/N, comuna de Arauco,
-    pudiendo ser trasladado a ruta Itata Km 21 Planta Nueva Aldea, comuna de Ranquil
-    o a casa matriz de Barca ubicada en Cabrero,
-    pudiendo ser trasladado dentro de la Región por causa justificada.
-    </p>
-    </t>
+                        <p style="margin:0;"><strong>TERCERO: Sueldo Base y Asignaciones</strong></p>
 
+                        <p>El Empleador se compromete a remunerar al Trabajador con los siguientes conceptos:</p>
 
-    <p style="margin:0;"><strong>SEGUNDO: Jornada de Trabajo</strong></p>
+                        <ul>
+                            <li>
+                                <strong>Sueldo Base:</strong>
+                                Valor fijo <span t-esc="(dict(contract._fields['schedule_pay']._description_selection(contract.env)).get(contract.schedule_pay, contract.schedule_pay or '') or '').lower()"/> por la cantidad de
+                                <strong>
+                                $<span t-esc="'{:,}'.format(int(contract.wage)).replace(',', '.')"/>.-</strong>
+                                <span>
+                                (<span t-esc="contract.wage_text"/>s)
+                                </span>
+                            </li>
+                            <li style="text-align:justify;">
+                                <strong>Gratificacion:</strong>
+                                El <strong>Empleador</strong> pagara al <strong>Trabajador</strong> por concepto de <strong>Gratificacion</strong> el monto establecido en el articulo 50 
+                                del Codigo del Trabajo, esto es, el 25% (veinticinco por ciento) de lo devengado en el respectivo ejercicio 
+                                comercial por concepto de remuneraciones mensuales, entendiendose con ello que para todos los efectos legales 
+                                queda eximido de la obligacion establecida en el articulo 47 del Codigo del Trabajo, sea cual fuere la utilidad liquida que obtuviere. 
+                                El monto a pagar por este concepto no excedera en total de 4,75 Ingresos Minimos Mensuales.
+                            </li>
 
-    <p style="text-align:justify;">
-    <span t-esc="contract.schedule_details"/>
-    </p>
+                            <t t-foreach="contract.employee_payment_concept_ids" t-as="line">
+                                <t t-if="line.payment_concept_id.name == 'Bonos Localidad'">
+                                    <li><strong>Bono Localidad:</strong>
+                                    Valor bruto diario por realizar labores en las siguientes localidades:
+                                    </li>
 
-    <p style="margin:0;"><strong>TERCERO: Sueldo Base y Asignaciones</strong></p>
+                                    <table style="width:100%; border:1px solid black; border-collapse:collapse;">
+                                        <tr style="border:1px solid black;">
+                                            <th style="border:1px solid black; padding:5px;">Localidad</th>
+                                            <th style="border:1px solid black; padding:5px;">Valor Bruto Diario</th>
+                                        </tr>
 
-    <p>El Empleador se compromete a remunerar al Trabajador con los siguientes conceptos:</p>
+                                        <tr>
+                                            <td style="border:1px solid black; padding:5px;">
+                                            Oficinas Centrales Cabrero / Planta Placas Masonite, Cabrero
+                                            </td>
+                                            <td style="border:1px solid black; padding:5px;">$0</td>
+                                        </tr>
 
-    <ul>
-            <li>
-            <strong>Sueldo Base:</strong>
-            Valor fijo <span t-esc="(dict(contract._fields['schedule_pay']._description_selection(contract.env)).get(contract.schedule_pay, contract.schedule_pay or '') or '').lower()"/> por la cantidad de
-            <strong>
-            $<span t-esc="'{:,}'.format(int(contract.wage)).replace(',', '.')"/>.-</strong>
-            <span>
-            (<span t-esc="contract.wage_text"/>s)
-            </span>
-            </li>
-            <br/>
-            <li style="text-align:justify;">
-            <strong>Gratificación:</strong>
-            El <strong>Empleador</strong> pagará al <strong>Trabajador</strong> por concepto de <strong>Gratificación</strong> el monto establecido en el artículo 50 
-            del Código del Trabajo, esto es, el 25% (veinticinco por ciento) de lo devengado en el respectivo ejercicio 
-            comercial por concepto de remuneraciones mensuales, entendiéndose con ello que para todos los efectos legales 
-            queda eximido de la obligación establecida en el artículo 47 del Código del Trabajo, sea cual fuere la utilidad líquida que obtuviere. 
-            El monto a pagar por este concepto no excederá en total de 4,75 Ingresos Mínimos Mensuales.
-            </li>
-            <br/>
+                                        <tr>
+                                            <td style="border:1px solid black; padding:5px;">
+                                            Celulosa CMPC Santa Fe Nacimiento / Celulosa Arauco Nueva Aldea
+                                            </td>
+                                            <td style="border:1px solid black; padding:5px;">$2.040</td>
+                                        </tr>
 
-        <!-- CONCEPTOS DINAMICOS -->
+                                        <tr>
+                                            <td style="border:1px solid black; padding:5px;">
+                                            Celulosa Horcones Arauco / Colbun Coronel / Planta Paneles Masisa Coronel
+                                            </td>
+                                            <td style="border:1px solid black; padding:5px;">$3.570</td>
+                                        </tr>
 
-            <t t-foreach="contract.employee_id.payment_concept_line_ids" t-as="line">
+                                        <tr>
+                                            <td style="border:1px solid black; padding:5px;">
+                                            Celulosa Arauco Licancel, Constitucion, Teno
+                                            </td>
+                                            <td style="border:1px solid black; padding:5px;">$10.400</td>
+                                        </tr>
 
-            <!-- SI ES BONO LOCALIDAD -->
-            <t t-if="line.payment_concept_id.name == 'Bonos Localidad'">
+                                        <tr>
+                                            <td style="border:1px solid black; padding:5px;">
+                                            Planta Valdivia
+                                            </td>
+                                            <td style="border:1px solid black; padding:5px;">$14.000</td>
+                                        </tr>
+                                    </table>
+                                </t>
 
-                <li><strong>Bono Localidad:</strong>
-                Valor bruto diario por realizar labores en las siguientes localidades:
-                </li>
+                                <t t-if="line.payment_concept_id.name != 'Bonos Localidad'">
+                                    <li style="text-align:justify;">
+                                        <strong>
+                                        <span t-esc="line.payment_concept_id.name"/>:
+                                        </strong>
 
-                <table style="width:100%; border:1px solid black; border-collapse:collapse;">
+                                        <t t-if="line.amount &gt; 0">
+                                            <span t-esc="line.payment_concept_id.description"/> 
+                                            <span t-esc="' ${:,.0f}'.format(line.amount).replace(',', '.')"/>
+                                            .-
+                                        </t>
+                                        <t t-else="">
+                                            <span t-esc="line.payment_concept_id.description"/>
+                                        </t>
+                                    </li>
+                                </t>
+                            </t>
+                        </ul>
 
-                    <tr style="border:1px solid black;">
-                        <th style="border:1px solid black; padding:5px;">Localidad</th>
-                        <th style="border:1px solid black; padding:5px;">Valor Bruto Diario</th>
-                    </tr>
+                        <p style="margin:0;"><strong>CUARTO: Fecha de pago de las Remuneraciones</strong></p>
 
-                    <tr>
-                        <td style="border:1px solid black; padding:5px;">
-                        Oficinas Centrales Cabrero / Planta Placas Masonite, Cabrero
-                        </td>
-                        <td style="border:1px solid black; padding:5px;">$0</td>
-                    </tr>
+                        <p style="text-align:justify;">
+                        Las remuneraciones se pagaran el dia 06 del mes siguiente por iguales periodos vencidos,
+                        mediante transferencia electronica, efectuando el empleador las deducciones legales.
+                        </p>
 
-                    <tr>
-                        <td style="border:1px solid black; padding:5px;">
-                        Celulosa CMPC Santa Fé Nacimiento / Celulosa Arauco Nueva Aldea
-                        </td>
-                        <td style="border:1px solid black; padding:5px;">$2.040</td>
-                    </tr>
+                        <p style="margin:0;"><strong>QUINTO: Descuentos Legales</strong></p>
 
-                    <tr>
-                        <td style="border:1px solid black; padding:5px;">
-                        Celulosa Horcones Arauco / Colbun Coronel / Planta Paneles Masisa Coronel
-                        </td>
-                        <td style="border:1px solid black; padding:5px;">$3.570</td>
-                    </tr>
+                        <p style="text-align:justify;">
+                        Todos los pagos y beneficios en dinero se expresan en valores brutos y estan afectos
+                        a la imponibilidad previsional y tributaria correspondiente.
+                        </p>
 
-                    <tr>
-                        <td style="border:1px solid black; padding:5px;">
-                        Celulosa Arauco Licancel, Constitución, Teno
-                        </td>
-                        <td style="border:1px solid black; padding:5px;">$10.400</td>
-                    </tr>
+                        <p style="margin:0;"><strong>SEXTO: Obligaciones y/o Prohibiciones</strong></p>
 
-                    <tr>
-                        <td style="border:1px solid black; padding:5px;">
-                        Planta Valdivia
-                        </td>
-                        <td style="border:1px solid black; padding:5px;">$14.000</td>
-                    </tr>
-                    
-                </table>
-        <br/>
-            </t>
+                        <ol style="list-style-type: lower-alpha;">
+                            <li>La dedicacion exclusiva y diligente a las funciones del cargo.</li>
+                            <li>Respeto irrestricto a normas internas y reglamentos de la empresa.</li>
+                            <li>Mantener reserva respecto de informacion confidencial.</li>
+                            <li>Prohibicion de realizar actividades para la competencia.</li>
+                        </ol>
 
-            <!-- OTROS CONCEPTOS -->
-            <t t-if="line.payment_concept_id.name != 'Bonos Localidad'">
+                        <p style="text-align:justify;">
+                            <strong>SEPTIMO:</strong>
+                            <t t-if="contract.is_por_obra">
+                                El presente contrato tendra duracion hasta el termino de la obra o faena "<strong><span t-esc="contract.tipo_obra_id.name"/></strong>".
+                                Se estima una duración de aproximadamente <strong><span t-esc="contract.duracion_obra"/></strong>, 
+                                sin perjuicio de que el contrato terminará por la conclusión efectiva de la obra o faena.
+                            </t>
+                            <t t-else="">
+                                El presente contrato tendra duracion 
+                                <t t-if="contract.date_end">
+                                    hasta el <strong>
+                                        <span t-esc="contract.format_date_es(contract.date_end)"/>.
+                                    </strong>
+                                </t>
+                                <t t-else="">
+                                    por tiempo Indefinido.
+                                </t>
+                            </t>
 
-                <li style="text-align:justify;">
-                <strong>
-                <span t-esc="line.payment_concept_id.name"/>:
-                </strong>
+                            Se deja constancia que la fecha de ingreso del trabajador es<strong>
+                                <span t-esc="contract.format_date_es(contract.date_start)"/>.
+                            </strong>
+                        </p>
 
-                <t t-if="line.amount &gt; 0">
-                    <span t-esc="line.payment_concept_id.description"/> 
-                    <span t-esc="' ${:,.0f}'.format(line.amount).replace(',', '.')"/>
-                    .-
+                        <br/><br/><br/>
+
+                        <div style="width:100%; margin-top:50px;">
+                            <div style="width:49%; display:inline-block; text-align:center;">
+                                ___________________________<br/>
+                                <span t-esc="contract.employee_id.name"/><br/>
+                                R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+                            </div>
+
+                            <div style="width:49%; display:inline-block; text-align:center; float:right;">
+                                ___________________________<br/>
+                                Servicios Barca SPA.<br/>
+                                R.U.T.: 76.766.106 - 1
+                            </div>
+                        </div>
+                    </div>
                 </t>
-                <t t-else="">
-                    <span t-esc="line.payment_concept_id.description"/>
-                </t>
-                </li>
-                <br/>
             </t>
-
         </t>
-    </ul>
-
-<p style="margin:0;"><strong>CUARTO: Fecha de pago de las Remuneraciones</strong></p>
-
-<p style="text-align:justify;">
-Las remuneraciones se pagarán el día 06 del mes siguiente por iguales períodos vencidos,
-mediante transferencia electrónica, efectuando el empleador las deducciones legales.
-</p>
-
-
-<p style="margin:0;"><strong>QUINTO: Descuentos Legales</strong></p>
-
-<p style="text-align:justify;">
-Todos los pagos y beneficios en dinero se expresan en valores brutos y están afectos
-a la imponibilidad previsional y tributaria correspondiente.
-</p>
-
-
-<p style="margin:0;"><strong>SEXTO: Obligaciones y/o Prohibiciones</strong></p>
-
-<ol style="list-style-type: lower-alpha;">
-
-<li>La dedicación exclusiva y diligente a las funciones del cargo.</li>
-
-<li>Respeto irrestricto a normas internas y reglamentos de la empresa.</li>
-
-<li>Mantener reserva respecto de información confidencial.</li>
-
-<li>Prohibición de realizar actividades para la competencia.</li>
-
-</ol>
-
-
-<p style="text-align:justify;">
-    <strong>SEPTIMO:</strong>
-    El presente contrato tendrá duración 
-
-    <t t-if="contract.date_end">
-        hasta el <strong>
-            <span t-esc="contract.format_date_es(contract.date_end)"/>.
-        </strong>
-    </t>
-    <t t-else="">
-        por tiempo Indefinido.
-    </t>
-
-    Se deja constancia que la fecha de ingreso del trabajador es<strong>
-        <span t-esc="contract.format_date_es(contract.date_start)"/>.
-    </strong>
-</p>
-
-
-
-<br/><br/><br/>
-
-<div style="width:100%; margin-top:50px;">
-	<div style="width:49%; display:inline-block; text-align:center;">
-		___________________________<br/>
-		<span t-esc="contract.employee_id.name"/><br/>
-		R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
-	</div>
-
-	<div style="width:49%; display:inline-block; text-align:center; float:right;">
-		___________________________<br/>
-		Servicios Barca SPA.<br/>
-		R.U.T.: 76.766.106 – 1
-	</div>
-</div>
-
-
-
-
-</div>
-
-</t>
-</t>
-</t>
-
-</template>
+    </template>
 </odoo>

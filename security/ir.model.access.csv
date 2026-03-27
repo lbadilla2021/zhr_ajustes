@@ -12,3 +12,4 @@ access_hr_payment_concept,access_hr_payment_concept,zhr_ajustes.model_hr_payment
 access_hr_employee_payment_concept,access_hr_employee_payment_concept,zhr_ajustes.model_hr_employee_payment_concept,hr.group_hr_user,1,1,1,1
 access_hr_lugar_trabajo,access_hr_lugar_trabajo,zhr_ajustes.model_hr_lugar_trabajo,hr.group_hr_user,1,1,1,1
 access_hr_employee_lugar_trabajo,access_hr_employee_lugar_trabajo,zhr_ajustes.model_hr_employee_lugar_trabajo,hr.group_hr_user,1,1,1,1
+access_hr_tipo_obra,access_hr_tipo_obra,zhr_ajustes.model_hr_tipo_obra,hr.group_hr_user,1,1,1,1
