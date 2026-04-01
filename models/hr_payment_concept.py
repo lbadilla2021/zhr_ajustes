@@ -29,7 +29,7 @@ class HrEmployeePaymentConcept(models.Model):
 
     payment_concept_id = fields.Many2one(
         'hr.payment.concept',
-        string='Concepto',
+        string='Conceptos de Pago',
         required=True,
     )
 

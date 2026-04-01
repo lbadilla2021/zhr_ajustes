@@ -85,7 +85,6 @@
             (<span t-esc="contract.wage_text"/>s)
             </span>
             </li>
-            <br/>
             <li style="text-align:justify;">
             <strong >Gratificación:</strong>
             El <strong>Empleador</strong> pagará al <strong>Trabajador</strong> por concepto de <strong>Gratificación</strong> el monto establecido en el artículo 50 
@@ -168,7 +167,6 @@
                     <span t-esc="line.payment_concept_id.description"/>
                 </t>
                 </li>
-                <br/>
             </t>
 
         </t>
@@ -188,7 +186,6 @@
     a la imponibilidad previsional y tributaria correspondiente.
     </p>
 
-    <br/>
     <p style="margin:0;"><strong>SEXTO: Obligaciones y/o Prohibiciones</strong></p>
     <p>Las siguientes son obligaciones y/o prohibiciones esenciales del presente Contrato, sin perjuicio de las que emanen de su propia naturaleza:</p>
 
@@ -214,66 +211,66 @@
 
     </ol>
 
-    <p style="text-align:justify;">
+    <div style="text-align:justify;">
         <strong>SEPTIMO:</strong>
         En atención a su cargo y funciones, el Trabajador declara comprender que tendrá acceso y manejo de información y antecedentes estratégicos de propiedad del Empleador, teniendo éstos la calidad de confidenciales respecto a su utilización.
-    </p>
+    </div>
 
-    <p>
+    <div style="text-align:justify;">
         Por lo expuesto, el Trabajador se obliga expresamente por este acto, durante la vigencia de este Contrato y aun habiéndose terminado el mismo, a abstenerse absolutamente de hacer uso de la información y antecedentes estratégicos aludidos, en otras finalidades que no sean aquellas propias de sus labores en la Empresa. Se compromete por lo tanto, a no revelar, informar o divulgar a terceros, sean estos personas naturales o jurídicas, directa o indirectamente, durante la duración del Contrato de Trabajo y aun habiéndose extinguido éste —de lo cual se dejará constancia en el finiquito respectivo— información confidencial y/o secreta del Empleador y/o cualquier otro antecedente referido a los productos, negocios, métodos o sistemas de servicio y trabajo del giro propio de la Empresa. Esta obligación se extiende también a la información secreta y privativa de los clientes y proveedores del Empleador.
-    </p>
+    </div>
 
-    <p>
+    <div style="text-align:justify;">
         Al terminar el presente Contrato, el Trabajador deberá devolver al Empleador toda información escrita en relación con el negocio, y no retendrá consigo ninguna copia, extracto, resumen u otro registro incluyendo toda forma de registro de información, incluida información digital.
-    </p>
+    </div>
 
-    <p style="text-align:justify;">
+    <span style="display:block; margin-top:12px; text-align:justify;">
         <strong>OCTAVO:</strong>
-        El Trabajador se compromete a no realizar por cuenta propia o de terceros ninguna gestión o actividad relacionada directa o indirectamente con el área de negocios desarrollada por Indoor SpA. En atención a lo que dispone el art. 160 N° 2 del Código del Trabajo, se prohíbe expresamente al Trabajador efectuar negociaciones particulares dentro del giro del negocio del Empleador.
-    </p>
+        El Trabajador se compromete a no realizar por cuenta propia o de terceros ninguna gestión o actividad relacionada directa o indirectamente con el área de negocios desarrollada por Barca SpA. En atención a lo que dispone el art. 160 N° 2 del Código del Trabajo, se prohíbe expresamente al Trabajador efectuar negociaciones particulares dentro del giro del negocio del Empleador.
+    </span>
 
-    <p style="text-align:justify;">
+    <span style="display:block; margin-top:12px; text-align:justify;">
         <strong>NOVENO:</strong>
         El Trabajador cumplirá fiel, íntegra, cabal y oportunamente todas las leyes, normas, disposiciones, regulaciones, resoluciones y ordenanzas legales, administrativas, judiciales y/o de otro tipo, de aplicación general o especial. En caso de que el Trabajador incumpla cualquier tipo de disposiciones y principios legales, podrá ser sancionado por el Empleador, sin perjuicio de la eventual denuncia de los hechos a las autoridades respectivas según la naturaleza y gravedad de éstos.
-    </p>
+    </span>
 
-    <p style="text-align:justify;">
+    <span style="display:block; margin-top:12px; text-align:justify;">
         <strong>DECIMO:</strong>
         El Trabajador se compromete a cumplir las obligaciones establecidas en el presente Contrato de Trabajo, así como todas aquellas que emanen de la naturaleza de dicho Contrato, en relación con el contenido ético-jurídico del mismo y con el principio de buena fe contractual que establece el art. 1546 del Código Civil.
-    </p>
+    </span>
 
-    <p>
+    <div style="text-align:justify;">
         El incumplimiento por parte del Trabajador de cualquiera de las obligaciones establecidas en el Contrato de Trabajo, podrá ser considerado un incumplimiento grave de las obligaciones del Contrato de Trabajo, de conformidad con lo que dispone el art. 160 N° 7 del Código del Trabajo.
-    </p>
+    </div>
 
-    <p>
+    <div style="text-align:justify;">
         Lo estipulado en esta cláusula es sin perjuicio de la responsabilidad civil y/o penal que pudiera hacerse efectiva en contra del Ejecutivo y de las indemnizaciones a que pudiere quedar obligado por los daños que su actividad ocasione a la Empresa.
-    </p>
+    </div>
 
-    <p style="text-align:justify;">
+    <span style="display:block; margin-top:12px; text-align:justify;">
         <strong>UNDECIMO:</strong>
         El Trabajador autoriza al Empleador a recolectar, procesar y transferir sus datos personales no sensibles, con el propósito de cumplir con sus obligaciones laborales, así como cualquier gestión interna de la empresa, como rendiciones de gastos, reserva de pasajes, entre otros.
-    </p>
+    </span>
 
 
-
-    <p style="text-align:justify;">
+<div style="page-break-inside: avoid !important;">
+    <span style="display:block; margin-top:12px; text-align:justify;">
         <strong>DUODECIMO:</strong>
         El presente contrato tendrá duración 
 
-        <t t-if="contract.date_end">
+        <t t-if="contract.contract_type_id.name == 'Indefinido' or not contract.date_end">
+            por tiempo indefinido.
+        </t>
+        <t t-else="">
             hasta el <strong>
                 <span t-esc="contract.format_date_es(contract.date_end)"/>.
             </strong>
-        </t>
-        <t t-else="">
-            por tiempo Indefinido.
         </t>
 
         Se deja constancia que la fecha de ingreso del trabajador es<strong>
             <span t-esc="contract.format_date_es(contract.date_start)"/>.
         </strong>
-    </p>
+    </span>
 
 
 
@@ -292,7 +289,7 @@
             R.U.T.: 76.766.106 – 1
         </div>
     </div>
-
+    </div>
     </div>
 
     </t>

@@ -44,10 +44,18 @@
                         acuerdan modificar el citado instrumento, en los siguientes terminos:
                         </p>
 
-                        <p style="margin:0;text-align:justify;"><strong>PRIMERO: </strong>
-                        A Contar de esta fecha, el contrato de trabajo suscrito con fecha
-                        <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>
-                        entre el empleador y el trabajador, se extiende hasta <span t-esc="contract.format_date_es(contract.date_end)"/>.
+                        <p style="margin:0;text-align:justify;">
+                            <strong>PRIMERO: </strong>
+                            A Contar de esta fecha, el contrato de trabajo suscrito con fecha
+                            <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>
+                            entre el empleador y el trabajador, se extiende
+
+                            <t t-if="contract.contract_type_id.name == 'Indefinido' or not contract.date_end">
+                                por tiempo indefinido.
+                            </t>
+                            <t t-else="">
+                                hasta <span t-esc="contract.format_date_es(contract.date_end)"/>.
+                            </t>
                         </p>
                         <br/>
 
