@@ -13,6 +13,7 @@
         'report/report_actualizacion.xml',
         'report/report_pacto_he.xml',
         'views/hr_accreditation_views.xml',
+        'views/hr_assigned_resource_views.xml',
         'views/hr_prevision_config_views.xml',
         'views/hr_payment_concept_views.xml',
         'views/hr_contract_view.xml',

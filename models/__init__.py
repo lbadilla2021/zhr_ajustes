@@ -10,3 +10,4 @@ from . import hr_contract
 from . import hr_payment_concept
 from . import hr_lugares_trabajo
 from . import hr_tipo_obra
+from . import hr_assigned_resource

@@ -29,6 +29,18 @@
                         </list>
                     </field>
                 </page>
+
+
+                <page string="Recursos Asignados" name="assigned_resources">
+                    <field name="assigned_resource_ids">
+                        <list editable="bottom">
+                            <field name="assigned_resource_id"/>
+                            <field name="identification"/>
+                            <field name="assignment_date"/>
+                            <field name="return_date"/>
+                        </list>
+                    </field>
+                </page>
             </xpath>
         </field>
     </record>
