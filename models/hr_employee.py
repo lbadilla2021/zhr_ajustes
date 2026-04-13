@@ -37,6 +37,12 @@ class HrEmployee(models.Model):
         string='Acreditaciones',
     )
 
+    assigned_resource_ids = fields.One2many(
+        'hr.employee.assigned.resource',
+        'employee_id',
+        string='Recursos Asignados',
+    )
+
     payment_concept_line_ids = fields.One2many(
         'hr.employee.payment.concept',
         'employee_id',
