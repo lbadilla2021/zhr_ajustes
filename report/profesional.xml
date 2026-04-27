@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="action_report_contract_employee_profesional" model="ir.actions.report">
         <field name="name">Contrato Empleado Profesional</field>
@@ -13,6 +13,7 @@
 <template id="contract_employee_template_profesional">
     <t t-call="web.html_container">
     <t t-foreach="docs" t-as="contract">
+    <t t-set="company" t-value="contract.company_id"/>
     <t t-call="web.basic_layout">
 
     <div class="page">
@@ -22,8 +23,8 @@
         <p style="text-align:justify;">
         En Cabrero, a 
         <span t-esc="contract.format_date_es(contract.date_start)"/>
-        entre <strong>Servicios Barca Spa,
-        R.U.T.: 76.766.106 - 1,</strong>,
+        entre <strong><span t-esc="company.name"/>,
+        R.U.T.: <span t-esc="company.vat"/>,</strong>,
         representada legalmente por <strong> don Claudio Barrales Espinoza , RUT 12.702.854-0</strong>
         con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
         y don <strong><span t-esc="contract.employee_id.name"/>,
@@ -52,11 +53,9 @@
 
     <p style="text-align:justify;">
     El Trabajador se compromete a ejecutar la labor de <strong><span t-esc="contract.job_id.name"/></strong>,
-    o labores similares, en dependencias de Celulosa Arauco y Constitución,
-    planta Arauco ubicada en Los Horcones S/N, comuna de Arauco,
-    pudiendo ser trasladado a ruta Itata Km 21 Planta Nueva Aldea, comuna de Ranquil
-    o a casa matriz de Barca ubicada en Cabrero,
-    pudiendo ser trasladado dentro de la Región por causa justificada.
+    o labores similares, en instalaciones de <span t-esc="company.name"/>, ubicado en Lote 4 Sector la Quinta, Cabrero pudiendo 
+    ser trasladado a otro domicilio por el ejercicio de sus funciones, dentro de la RegiÃ³n, por causa justificada, 
+    sin que ello importe menoscabo para el trabajador.
     </p>
     </t>
 
@@ -84,7 +83,7 @@
             </li>
             <li style="text-align:justify;">
             <strong>Gratificación:</strong>
-            El <strong>Empleador</strong> pagará al <strong>Trabajador</strong> por concepto de <strong>Gratificación</strong> el monto establecido en el artículo 50 
+            El<b> Empleador</b> pagará al<b> Trabajador</b> por concepto de<b> Gratificación</b> el monto establecido en el artículo 50 
             del Código del Trabajo, esto es, el 25% (veinticinco por ciento) de lo devengado en el respectivo ejercicio 
             comercial por concepto de remuneraciones mensuales, entendiéndose con ello que para todos los efectos legales 
             queda eximido de la obligación establecida en el artículo 47 del Código del Trabajo, sea cual fuere la utilidad líquida que obtuviere. 
@@ -173,8 +172,8 @@
 <p style="margin:0;"><strong>CUARTO: Fecha de pago de las Remuneraciones</strong></p>
 
 <p style="text-align:justify;">
-Las remuneraciones se pagarán el día 10 del mes siguiente por iguales períodos vencidos, por medio de transferencia electrónica 
-en moneda nacional y del monto de ellas el Empleador hará las deducciones que establecen las leyes vigentes.
+Las remuneraciones se pagaran el dia 06 del mes siguiente por iguales periodos vencidos,
+mediante transferencia electronica, efectuando el empleador las deducciones legales.
 </p>
 
 
@@ -196,14 +195,14 @@ a la imponibilidad previsional y tributaria correspondiente.
     <li>Dar aviso inmediatamente a su jefe directo o a quien corresponda como superior jerárquico, de cualquier irregularidad en el manejo de los negocios, en la prestación de los servicios y en general en el cumplimiento de las obligaciones por parte de los trabajadores del Empleador, y de cualquier observación o reclamo que realicen los clientes de la Empresa en relación a los servicios que ésta presta.</li>
 
     <li>La obligación de mantener reserva respecto de antecedentes e informaciones que la Empresa considere de carácter confidencial, o que por su naturaleza revistan este carácter.</li>
+    
+    <li>La prohibición al trabajador de realizar negociaciones dentro del giro del negocio, tales como desarrollar actividades relacionadas con su trabajo para la competencia o en actividades profesionales externas remuneradas similares a la del Empleador y que pusiesen en peligro la exclusividad de la información que reciba en el ejercicio de su cargo.</li> 
 
-    <li>La prohibición al trabajador de realizar negociaciones dentro del giro del negocio, tales como desarrollar actividades relacionadas con su trabajo para la competencia o en actividades profesionales externas remuneradas similares a la del Empleador y que pusiesen en peligro la exclusividad de la información que reciba en el ejercicio de su cargo.</li>
+    <li>Utilizar en el cumplimiento de sus funciones, única y exclusivamente, los software y hardware que el Empleador utiliza y que pone a disposición de sus trabajadores para el cumplimiento de sus funciones. Queda expresamente prohibido al trabajador copiar, reproducir o alterar los referidos softwares de la empresa.</li> 
 
-    <li>Utilizar en el cumplimiento de sus funciones, única y exclusivamente, los software y hardware que el Empleador utiliza y que pone a disposición de sus trabajadores para el cumplimiento de sus funciones. Queda expresamente prohibido al trabajador copiar, reproducir o alterar los referidos softwares de la empresa.</li>
+    <li>No revelar a ninguna persona, aunque sea trabajador de la Empresa, las passwords o claves que utilice para ingresar a los sistemas computacionales, correo electrónico, documentos, accesos, etc. de la Empresa.</li> 
 
-    <li>No revelar a ninguna persona, aunque sea trabajador de la Empresa, las passwords o claves que utilice para ingresar a los sistemas computacionales, correo electrónico, documentos, accesos, etc. de la Empresa.</li>
-
-    <li>Utilizar el servicio de correo electrónico provisto por la Empresa exclusivamente para fines laborales. Por lo tanto, ningún correo electrónico enviado por el trabajador desde la cuenta proporcionada por la Empresa tiene carácter de comunicación privada, sino que constituye un registro de la Empresa, la que se encuentra plenamente facultada para monitorear y conocer dichos correos electrónicos, aun después de terminada la relación laboral.</li>
+    <li>Utilizar el servicio de correo electrónico provisto por la Empresa exclusivamente para fines laborales. Por lo tanto, ningún correo electrónico enviado por el trabajador desde la cuenta proporcionada por la Empresa tiene carácter de comunicación privada, sino que constituye un registro de la Empresa, la que se encuentra plenamente facultada para monitorear y conocer dichos correos electrónicos, aun después de terminada la relación laboral.</li> 
 
     <li>Comunicar a la Empresa cualquier cambio de domicilio dentro de las 48 horas siguientes a que se produzca.</li>
 
@@ -222,9 +221,9 @@ a la imponibilidad previsional y tributaria correspondiente.
         Al terminar el presente Contrato, el Trabajador deberá devolver al Empleador toda información escrita en relación con el negocio, y no retendrá consigo ninguna copia, extracto, resumen u otro registro incluyendo toda forma de registro de información, incluida información digital.
     </div>
 
-<span style="display:block; margin-top:12px; text-align:justify;">
+    <span style="display:block; margin-top:12px; text-align:justify;">
         <strong>OCTAVO:</strong>
-        El Trabajador se compromete a no realizar por cuenta propia o de terceros ninguna gestión o actividad relacionada directa o indirectamente con el área de negocios desarrollada por Barca SpA. En atención a lo que dispone el art. 160 N° 2 del Código del Trabajo, se prohíbe expresamente al Trabajador efectuar negociaciones particulares dentro del giro del negocio del Empleador.
+        El Trabajador se compromete a no realizar por cuenta propia o de terceros ninguna gestión o actividad relacionada directa o indirectamente con el área de negocios desarrollada por <span t-esc="company.name"/>. En atención a lo que dispone el art. 160 N° 2 del Código del Trabajo, se prohíbe expresamente al Trabajador efectuar negociaciones particulares dentro del giro del negocio del Empleador.
     </span>
 
     <span style="display:block; margin-top:12px; text-align:justify;">
@@ -249,6 +248,7 @@ a la imponibilidad previsional y tributaria correspondiente.
         <strong>UNDECIMO:</strong>
         El Trabajador autoriza al Empleador a recolectar, procesar y transferir sus datos personales no sensibles, con el propósito de cumplir con sus obligaciones laborales, así como cualquier gestión interna de la empresa, como rendiciones de gastos, reserva de pasajes, entre otros.
     </span>
+
 
 
 <div style="page-break-inside: avoid !important;">
@@ -284,8 +284,8 @@ a la imponibilidad previsional y tributaria correspondiente.
 
         <div style="width:49%; display:inline-block; text-align:center; float:right;">
             ___________________________<br/>
-            Servicios Barca SPA.<br/>
-            R.U.T.: 76.766.106 – 1
+            <span t-esc="company.name"/><br/>
+            R.U.T.: <span t-esc="company.vat"/>
         </div>
     </div>
 </div>
@@ -297,3 +297,7 @@ a la imponibilidad previsional y tributaria correspondiente.
 </t>
     </template>
 </odoo>
+
+
+
+
