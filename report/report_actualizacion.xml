@@ -28,7 +28,7 @@
 
                         <p style="text-align:justify;">
                         En Cabrero, a
-                        <span t-esc="contract.format_today_es()"/>
+                        <span t-esc="contract.format_date_es(contract.date_start)"/>
                         entre <strong>Servicios Barca Spa,
                         R.U.T.: 76.766.106 - 1,</strong>
                         representada legalmente por <strong> don Claudio Barrales Espinoza, RUT 12.702.854-0</strong>
