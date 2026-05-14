@@ -12,3 +12,4 @@ from . import hr_lugares_trabajo
 from . import hr_tipo_obra
 from . import hr_assigned_resource
 from . import hr_job_family
+from . import hr_mail_distribution

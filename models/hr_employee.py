@@ -83,6 +83,24 @@ class HrEmployee(models.Model):
             },
         }
 
+
+    def _update_contracts_on_termination(self, termination_date):
+        today = fields.Date.context_today(self)
+        for employee in self:
+            if not termination_date:
+                continue
+            contracts = self.env['hr.contract'].search([
+                ('employee_id', '=', employee.id),
+                ('state', '=', 'open'),
+            ])
+            if not contracts:
+                continue
+
+            vals = {'date_end': termination_date}
+            if termination_date < today:
+                vals['state'] = 'cancel' if employee.departure_reason_id else 'close'
+            contracts.write(vals)
+
     # --- método correcto dentro de la clase ---
     def get_marital_label(self):
         self.ensure_one()

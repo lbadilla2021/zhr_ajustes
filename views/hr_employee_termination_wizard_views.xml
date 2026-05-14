@@ -8,6 +8,7 @@
                 <group>
                     <field name="employee_id" readonly="1"/>
                     <field name="departure_reason_id"/>
+                    <field name="date_end"/>
                 </group>
                 <footer>
                     <button string="Confirmar" type="object" name="action_confirm" class="btn-primary"/>
