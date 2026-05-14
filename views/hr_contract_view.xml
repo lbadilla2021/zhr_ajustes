@@ -50,6 +50,10 @@
                     help="Imprime actualización de contrato"/>
             </xpath>
 
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="employee_identification_id" readonly="1"/>
+            </xpath>
+
             <xpath expr="//field[@name='contract_type_id']" position="after">
                 <field name="is_por_obra" invisible="1"/>
                 <field name="tipo_obra_id" invisible="not is_por_obra" required="is_por_obra"/>
@@ -67,6 +71,18 @@
 
             <xpath expr="//div[@id='resource_calendar_warning']" position="after">
                     <field name="lugar_trabajo_id"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="hr_contract_view_tree_inherit_identification" model="ir.ui.view">
+        <field name="name">hr.contract.list.inherit.identification</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="employee_identification_id" optional="show"/>
             </xpath>
         </field>
     </record>

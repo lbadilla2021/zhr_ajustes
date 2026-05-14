@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="zhr_mail_distribution_list_view_list" model="ir.ui.view">
+        <field name="name">zhr.mail.distribution.list.list</field>
+        <field name="model">zhr.mail.distribution.list</field>
+        <field name="arch" type="xml">
+            <list string="Listas de Distribución">
+                <field name="name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="zhr_mail_distribution_list_view_form" model="ir.ui.view">
+        <field name="name">zhr.mail.distribution.list.form</field>
+        <field name="model">zhr.mail.distribution.list</field>
+        <field name="arch" type="xml">
+            <form string="Lista de Distribución">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                    <notebook>
+                        <page string="Correos" name="emails">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="email"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="zhr_mail_distribution_list_action" model="ir.actions.act_window">
+        <field name="name">Listas de Distribución</field>
+        <field name="res_model">zhr.mail.distribution.list</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="zhr_mail_distribution_list_menu"
+              name="Listas de Distribución"
+              parent="hr.menu_config_employee"
+              action="zhr_mail_distribution_list_action"
+              sequence="90"
+              groups="hr.group_hr_manager"/>
+</odoo>
