@@ -7,11 +7,21 @@ class HrEmployee(models.Model):
     apellido_materno = fields.Char(string='Apellido Materno')
     nombres = fields.Char(string='Nombres')
     nombre_preferido = fields.Char(string='Nombre Preferido')
+    driver_license_expiration_date = fields.Date(
+        string='Vencimiento licencia conducir',
+    )
     analytic_account_id = fields.Many2one(
         'account.analytic.account',
         string='Centro de Costo',
         domain="[('company_id', '=', company_id)]",
         help='Seleccione el centro de costo dentro del plan analítico de la empresa.',
+    )
+    job_family_id = fields.Many2one(
+        'hr.job.family',
+        string='Familia',
+        related='job_id.job_family_id',
+        store=True,
+        readonly=True,
     )
     afp_id = fields.Many2one('hr.afp', string='AFP')
     health_system_id = fields.Many2one('hr.health_system', string='Sistema de Salud')

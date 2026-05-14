@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_job_form_inherit_job_family" model="ir.ui.view">
+        <field name="name">hr.job.form.inherit.job.family</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <group name="job_family_details">
+                    <group>
+                        <field name="job_family_id" string="Familia"/>
+                        <field name="job_creation_date" string="Fecha"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_job_list_inherit_job_family" model="ir.ui.view">
+        <field name="name">hr.job.list.inherit.job.family</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="job_family_id" optional="show"/>
+                <field name="job_creation_date" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

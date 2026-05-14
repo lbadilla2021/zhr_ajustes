@@ -4,6 +4,41 @@ from babel.dates import format_date
 class HrContract(models.Model):
     _inherit = 'hr.contract'
 
+    state = fields.Selection([
+        ('draft', 'New'),
+        ('open', 'Vigente'),
+        ('close', 'Terminado'),
+        ('cancel', 'Terminado'),
+    ], string='Status', group_expand=True, copy=False,
+        tracking=True, help='Status of the contract', default='draft')
+
+    @api.model
+    def _update_contract_state_labels(self):
+        labels = {
+            'open': 'Vigente',
+            'close': 'Vencido',
+            'cancel': 'Terminado',
+        }
+        field = self.env['ir.model.fields'].sudo().search([
+            ('model', '=', 'hr.contract'),
+            ('name', '=', 'state'),
+        ], limit=1)
+        for value, label in labels.items():
+            self.env.cr.execute(
+                """
+                UPDATE ir_model_fields_selection
+                   SET name = jsonb_set(
+                       jsonb_set(COALESCE(name, '{}'::jsonb), '{es_CL}', to_jsonb(%s::text), true),
+                       '{es_419}', to_jsonb(%s::text), true
+                   )
+                 WHERE field_id = %s
+                   AND value = %s
+                """,
+                (label, label, field.id, value),
+            )
+        self.env['ir.model.fields.selection'].invalidate_model(['name'])
+        return True
+
     schedule_pay = fields.Selection(
         selection_add=[('daily', 'Diario')],
         ondelete={'daily': 'set default'},

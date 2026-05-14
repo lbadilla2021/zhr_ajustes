@@ -29,6 +29,7 @@
                 <field name="employee_type" optional="show"/>
                 <field name="gender" optional="show"/>
                 <field name="job_id" optional="show"/>
+                <field name="job_family_id" optional="show"/>
                 <field name="job_title" optional="show"/>
                 <field name="marital" optional="show"/>
                 <field name="resource_calendar_id" optional="hide"/>
