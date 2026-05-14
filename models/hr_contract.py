@@ -1,5 +1,8 @@
-from odoo import fields, models, api
 from babel.dates import format_date
+from markupsafe import Markup, escape
+
+from odoo import api, fields, models
+
 
 class HrContract(models.Model):
     _inherit = 'hr.contract'
@@ -7,10 +10,19 @@ class HrContract(models.Model):
     state = fields.Selection([
         ('draft', 'New'),
         ('open', 'Vigente'),
-        ('close', 'Terminado'),
+        ('close', 'Vencido'),
         ('cancel', 'Terminado'),
     ], string='Status', group_expand=True, copy=False,
         tracking=True, help='Status of the contract', default='draft')
+
+    employee_identification_id = fields.Char(
+        string='N° Identificación Empleado',
+        related='employee_id.identification_id',
+        store=True,
+        readonly=True,
+        index=True,
+        help='Número de identificación del empleado asociado al contrato.',
+    )
 
     @api.model
     def _update_contract_state_labels(self):
@@ -46,6 +58,95 @@ class HrContract(models.Model):
 
     wage_text = fields.Char(compute="_compute_wage_text")
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        contracts = super().create(vals_list)
+        contracts._send_contract_update_notification()
+        return contracts
+
+    def write(self, vals):
+        res = super().write(vals)
+        if {'employee_id', 'date_start', 'date_end', 'state'} & set(vals):
+            self._send_contract_update_notification()
+        return res
+
+    @api.model
+    def _cron_update_expired_contracts(self):
+        """Close or cancel open contracts whose end date is already expired."""
+        today = fields.Date.context_today(self)
+        expired_contracts = self.search([
+            ('state', '=', 'open'),
+            ('date_end', '!=', False),
+            ('date_end', '<', today),
+        ])
+        contracts_without_departure = expired_contracts.filtered(
+            lambda contract: not contract.employee_id.departure_reason_id
+        )
+        contracts_with_departure = expired_contracts - contracts_without_departure
+        if contracts_without_departure:
+            contracts_without_departure.write({'state': 'close'})
+        if contracts_with_departure:
+            contracts_with_departure.write({'state': 'cancel'})
+        return True
+
+    def _send_contract_update_notification(self):
+        distribution_list = self.env['zhr.mail.distribution.list'].sudo().search([
+            ('name', '=', 'Avisos Contratos'),
+            ('active', '=', True),
+        ], limit=1)
+        recipients = distribution_list._get_recipient_emails() if distribution_list else []
+        if not recipients:
+            return False
+
+        body = self._get_contract_update_email_body()
+        if not body:
+            return False
+
+        mail_values = {
+            'subject': 'Odoo Actualizaciones Contratos',
+            'email_to': ','.join(recipients),
+            'body_html': body,
+            'auto_delete': True,
+        }
+        self.env['mail.mail'].sudo().create(mail_values).send()
+        return True
+
+    def _get_contract_update_email_body(self):
+        if not self:
+            return False
+
+        rows = []
+        state_labels = dict(self.fields_get(['state'], ['selection'])['state']['selection'])
+        for contract in self:
+            rows.append(Markup(
+                '<tr>'
+                '<td>{employee}</td>'
+                '<td>{date_start}</td>'
+                '<td>{date_end}</td>'
+                '<td>{state}</td>'
+                '</tr>'
+            ).format(
+                employee=escape(contract.employee_id.name or ''),
+                date_start=escape(contract.date_start or ''),
+                date_end=escape(contract.date_end or ''),
+                state=escape(state_labels.get(contract.state, contract.state or '')),
+            ))
+
+        return Markup(
+            '<p>Se registraron actualizaciones en contratos de empleados:</p>'
+            '<table border="1" cellpadding="5" cellspacing="0">'
+            '<thead>'
+            '<tr>'
+            '<th>Nombre del empleado</th>'
+            '<th>Fecha de inicio</th>'
+            '<th>Fecha de término</th>'
+            '<th>Estado del contrato</th>'
+            '</tr>'
+            '</thead>'
+            '<tbody>{rows}</tbody>'
+            '</table>'
+        ).format(rows=Markup('').join(rows))
+
     @api.depends('schedule_pay')
     def _compute_schedule_pay_name(self):
         schedule_pay_labels = {
@@ -72,7 +173,7 @@ class HrContract(models.Model):
                 text = rec.company_id.currency_id.amount_to_text(rec.wage)
                 rec.wage_text = text.capitalize()
             else:
-                rec.wage_text = ""    
+                rec.wage_text = ""
 
     employee_payment_concept_ids = fields.One2many(
         'hr.employee.payment.concept',
@@ -88,7 +189,7 @@ class HrContract(models.Model):
     duracion_obra = fields.Char(
         string='Duración de obra',
     )
-    
+
     lugar_trabajo_id = fields.Many2one(
         'hr.lugar.trabajo',
         string='Lugar de trabajo',
@@ -134,15 +235,12 @@ class HrContract(models.Model):
     )
 
     def _compute_schedule_details(self):
-        
         for rec in self:
             if rec.resource_calendar_id and rec.resource_calendar_id.attendance_ids:
-                att = rec.resource_calendar_id.attendance_ids[0]
                 rec.schedule_details = rec.resource_calendar_id.system_schedule
             else:
                 rec.schedule_details = ""
-    
-    # ✅ NUEVO MÉTODO
+
     def action_print_anexo_planta(self):
         self.ensure_one()
 

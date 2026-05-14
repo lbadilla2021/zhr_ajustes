@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="zhr_mail_distribution_list_contract_notices" model="zhr.mail.distribution.list">
+        <field name="name">Avisos Contratos</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

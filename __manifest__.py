@@ -1,9 +1,11 @@
 {
     'name': 'Barca Ajustes Modulo HR',
     'version': '1.0',
-    'depends': ['hr', 'hr_contract', 'hr_skills', 'account'],
+    'depends': ['hr', 'hr_contract', 'hr_skills', 'account', 'mail'],
     'data': [
         'security/ir.model.access.csv',
+        'data/hr_mail_distribution_data.xml',
+        'data/hr_contract_cron.xml',
         'report/contract_report.xml',
         'report/paperformat.xml',
         'report/operador.xml',
@@ -15,6 +17,7 @@
         'views/hr_accreditation_views.xml',
         'views/hr_assigned_resource_views.xml',
         'views/hr_prevision_config_views.xml',
+        'views/hr_mail_distribution_views.xml',
         'views/hr_payment_concept_views.xml',
         'views/hr_contract_view.xml',
         'views/hr_tipo_obra_views.xml',
