@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_job_family_list_view" model="ir.ui.view">
+        <field name="name">hr.job.family.list</field>
+        <field name="model">hr.job.family</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="description"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_job_family_form_view" model="ir.ui.view">
+        <field name="name">hr.job.family.form</field>
+        <field name="model">hr.job.family</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="description"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_job_family_action" model="ir.actions.act_window">
+        <field name="name">Familias de Cargos</field>
+        <field name="res_model">hr.job.family</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hr_job_family"
+              name="Familias de Cargos"
+              parent="menu_hr_tables_root"
+              action="hr_job_family_action"
+              sequence="80"/>
+</odoo>

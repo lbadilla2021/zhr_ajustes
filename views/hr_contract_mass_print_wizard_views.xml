@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_contract_mass_print_wizard_view" model="ir.ui.view">
+        <field name="name">hr.contract.mass.print.wizard.form</field>
+        <field name="model">hr.contract.mass.print.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Impresion masiva de contratos">
+                <group>
+                    <field name="contract_ids" invisible="1"/>
+                    <field name="employee_ids" widget="many2many_tags" readonly="1"/>
+                    <field name="show_actualizacion_options" invisible="1"/>
+                </group>
+
+                <group string="Opciones para Actualizacion"
+                       invisible="not show_actualizacion_options">
+                    <field name="actualizacion_report_type" widget="radio"/>
+                    <field name="show_sueldo_base"
+                           invisible="actualizacion_report_type != 'actualizacion'"/>
+                    <field name="show_cargo_actual"
+                           invisible="actualizacion_report_type != 'actualizacion'"/>
+                    <field name="show_jornada_trabajo"
+                           invisible="actualizacion_report_type != 'actualizacion'"/>
+                </group>
+
+                <footer>
+                    <button string="Contrato"
+                            type="object"
+                            name="action_print_contract"
+                            icon="fa-print"
+                            class="btn-primary"/>
+                    <button string="Anexo Planta"
+                            type="object"
+                            name="action_print_anexo_planta"
+                            icon="fa-print"
+                            class="btn-secondary"/>
+                    <button string="Pacto HE"
+                            type="object"
+                            name="action_print_pacto_he"
+                            icon="fa-print"
+                            class="btn-secondary"/>
+                    <button string="Actualizacion"
+                            type="object"
+                            name="action_print_actualizacion"
+                            icon="fa-print"
+                            class="btn-secondary"
+                            invisible="show_actualizacion_options"/>
+                    <button string="Imprimir Actualizacion"
+                            type="object"
+                            name="action_confirm_actualizacion"
+                            icon="fa-print"
+                            class="btn-primary"
+                            invisible="not show_actualizacion_options"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_contract_mass_print_action_server" model="ir.actions.server">
+        <field name="name">Imprimir contratos</field>
+        <field name="model_id" ref="hr_contract.model_hr_contract"/>
+        <field name="binding_model_id" ref="hr_contract.model_hr_contract"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_open_mass_print_wizard()</field>
+    </record>
+</odoo>

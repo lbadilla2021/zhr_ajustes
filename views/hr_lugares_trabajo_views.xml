@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_hr_lugar_trabajo_tree" model="ir.ui.view">
+        <field name="name">hr.lugar.trabajo.tree</field>
+        <field name="model">hr.lugar.trabajo</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hr_lugar_trabajo_form" model="ir.ui.view">
+        <field name="name">hr.lugar.trabajo.form</field>
+        <field name="model">hr.lugar.trabajo</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_lugar_trabajo_action" model="ir.actions.act_window">
+        <field name="name">Lugares de Trabajo</field>
+        <field name="res_model">hr.lugar.trabajo</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hr_lugar_trabajo"
+              name="Lugares de Trabajo"
+              parent="menu_hr_tables_root"
+              action="hr_lugar_trabajo_action"
+              sequence="60"/>
+
+</odoo>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ========================= -->
+    <!-- AFP -->
+    <!-- ========================= -->
+    <record id="hr_afp_tree_view" model="ir.ui.view">
+        <field name="name">hr.afp.tree</field>
+        <field name="model">hr.afp</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_afp_form_view" model="ir.ui.view">
+        <field name="name">hr.afp.form</field>
+        <field name="model">hr.afp</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_afp_action" model="ir.actions.act_window">
+        <field name="name">AFP</field>
+        <field name="res_model">hr.afp</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========================= -->
+    <!-- SALUD -->
+    <!-- ========================= -->
+    <record id="hr_health_system_tree_view" model="ir.ui.view">
+        <field name="name">hr.health.system.tree</field>
+        <field name="model">hr.health_system</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="type"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_health_system_form_view" model="ir.ui.view">
+        <field name="name">hr.health.system.form</field>
+        <field name="model">hr.health_system</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="type"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_health_system_action" model="ir.actions.act_window">
+        <field name="name">Salud</field>
+        <field name="res_model">hr.health_system</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <menuitem id="menu_hr_afp"
+              name="AFP"
+              parent="menu_hr_tables_root"
+              action="hr_afp_action"
+              sequence="10"/>
+
+    <menuitem id="menu_hr_health_system"
+              name="Salud"
+              parent="menu_hr_tables_root"
+              action="hr_health_system_action"
+              sequence="20"/>
+
+</odoo>

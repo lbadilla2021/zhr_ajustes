@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="hr_assigned_resource_tree_view" model="ir.ui.view">
+        <field name="name">hr.assigned.resource.tree</field>
+        <field name="model">hr.assigned.resource</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_assigned_resource_form_view" model="ir.ui.view">
+        <field name="name">hr.assigned.resource.form</field>
+        <field name="model">hr.assigned.resource</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_assigned_resource_action" model="ir.actions.act_window">
+        <field name="name">Recursos Asignados</field>
+        <field name="res_model">hr.assigned.resource</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hr_assigned_resource"
+              name="Recursos Asignados"
+              parent="menu_hr_tables_root"
+              action="hr_assigned_resource_action"
+              sequence="50"/>
+
+</odoo>

@@ -1,0 +1,175 @@
+<odoo>
+
+    <record id="action_report_renovacion" model="ir.actions.report">
+        <field name="name">Anexo Renovacion de Contrato</field>
+        <field name="model">hr.contract.actualizacion.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zhr_ajustes.report_renovacion</field>
+        <field name="report_file">zhr_ajustes.report_renovacion</field>
+        <field name="print_report_name">'Renovacion Contrato - %s' % (object.contract_id.employee_id.name)</field>
+    </record>
+
+    <record id="action_report_actualizacion" model="ir.actions.report">
+        <field name="name">Actualizacion de Contrato</field>
+        <field name="model">hr.contract.actualizacion.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zhr_ajustes.report_actualizacion</field>
+        <field name="report_file">zhr_ajustes.report_actualizacion</field>
+        <field name="print_report_name">'Actualizacion Contrato - %s' % (object.contract_id.employee_id.name)</field>
+    </record>
+
+    <template id="report_renovacion">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="wizard">
+                <t t-set="contract" t-value="wizard.contract_id"/>
+                <t t-call="web.basic_layout">
+                    <div class="page">
+                        <p style="text-align:center;">ANEXO DE CONTRATO DE TRABAJO</p>
+
+                        <p style="text-align:justify;">
+                        En Cabrero, a
+                        <span t-esc="contract.format_date_es(contract.date_start)"/>
+                        entre <strong>Servicios Barca Spa,
+                        R.U.T.: 76.766.106 - 1,</strong>
+                        representada legalmente por <strong> don Claudio Barrales Espinoza, RUT 12.702.854-0</strong>
+                        con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
+                        y don <strong><span t-esc="contract.employee_id.name"/>,
+                        R.U.T.: <span t-esc="contract.employee_id.identification_id"/>,</strong>
+                        de nacionalidad chilena, fecha nacimiento
+                        <span t-esc="contract.format_date_es(contract.employee_id.birthday)"/>
+                        domiciliado en
+                        <span t-esc="contract.employee_id.private_street"/>,
+                        de estado civil <span t-esc="contract.employee_id.get_marital_label()"/>,
+                        en adelante el trabajador, todos ya individualizados en contrato de origen,
+                        acuerdan modificar el citado instrumento, en los siguientes terminos:
+                        </p>
+
+                        <p style="margin:0;text-align:justify;">
+                            <strong>PRIMERO: </strong>
+                            A Contar de esta fecha, el contrato de trabajo suscrito con fecha
+                            <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>
+                            entre el empleador y el trabajador, se extiende
+
+                            <t t-if="contract.contract_type_id.name == 'Indefinido' or not contract.date_end">
+                                por tiempo indefinido.
+                            </t>
+                            <t t-else="">
+                                hasta <span t-esc="contract.format_date_es(contract.date_end)"/>.
+                            </t>
+                        </p>
+                        <br/>
+
+                        <p style="margin:0; text-align:justify;"><strong>SEGUNDO: </strong>
+                        Las condiciones que forman parte del contrato original o anexos posteriores se mantienen inalteradas.
+                        </p>
+                        <br/>
+
+                        <p style="margin:0; text-align:justify;"><strong>TERCERO: </strong>
+                        El presente Anexo de Contrato de trabajo se firma en dos ejemplares, quedando uno en poder del trabajador, y otro para el empleador,
+                        dejandose expresa constancia que el trabajador ha recibido uno de ellos al firmar este documento. Se deja constancia que el trabajador
+                        ingreso al servicio el <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>.
+                        </p>
+
+                        <br/><br/><br/>
+
+                        <div style="width:100%; margin-top:50px;">
+                            <div style="width:49%; display:inline-block; text-align:center;">
+                                ___________________________<br/>
+                                <span t-esc="contract.employee_id.name"/><br/>
+                                R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+                            </div>
+
+                            <div style="width:49%; display:inline-block; text-align:center; float:right;">
+                                ___________________________<br/>
+                                Servicios Barca SPA.<br/>
+                                R.U.T.: 76.766.106 - 1
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_actualizacion">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="wizard">
+                <t t-set="contract" t-value="wizard.contract_id"/>
+                <t t-call="web.basic_layout">
+                    <div class="page">
+                        <p style="text-align:center;">ANEXO ACTUALIZACIóN AL CONTRATO DE TRABAJO</p>
+
+                        <p style="text-align:justify;">
+                        En Cabrero, a
+                        <span t-esc="contract.format_date_es(contract.date_start)"/>
+                        entre <strong>Servicios Barca Spa,
+                        R.U.T.: 76.766.106 - 1,</strong>
+                        representada legalmente por <strong> don Claudio Barrales Espinoza, RUT 12.702.854-0</strong>
+                        con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
+                        y don <strong><span t-esc="contract.employee_id.name"/>,
+                        R.U.T.: <span t-esc="contract.employee_id.identification_id"/>,</strong>
+                        de nacionalidad chilena, fecha nacimiento
+                        <span t-esc="contract.format_date_es(contract.employee_id.birthday)"/>
+                        domiciliado en
+                        <span t-esc="contract.employee_id.private_street"/>,
+                        de estado civil <span t-esc="contract.employee_id.get_marital_label()"/>,
+                        en adelante el trabajador, todos ya individualizados en contrato de origen,
+                        acuerdan modificar el citado instrumento, en los siguientes terminos:
+                        </p>
+
+                        <p style="margin:0; text-align:justify;"><strong>PRIMERO: </strong>
+                        Se deja constancia que las condiciones contractuales vigentes son las siguientes:
+                        <t t-if="wizard.show_sueldo_base">
+                        <li><strong>Sueldo base: </strong>El sueldo base vigente
+                        <strong><span t-esc="(dict(contract._fields['schedule_pay']._description_selection(contract.env)).get(contract.schedule_pay, contract.schedule_pay or '') or '').lower()"/> 
+                        es                      
+                        $<span t-esc="'{:,}'.format(int(contract.wage)).replace(',', '.')"/>.-
+                        <span>
+                        (<span t-esc="contract.wage_text"/>s)
+                        </span></strong>.
+                        </li>
+                        </t>
+                        <t t-if="wizard.show_cargo_actual">
+                        <li><strong>Su cargo actual es de:<span t-esc="contract.job_id.name"/></strong>.
+                        </li>
+                        </t>
+                        <t t-if="wizard.show_jornada_trabajo">
+                        <li><strong><span t-esc="contract.schedule_details.replace('será', 'es')"/></strong>
+                        </li>
+                        </t>
+                        </p>
+                        <br/>
+
+                        <p style="margin:0; text-align:justify;"><strong>SEGUNDO: </strong>
+                        Se deja constancia que todas las otras obligaciones del cargo, asi como los beneficios, bonos y clausulas derivadas del contrato original,
+                        salvo los indicados en este anexo, suscrito el <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>, se
+                        mantienen vigentes Se deja constancia que la fecha de ingreso del trabajador es <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>.
+                        </p>
+                        <br/>
+
+                        <p style="margin:0; text-align:justify;"><strong>TERCERO: </strong>
+                        El presente anexo de contrato se firma en dos ejemplares quedando uno en poder de cada parte.
+                        </p>
+
+                        <br/><br/><br/>
+
+                        <div style="width:100%; margin-top:50px;">
+                            <div style="width:49%; display:inline-block; text-align:center;">
+                                ___________________________<br/>
+                                <span t-esc="contract.employee_id.name"/><br/>
+                                R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+                            </div>
+
+                            <div style="width:49%; display:inline-block; text-align:center; float:right;">
+                                ___________________________<br/>
+                                Servicios Barca SPA.<br/>
+                                R.U.T.: 76.766.106 - 1
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

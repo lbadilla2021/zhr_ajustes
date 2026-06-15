@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="action_report_contract_employee_ejecutivo" model="ir.actions.report">
+        <field name="name">Contrato Empleado Ejecutivo</field>
+        <field name="model">hr.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="paperformat_id" ref="zhr_ajustes.paperformat_contrato"/>
+        <field name="report_name">zhr_ajustes.contract_employee_template_ejecutivo</field>
+        <field name="report_file">zhr_ajustes.contract_employee_template_ejecutivo</field>
+        <field name="print_report_name">'Contrato Ejecutivo - %s' % (object.employee_id.name)</field>
+    </record>
+
+
+<template id="contract_employee_template_ejecutivo">
+
+    <t t-call="web.html_container">
+    <t t-foreach="docs" t-as="contract">
+    <t t-set="company" t-value="contract.company_id"/>
+    <t t-set="fecha_pago_config" t-value="env['zhr.fecha.pago'].search([], limit=1)"/>
+    <t t-call="web.basic_layout">
+
+    <div class="page">
+
+    <p style="text-align:center;">CONTRATO DE TRABAJO</p>
+
+        <p style="text-align:justify;">
+        En Cabrero, a 
+        <span t-esc="contract.format_date_es(contract.date_start)"/>
+        entre <strong><span t-esc="company.name"/>,
+        R.U.T.: <span t-esc="company.vat"/>,</strong>,
+        representada legalmente por <strong> don Claudio Barrales Espinoza , RUT 12.702.854-0</strong>
+        con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
+        y don <strong><span t-esc="contract.employee_id.name"/>,
+        R.U.T.: <span t-esc="contract.employee_id.identification_id"/>,</strong>
+        de nacionalidad chilena, fecha nacimiento 
+        <span t-esc="contract.format_date_es(contract.employee_id.birthday)"/>
+        domiciliado en 
+        <span t-esc="contract.employee_id.private_street"/>,
+        de estado civil <span t-esc="contract.employee_id.get_marital_label()"/>,
+        AFP: <span t-esc="contract.employee_id.afp_id.name"/>, 
+        Salud: <span t-esc="contract.employee_id.health_system_id.name"/>,
+        se ha convenido el siguiente Contrato de trabajo, para cuyos efectos las partes convienen en 
+        denominarse, respectivamente,<strong> Empleador y Trabajador.</strong>
+        </p>
+
+
+    <p style="margin:0;"><strong>PRIMERO: Cargo del Trabajador</strong></p>
+    <t t-if="contract.lugar_trabajo_id and contract.lugar_trabajo_id.description">
+        <p style="text-align:justify;">
+                El Trabajador se compromete a ejecutar la labor de <strong><span t-esc="contract.job_id.name"/></strong>,
+                o labores similares,
+            <span t-esc="contract.lugar_trabajo_id.description"/>
+        </p>
+    </t>
+    <t t-else="">
+
+    <p style="text-align:justify;">
+    El Trabajador se compromete a ejecutar la labor de <strong><span t-esc="contract.job_id.name"/></strong>,
+    o labores similares, en instalaciones de <span t-esc="company.name"/>, ubicado en Lote 4 Sector la Quinta, Cabrero pudiendo 
+    ser trasladado a otro domicilio por el ejercicio de sus funciones, dentro de la RegiÃ³n, por causa justificada, 
+    sin que ello importe menoscabo para el trabajador.
+    </p>
+    </t>
+
+
+    <p style="margin:0;"><strong>SEGUNDO: Jornada de Trabajo</strong></p>
+
+    <p style="text-align:justify;">
+    <span t-esc="contract.schedule_details"/>
+    </p>
+
+
+    <p style="margin:0;"><strong>TERCERO: Sueldo Base y Asignaciones</strong></p>
+
+    <p>El Empleador se compromete a remunerar al Trabajador con los siguientes conceptos:</p>
+
+    <ul>
+            <li style="text-align:justify;">
+            <strong>Sueldo Base:</strong>
+            Valor fijo <span t-esc="(dict(contract._fields['schedule_pay']._description_selection(contract.env)).get(contract.schedule_pay, contract.schedule_pay or '') or '').lower()"/> por la cantidad de
+            <strong>
+            $<span t-esc="'{:,}'.format(int(contract.wage)).replace(',', '.')"/>.-</strong>
+            <span>
+            (<span t-esc="contract.wage_text"/>s)
+            </span>
+            </li>
+            <li style="text-align:justify;">
+            <strong>Gratificación:</strong>
+            El<b> Empleador</b> pagará al<b> Trabajador</b> por concepto de<b> Gratificación</b> el monto establecido en el artículo 50 
+            del Código del Trabajo, esto es, el 25% (veinticinco por ciento) de lo devengado en el respectivo ejercicio 
+            comercial por concepto de remuneraciones mensuales, entendiéndose con ello que para todos los efectos legales 
+            queda eximido de la obligación establecida en el artículo 47 del Código del Trabajo, sea cual fuere la utilidad líquida que obtuviere. 
+            El monto a pagar por este concepto no excederá en total de 4,75 Ingresos Mínimos Mensuales.
+            </li>
+
+        <!-- CONCEPTOS DINAMICOS -->
+
+            <t t-foreach="contract.employee_payment_concept_ids" t-as="line">
+
+            <!-- SI ES BONO LOCALIDAD -->
+            <t t-if="line.payment_concept_id.name == 'Bonos Localidad'">
+
+                <li style="text-align:justify;"><strong>Bono Localidad:</strong>
+                Valor bruto diario por realizar labores en las siguientes localidades:
+                </li>
+
+                <table style="width:100%; border:1px solid black; border-collapse:collapse;">
+
+                    <tr style="border:1px solid black;">
+                        <th style="border:1px solid black; padding:5px;">Localidad</th>
+                        <th style="border:1px solid black; padding:5px;">Valor Bruto Diario</th>
+                    </tr>
+
+                    <tr>
+                        <td style="border:1px solid black; padding:5px;">
+                        Oficinas Centrales Cabrero / Planta Placas Masonite, Cabrero
+                        </td>
+                        <td style="border:1px solid black; padding:5px;">$0</td>
+                    </tr>
+
+                    <tr>
+                        <td style="border:1px solid black; padding:5px;">
+                        Celulosa CMPC Santa FÃ© Nacimiento / Celulosa Arauco Nueva Aldea
+                        </td>
+                        <td style="border:1px solid black; padding:5px;">$2.040</td>
+                    </tr>
+
+                    <tr>
+                        <td style="border:1px solid black; padding:5px;">
+                        Celulosa Horcones Arauco / Colbun Coronel / Planta Paneles Masisa Coronel
+                        </td>
+                        <td style="border:1px solid black; padding:5px;">$3.570</td>
+                    </tr>
+
+                    <tr>
+                        <td style="border:1px solid black; padding:5px;">
+                        Celulosa Arauco Licancel, ConstituciÃ³n, Teno
+                        </td>
+                        <td style="border:1px solid black; padding:5px;">$10.400</td>
+                    </tr>
+
+                    <tr>
+                        <td style="border:1px solid black; padding:5px;">
+                        Planta Valdivia
+                        </td>
+                        <td style="border:1px solid black; padding:5px;">$14.000</td>
+                    </tr>
+                    
+                </table>
+            </t>
+
+            <!-- OTROS CONCEPTOS -->
+            <t t-if="line.payment_concept_id.name != 'Bonos Localidad'">
+
+                <li style="text-align:justify;">
+                <strong>
+                <span t-esc="line.payment_concept_id.name"/>:
+                </strong>
+
+                <t t-if="line.amount &gt; 0">
+                    <span t-esc="line.payment_concept_id.description"/> 
+                    <span t-esc="' ${:,.0f}'.format(line.amount).replace(',', '.')"/>
+                    .-
+                </t>
+                <t t-else="">
+                    <span t-esc="line.payment_concept_id.description"/>
+                </t>
+                </li>
+            </t>
+
+        </t>
+    </ul>
+
+    <p style="margin:0;text-align:justify;"><strong>CUARTO: Fecha de pago de las Remuneraciones</strong></p>
+
+    <p>
+    Las remuneraciones se pagarán el dia <t t-esc="'%02d' % fecha_pago_config.dia_pago if fecha_pago_config else '10'"/> del mes siguiente por iguales peri­odos vencidos, por medio de transferencia electrónica
+    en moneda nacional y del monto de ellas el Empleador hará las deducciones que establecen las leyes vigentes.
+    </p>
+
+
+    <p style="margin:0;"><strong>QUINTO: Descuentos Legales</strong></p>
+    <p>
+    Todos los pagos y beneficios en dinero se expresan en valores brutos y están afectos
+    a la imponibilidad previsional y tributaria correspondiente.
+    </p>
+
+    <p style="margin:0;"><strong>SEXTO: Obligaciones y/o Prohibiciones</strong></p>
+    <p>Las siguientes son obligaciones y/o prohibiciones esenciales del presente Contrato, sin perjuicio de las que emanen de su propia naturaleza:</p>
+
+
+    <ol style="list-style-type: lower-alpha;">
+
+        <li>La dedicación exclusiva y diligente a las funciones del cargo en un nivel de eficiencia compatible con las exigencias de la organización y conforme a las políticas y metas de la Empresa y normas recibidas.</li>
+
+        <li>El respeto irrestricto a las normas directivas de general aplicación en la Empresa, tales como Reglamento Interno o de Seguridad o Manuales de Procedimientos.</li>
+
+        <li>Dar aviso inmediatamente a su jefe directo o a quien corresponda como superior jerárquico, de cualquier irregularidad en el manejo de los negocios, en la prestación de los servicios y en general en el cumplimiento de las obligaciones por parte de los trabajadores del Empleador, y de cualquier observación o reclamo que realicen los clientes de la Empresa en relación a los servicios que ésta presta.</li>
+
+        <li>La obligación de mantener reserva respecto de antecedentes e informaciones que la Empresa considere de carácter confidencial, o que por su naturaleza revistan este carácter.</li>
+        
+        <li>La prohibición al trabajador de realizar negociaciones dentro del giro del negocio, tales como desarrollar actividades relacionadas con su trabajo para la competencia o en actividades profesionales externas remuneradas similares a la del Empleador y que pusiesen en peligro la exclusividad de la información que reciba en el ejercicio de su cargo.</li> 
+
+        <li>Utilizar en el cumplimiento de sus funciones, única y exclusivamente, los software y hardware que el Empleador utiliza y que pone a disposición de sus trabajadores para el cumplimiento de sus funciones. Queda expresamente prohibido al trabajador copiar, reproducir o alterar los referidos softwares de la empresa.</li> 
+
+        <li>No revelar a ninguna persona, aunque sea trabajador de la Empresa, las passwords o claves que utilice para ingresar a los sistemas computacionales, correo electrónico, documentos, accesos, etc. de la Empresa.</li> 
+
+        <li>Utilizar el servicio de correo electrónico provisto por la Empresa exclusivamente para fines laborales. Por lo tanto, ningún correo electrónico enviado por el trabajador desde la cuenta proporcionada por la Empresa tiene carácter de comunicación privada, sino que constituye un registro de la Empresa, la que se encuentra plenamente facultada para monitorear y conocer dichos correos electrónicos, aun después de terminada la relación laboral.</li> 
+
+        <li>Comunicar a la Empresa cualquier cambio de domicilio dentro de las 48 horas siguientes a que se produzca.</li>
+
+    </ol>
+
+    <div style="text-align:justify;">
+        <strong>SEPTIMO:</strong>
+        En atención a su cargo y funciones, el Trabajador declara comprender que tendrá acceso y manejo de información y antecedentes estratégicos de propiedad del Empleador, teniendo éstos la calidad de confidenciales respecto a su utilización.
+    </div>
+
+    <div style="text-align:justify;">
+        Por lo expuesto, el Trabajador se obliga expresamente por este acto, durante la vigencia de este Contrato y aun habiéndose terminado el mismo, a abstenerse absolutamente de hacer uso de la información y antecedentes estratégicos aludidos, en otras finalidades que no sean aquellas propias de sus labores en la Empresa. Se compromete por lo tanto, a no revelar, informar o divulgar a terceros, sean estos personas naturales o jurídicas, directa o indirectamente, durante la duración del Contrato de Trabajo y aun habiéndose extinguido éste —de lo cual se dejará constancia en el finiquito respectivo— información confidencial y/o secreta del Empleador y/o cualquier otro antecedente referido a los productos, negocios, métodos o sistemas de servicio y trabajo del giro propio de la Empresa. Esta obligación se extiende también a la información secreta y privativa de los clientes y proveedores del Empleador.
+    </div>
+
+    <div style="text-align:justify;">
+        Al terminar el presente Contrato, el Trabajador deberá devolver al Empleador toda información escrita en relación con el negocio, y no retendrá consigo ninguna copia, extracto, resumen u otro registro incluyendo toda forma de registro de información, incluida información digital.
+    </div>
+
+    <span style="display:block; margin-top:12px; text-align:justify;">
+        <strong>OCTAVO:</strong>
+        El Trabajador se compromete a no realizar por cuenta propia o de terceros ninguna gestión o actividad relacionada directa o indirectamente con el área de negocios desarrollada por <span t-esc="company.name"/>. En atención a lo que dispone el art. 160 N° 2 del Código del Trabajo, se prohíbe expresamente al Trabajador efectuar negociaciones particulares dentro del giro del negocio del Empleador.
+    </span>
+
+    <span style="display:block; margin-top:12px; text-align:justify;">
+        <strong>NOVENO:</strong>
+        El Trabajador cumplirá fiel, íntegra, cabal y oportunamente todas las leyes, normas, disposiciones, regulaciones, resoluciones y ordenanzas legales, administrativas, judiciales y/o de otro tipo, de aplicación general o especial. En caso de que el Trabajador incumpla cualquier tipo de disposiciones y principios legales, podrá ser sancionado por el Empleador, sin perjuicio de la eventual denuncia de los hechos a las autoridades respectivas según la naturaleza y gravedad de éstos.
+    </span>
+
+    <span style="display:block; margin-top:12px; text-align:justify;">
+        <strong>DECIMO:</strong>
+        El Trabajador se compromete a cumplir las obligaciones establecidas en el presente Contrato de Trabajo, así como todas aquellas que emanen de la naturaleza de dicho Contrato, en relación con el contenido ético-jurídico del mismo y con el principio de buena fe contractual que establece el art. 1546 del Código Civil.
+    </span>
+
+    <div style="text-align:justify;">
+        El incumplimiento por parte del Trabajador de cualquiera de las obligaciones establecidas en el Contrato de Trabajo, podrá ser considerado un incumplimiento grave de las obligaciones del Contrato de Trabajo, de conformidad con lo que dispone el art. 160 N° 7 del Código del Trabajo.
+    </div>
+
+    <div style="text-align:justify;">
+        Lo estipulado en esta cláusula es sin perjuicio de la responsabilidad civil y/o penal que pudiera hacerse efectiva en contra del Ejecutivo y de las indemnizaciones a que pudiere quedar obligado por los daños que su actividad ocasione a la Empresa.
+    </div>
+
+    <span style="display:block; margin-top:12px; text-align:justify;">
+        <strong>UNDECIMO:</strong>
+        El Trabajador autoriza al Empleador a recolectar, procesar y transferir sus datos personales no sensibles, con el propósito de cumplir con sus obligaciones laborales, así como cualquier gestión interna de la empresa, como rendiciones de gastos, reserva de pasajes, entre otros.
+    </span>
+
+
+<div style="page-break-inside: avoid !important;">
+    <span style="display:block; margin-top:12px; text-align:justify;">
+        <strong>DUODECIMO:</strong>
+        El presente contrato tendrá duración 
+
+        <t t-if="contract.contract_type_id.name == 'Indefinido' or not contract.date_end">
+            por tiempo indefinido.
+        </t>
+        <t t-else="">
+            hasta el <strong>
+                <span t-esc="contract.format_date_es(contract.date_end)"/>.
+            </strong>
+        </t>
+
+        Se deja constancia que la fecha de ingreso del trabajador es<strong>
+            <span t-esc="contract.format_date_es(contract.date_start)"/>.
+        </strong>
+    </span>
+
+
+
+    <br/><br/><br/>
+    
+    <div style="width:100%; margin-top:50px;">
+        <div style="width:49%; display:inline-block; text-align:center;">
+            ___________________________<br/>
+            <span t-esc="contract.employee_id.name"/><br/>
+            R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+        </div>
+
+        <div style="width:49%; display:inline-block; text-align:center; float:right;">
+            ___________________________<br/>
+            <span t-esc="company.name"/><br/>
+            R.U.T.: <span t-esc="company.vat"/>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    </t>
+    </t>
+    </t>
+
+</template>
+
+</odoo>
+
+
+
+

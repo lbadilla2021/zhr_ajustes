@@ -1,0 +1,200 @@
+from odoo import fields, models, api
+from babel.dates import format_date
+
+class HrContract(models.Model):
+    _inherit = 'hr.contract'
+
+    identification_id = fields.Char(
+        string='Numero de Identificacion',
+        related='employee_id.identification_id',
+        store=True,
+        readonly=True,
+    )
+
+    state = fields.Selection([
+        ('draft', 'New'),
+        ('open', 'Vigente'),
+        ('close', 'Terminado'),
+        ('cancel', 'Terminado'),
+    ], string='Status', group_expand=True, copy=False,
+        tracking=True, help='Status of the contract', default='draft')
+
+    @api.model
+    def _update_contract_state_labels(self):
+        labels = {
+            'open': 'Vigente',
+            'close': 'Vencido',
+            'cancel': 'Terminado',
+        }
+        field = self.env['ir.model.fields'].sudo().search([
+            ('model', '=', 'hr.contract'),
+            ('name', '=', 'state'),
+        ], limit=1)
+        for value, label in labels.items():
+            self.env.cr.execute(
+                """
+                UPDATE ir_model_fields_selection
+                   SET name = jsonb_set(
+                       jsonb_set(COALESCE(name, '{}'::jsonb), '{es_CL}', to_jsonb(%s::text), true),
+                       '{es_419}', to_jsonb(%s::text), true
+                   )
+                 WHERE field_id = %s
+                   AND value = %s
+                """,
+                (label, label, field.id, value),
+            )
+        self.env['ir.model.fields.selection'].invalidate_model(['name'])
+        return True
+
+    schedule_pay = fields.Selection(
+        selection_add=[('daily', 'Diario')],
+        ondelete={'daily': 'set default'},
+    )
+
+    wage_text = fields.Char(compute="_compute_wage_text")
+
+    @api.depends('schedule_pay')
+    def _compute_schedule_pay_name(self):
+        schedule_pay_labels = {
+            'daily': 'diario',
+            'weekly': 'semanal',
+            'bi-weekly': 'quincenal',
+            'bi-monthly': 'bimensual',
+            'monthly': 'mensual',
+            'quarterly': 'trimestral',
+            'semi-annually': 'semestral',
+            'annually': 'anual',
+        }
+
+        for rec in self:
+            rec.schedule_pay_name = schedule_pay_labels.get(
+                rec.schedule_pay,
+                rec.schedule_pay or '',
+            )
+
+    @api.depends('wage')
+    def _compute_wage_text(self):
+        for rec in self:
+            if rec.wage:
+                text = rec.company_id.currency_id.amount_to_text(rec.wage)
+                rec.wage_text = text.capitalize()
+            else:
+                rec.wage_text = ""    
+
+    employee_payment_concept_ids = fields.One2many(
+        'hr.employee.payment.concept',
+        'contract_id',
+        string='Conceptos de Pago',
+    )
+
+    tipo_obra_id = fields.Many2one(
+        'hr.tipo.obra',
+        string='Tipo de obra',
+    )
+
+    duracion_obra = fields.Char(
+        string='Duración de obra',
+    )
+    
+    lugar_trabajo_id = fields.Many2one(
+        'hr.lugar.trabajo',
+        string='Lugar de trabajo',
+    )
+    is_por_obra = fields.Boolean(
+        compute='_compute_is_por_obra',
+    )
+
+    lugar_trabajo_line_ids = fields.One2many(
+        'hr.employee.lugar.trabajo',
+        'contract_id',
+        string='Lugares de trabajo',
+    )
+
+    @api.depends('contract_type_id')
+    def _compute_is_por_obra(self):
+        for rec in self:
+            contract_type_name = (rec.contract_type_id.name or '').strip().lower()
+            rec.is_por_obra = 'obra' in contract_type_name
+
+    def action_print_contract(self):
+        self.ensure_one()
+
+        # Obtener nombre de la estructura salarial
+        structure_name = ''
+        if self.struct_id:
+            structure_name = (self.struct_id.name or '').strip().lower()
+
+        # Selección del reporte según estructura
+        if 'ejecutivo' in structure_name:
+            report_xml_id = 'zhr_ajustes.action_report_contract_employee_ejecutivo'
+        elif 'profesional' in structure_name:
+            report_xml_id = 'zhr_ajustes.action_report_contract_employee_profesional'
+        elif 'operativo' in structure_name:
+            report_xml_id = 'zhr_ajustes.action_report_contract_employee_operador'
+        else:
+            report_xml_id = 'zhr_ajustes.action_report_contract_employee_operador'
+
+        return self.env.ref(report_xml_id).report_action(self)
+
+    def action_open_mass_print_wizard(self):
+        contracts = self or self.browse(self.env.context.get('active_ids', []))
+        wizard = self.env['hr.contract.mass.print.wizard'].create({
+            'contract_ids': [(6, 0, contracts.ids)],
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Impresion masiva de contratos',
+            'res_model': 'hr.contract.mass.print.wizard',
+            'view_mode': 'form',
+            'res_id': wizard.id,
+            'target': 'new',
+        }
+
+    schedule_details = fields.Char(
+        compute="_compute_schedule_details"
+    )
+
+    def _compute_schedule_details(self):
+        
+        for rec in self:
+            if rec.resource_calendar_id and rec.resource_calendar_id.attendance_ids:
+                att = rec.resource_calendar_id.attendance_ids[0]
+                rec.schedule_details = rec.resource_calendar_id.system_schedule
+            else:
+                rec.schedule_details = ""
+    
+    # ✅ NUEVO MÉTODO
+    def action_print_anexo_planta(self):
+        self.ensure_one()
+
+        return self.env.ref(
+            'zhr_ajustes.action_report_anexo_planta'
+        ).report_action(self)
+
+    def action_print_pacto_he(self):
+        self.ensure_one()
+        return self.env.ref(
+            'zhr_ajustes.action_report_pacto_he'
+        ).report_action(self)
+
+    def action_print_actualizacion(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Seleccionar anexo',
+            'res_model': 'hr.contract.actualizacion.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_contract_id': self.id,
+            },
+        }
+
+    def format_date_es(self, fecha):
+        if fecha:
+            return format_date(fecha, format="d 'de' MMMM 'de' yyyy", locale='es')
+        return ''
+
+    def format_today_es(self):
+        self.ensure_one()
+        return self.format_date_es(fields.Date.context_today(self))

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="hr_fecha_pago_list_view" model="ir.ui.view">
+        <field name="name">zhr.fecha.pago.list</field>
+        <field name="model">zhr.fecha.pago</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="dia_pago" string="Día de Pago"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_fecha_pago_form_view" model="ir.ui.view">
+        <field name="name">zhr.fecha.pago.form</field>
+        <field name="model">zhr.fecha.pago</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="dia_pago" string="Día de Pago"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_fecha_pago_action" model="ir.actions.act_window">
+        <field name="name">Fecha de Pago</field>
+        <field name="res_model">zhr.fecha.pago</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hr_fecha_pago"
+              name="Fecha de Pago"
+              parent="menu_hr_tables_root"
+              action="hr_fecha_pago_action"
+              sequence="50"/>
+
+</odoo>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <delete model="ir.ui.view"
+            search="[('name', '=', 'employee.address.fields'), ('model', '=', 'hr.employee')]"/>
+    <delete model="ir.ui.view"
+            search="[('name', '=', 'employee.add.rut.dv'), ('model', '=', 'hr.employee')]"/>
+</odoo>

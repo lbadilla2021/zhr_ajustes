@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <function model="hr.contract" name="_update_contract_state_labels"/>
+</odoo>

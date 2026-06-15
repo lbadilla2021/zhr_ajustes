@@ -34,4 +34,56 @@
 
         </field>
     </record>
+
+    <record id="employee_address_city_fields" model="ir.ui.view">
+        <field name="name">employee.address.city.fields</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='private_street2']" position="attributes">
+                <attribute name="string">Numeración dirección</attribute>
+            </xpath>
+            <xpath expr="//field[@name='private_city']" position="replace">
+                <field name="city_id" string="Ciudad"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="employee_add_cost_center" model="ir.ui.view">
+        <field name="name">employee.add.cost.center</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='job_id']" position="after">
+                <field name="job_family_id"/>
+                <field name="analytic_account_id"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="employee_add_rut_dv" model="ir.ui.view">
+        <field name="name">employee.add.rut.dv</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='identification_id']" position="after">
+                <field name="rut_dv" string="Digito Verificador"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="employee_add_driver_license_expiration" model="ir.ui.view">
+        <field name="name">employee.add.driver.license.expiration</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+        <xpath expr="//field[@name='company_id']/ancestor::group[1]" position="inside">
+            <field name="driver_license_expiration_date"/>
+        </xpath>
+
+        </field>
+    </record>
 </odoo>

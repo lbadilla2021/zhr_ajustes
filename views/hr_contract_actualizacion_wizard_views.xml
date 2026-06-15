@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_contract_actualizacion_wizard_view" model="ir.ui.view">
+        <field name="name">hr.contract.actualizacion.wizard.form</field>
+        <field name="model">hr.contract.actualizacion.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Seleccionar anexo">
+                <group>
+                    <field name="contract_id" readonly="1"/>
+                    <field name="report_type" widget="radio"/>
+                </group>
+                <group string="Contenido de actualizacion" invisible="report_type != 'actualizacion'">
+                    <field name="show_sueldo_base"/>
+                    <field name="show_cargo_actual"/>
+                    <field name="show_jornada_trabajo"/>
+                </group>
+                <footer>
+                    <button string="Imprimir" type="object" name="action_confirm" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
