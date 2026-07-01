@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HrContractActualizacionWizard(models.TransientModel):
@@ -23,6 +23,14 @@ class HrContractActualizacionWizard(models.TransientModel):
     show_sueldo_base = fields.Boolean(string='Sueldo base', default=True)
     show_cargo_actual = fields.Boolean(string='Cargo actual', default=True)
     show_jornada_trabajo = fields.Boolean(string='Jornada de trabajo', default=True)
+
+    @api.onchange('report_type')
+    def _onchange_report_type(self):
+        for wizard in self:
+            show_options = wizard.report_type == 'actualizacion'
+            wizard.show_sueldo_base = show_options
+            wizard.show_cargo_actual = show_options
+            wizard.show_jornada_trabajo = show_options
 
     def action_confirm(self):
         self.ensure_one()

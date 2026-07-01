@@ -33,6 +33,14 @@ class HrContractMassPrintWizard(models.TransientModel):
     show_cargo_actual = fields.Boolean(string='Cargo actual', default=True)
     show_jornada_trabajo = fields.Boolean(string='Jornada de trabajo', default=True)
 
+    @api.onchange('actualizacion_report_type')
+    def _onchange_actualizacion_report_type(self):
+        for wizard in self:
+            show_options = wizard.actualizacion_report_type == 'actualizacion'
+            wizard.show_sueldo_base = show_options
+            wizard.show_cargo_actual = show_options
+            wizard.show_jornada_trabajo = show_options
+
     def action_print_contract(self):
         return self._generate_merged_pdf('contract')
 

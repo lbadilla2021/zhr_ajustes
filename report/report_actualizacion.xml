@@ -22,6 +22,7 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="wizard">
                 <t t-set="contract" t-value="wizard.contract_id"/>
+                <t t-set="company" t-value="contract.company_id"/>
                 <t t-call="web.basic_layout">
                     <div class="page">
                         <p style="text-align:center;">ANEXO DE CONTRATO DE TRABAJO</p>
@@ -29,8 +30,8 @@
                         <p style="text-align:justify;">
                         En Cabrero, a
                         <span t-esc="contract.format_date_es(contract.date_start)"/>
-                        entre <strong>Servicios Barca Spa,
-                        R.U.T.: 76.766.106 - 1,</strong>
+                        entre <strong><span t-esc="company.name"/>,
+                        R.U.T.: <span t-esc="company.vat"/>,</strong>,
                         representada legalmente por <strong> don Claudio Barrales Espinoza, RUT 12.702.854-0</strong>
                         con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
                         y don <strong><span t-esc="contract.employee_id.name"/>,
@@ -59,9 +60,37 @@
                         </p>
                         <br/>
 
-                        <p style="margin:0; text-align:justify;"><strong>SEGUNDO: </strong>
-                        Las condiciones que forman parte del contrato original o anexos posteriores se mantienen inalteradas.
-                        </p>
+                        <t t-set="show_contract_terms" t-value="wizard.show_sueldo_base or wizard.show_cargo_actual or wizard.show_jornada_trabajo"/>
+                        <t t-if="show_contract_terms">
+                            <p style="margin:0; text-align:justify;"><strong>SEGUNDO: </strong>
+                            Se acuerda que a partir de esta fecha las condiciones contractuales vigentes son las siguientes:
+                            </p>
+                            <ul style="margin-top:0; text-align:justify;">
+                                <t t-if="wizard.show_sueldo_base">
+                                    <li><strong>Sueldo base: </strong>El sueldo base vigente
+                                    <strong><span t-esc="(dict(contract._fields['schedule_pay']._description_selection(contract.env)).get(contract.schedule_pay, contract.schedule_pay or '') or '').lower()"/>
+                                    es
+                                    $<span t-esc="'{:,}'.format(int(contract.wage)).replace(',', '.')"/>.-
+                                    <span>
+                                    (<span t-esc="contract.wage_text"/>s)
+                                    </span></strong>.
+                                    </li>
+                                </t>
+                                <t t-if="wizard.show_cargo_actual">
+                                    <li><strong>Su cargo actual es de: <span t-esc="contract.job_id.name"/></strong>.
+                                    </li>
+                                </t>
+                                <t t-if="wizard.show_jornada_trabajo">
+                                    <li><strong><span t-esc="(contract.schedule_details or '').replace('será', 'es').replace('serÃ¡', 'es')"/></strong>
+                                    </li>
+                                </t>
+                            </ul>
+                        </t>
+                        <t t-else="">
+                            <p style="margin:0; text-align:justify;"><strong>SEGUNDO: </strong>
+                            Las condiciones que forman parte del contrato original o anexos posteriores se mantienen inalteradas.
+                            </p>
+                        </t>
                         <br/>
 
                         <p style="margin:0; text-align:justify;"><strong>TERCERO: </strong>
@@ -81,8 +110,8 @@
 
                             <div style="width:49%; display:inline-block; text-align:center; float:right;">
                                 ___________________________<br/>
-                                Servicios Barca SPA.<br/>
-                                R.U.T.: 76.766.106 - 1
+                                <span t-esc="company.name"/><br/>
+                                R.U.T.: <span t-esc="company.vat"/>
                             </div>
                         </div>
                     </div>
@@ -102,8 +131,8 @@
                         <p style="text-align:justify;">
                         En Cabrero, a
                         <span t-esc="contract.format_date_es(contract.date_start)"/>
-                        entre <strong>Servicios Barca Spa,
-                        R.U.T.: 76.766.106 - 1,</strong>
+                        entre <strong><span t-esc="company.name"/>,
+                        R.U.T.: <span t-esc="company.vat"/>,</strong>,
                         representada legalmente por <strong> don Claudio Barrales Espinoza, RUT 12.702.854-0</strong>
                         con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
                         y don <strong><span t-esc="contract.employee_id.name"/>,
@@ -162,8 +191,8 @@
 
                             <div style="width:49%; display:inline-block; text-align:center; float:right;">
                                 ___________________________<br/>
-                                Servicios Barca SPA.<br/>
-                                R.U.T.: 76.766.106 - 1
+                                <span t-esc="company.name"/><br/>
+                                R.U.T.: <span t-esc="company.vat"/>
                             </div>
                         </div>
                     </div>

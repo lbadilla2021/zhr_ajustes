@@ -14,12 +14,9 @@
                 <group string="Opciones para Actualizacion"
                        invisible="not show_actualizacion_options">
                     <field name="actualizacion_report_type" widget="radio"/>
-                    <field name="show_sueldo_base"
-                           invisible="actualizacion_report_type != 'actualizacion'"/>
-                    <field name="show_cargo_actual"
-                           invisible="actualizacion_report_type != 'actualizacion'"/>
-                    <field name="show_jornada_trabajo"
-                           invisible="actualizacion_report_type != 'actualizacion'"/>
+                    <field name="show_sueldo_base"/>
+                    <field name="show_cargo_actual"/>
+                    <field name="show_jornada_trabajo"/>
                 </group>
 
                 <footer>

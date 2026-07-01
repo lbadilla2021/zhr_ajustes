@@ -9,7 +9,7 @@
                     <field name="contract_id" readonly="1"/>
                     <field name="report_type" widget="radio"/>
                 </group>
-                <group string="Contenido de actualizacion" invisible="report_type != 'actualizacion'">
+                <group string="Contenido del anexo">
                     <field name="show_sueldo_base"/>
                     <field name="show_cargo_actual"/>
                     <field name="show_jornada_trabajo"/>
