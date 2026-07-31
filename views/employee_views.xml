@@ -9,8 +9,9 @@
             <!-- Inserta Fechas Laborales en Work Information -->
             <xpath expr="//page[@name='public']//div[@id='o_work_employee_main']" position="inside">
                 <group string="Fechas Laborales">
-                    <field name="first_contract_date" string="Fecha de Ingreso"/>
-                    <field name="departure_date" string="Fecha de Salida"/>
+                    <field name="fecha_contrato" readonly="1"/>
+                    <field name="fecha_finiquito" readonly="1"/>
+                    <field name="fecha_primer_ingreso" string="Fecha primer ingreso" readonly="1"/>
                 </group>
             </xpath>
 

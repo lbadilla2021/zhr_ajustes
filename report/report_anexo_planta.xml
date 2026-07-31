@@ -146,6 +146,65 @@
 
                 </div>
 
+       <div style="page-break-before: always;"></div>
+                <div class="page">
+
+                    <p style="text-align:center;">
+                        <b>ANEXO AL CONTRATO DE TRABAJO</b>
+                    </p>
+
+                    <br/>
+
+                    <p style="text-align:justify;">
+                        En Cabrero, a 
+                        <span t-esc="contract.format_date_es(contract.date_start)"/>
+                        entre <b>Servicios Barca S.P.A. R.U.T.: 76.766.106-1,</b>
+                        con domicilio en Lote 4 Sector la Quinta, Cabrero, en adelante
+                        <b>Empleador</b> y
+                        <b><span t-esc="contract.employee_id.name"/></b>,
+                        Rut: <span t-esc="contract.employee_id.identification_id"/>,
+                        en adelante <b>Trabajador</b> acuerdan lo siguiente como anexo
+                        al contrato de trabajo:
+                    </p>
+
+                    <br/>
+
+                    <p style="text-align:justify;">
+                        <b>PRIMERO:</b> Conforme a lo establecido en el artículo 12°
+                        inciso primero del Código del Trabajo, el Trabajador, en
+                        adelante, podrá ser trasladado al establecimiento de  
+                        FORESTAL Y PAPELERA CONCEPCION S.A (FPC), ubicada en 
+                        Parque Industrial Escuadrón II Km 17,5 Coronel, Región Biobío, 
+                        sin conllevar esto menoscabo alguno.
+                    </p>
+
+                    <br/>
+
+                    <p style="text-align:justify;">
+                        <b>SEGUNDO:</b> El presente anexo se firma en dos ejemplares
+                        quedando uno en poder del empleador y uno en poder del trabajador.
+                    </p>
+
+<br/><br/><br/>
+
+                            <table width="100%" style="margin-top:50px; border:none; border-collapse:collapse;">
+                                <tr>
+                                    <td width="50%" style="text-align:center; border:none;">
+                                        ___________________________<br/>
+                                        <span t-esc="contract.employee_id.name"/><br/>
+                                        R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+                                    </td>
+                                    <td width="50%" style="text-align:center; border:none;">
+                                        ___________________________<br/>
+                                        Servicios Barca SPA.<br/>
+                                        R.U.T.: 76.766.106 – 1
+                                    </td>
+                                </tr>
+                            </table>
+
+                </div>
+                
+
     </t>
     </t>
     </t>

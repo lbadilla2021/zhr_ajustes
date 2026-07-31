@@ -25,12 +25,12 @@
 
                         <p style="text-align:justify;">
                         En Cabrero, a 
-                        <span t-esc="contract.format_date_es(contract.date_start)"/>
+                        <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>
                         entre <strong><span t-esc="company.name"/>,
                         R.U.T.: <span t-esc="company.vat"/>,</strong>,
-                        representada legalmente por <strong> don Claudio Barrales Espinoza , RUT 12.702.854-0</strong>
+                        representada legalmente por <strong>Claudio Barrales Espinoza , RUT 12.702.854-0</strong>
                          con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
-                        y don <strong><span t-esc="contract.employee_id.name"/>,
+                        y <strong><span t-esc="contract.employee_id.name"/>,
                         R.U.T.: <span t-esc="contract.employee_id.identification_id"/>,</strong>
                         de nacionalidad chilena, fecha nacimiento 
                         <span t-esc="contract.format_date_es(contract.employee_id.birthday)"/>
@@ -133,7 +133,7 @@
                                             <td style="border:1px solid black; padding:5px;">
                                             Planta Valdivia
                                             </td>
-                                            <td style="border:1px solid black; padding:5px;">$13.000</td>
+                                            <td style="border:1px solid black; padding:5px;">$14.000</td>
                                         </tr>
                                     </table>
                                 </t>
@@ -167,7 +167,7 @@
                             a la imponibilidad previsional y tributaria correspondiente.
                             </p>
 
-                            <div style="page-break-inside: avoid !important;">
+                            <div style="page-break-inside: avoid !important; break-inside: avoid;">
                                 <p style="text-align:justify;">
                                     <strong>QUINTO:</strong>
                                     El presente contrato tendra duracion hasta el termino de la obra o faena "<strong><span t-esc="contract.tipo_obra_id.name"/></strong>".
@@ -177,6 +177,7 @@
                                         <span t-esc="contract.format_date_es(contract.date_start)"/>.
                                     </strong>
                                 </p>
+                                <t t-call="zhr_ajustes.contract_employee_signature_operador"/>
                             </div>
                         </t>
 
@@ -204,7 +205,7 @@
                                 <li>Prohibicion de realizar actividades para la competencia.</li>
                             </ol>
 
-                            <div style="page-break-inside: avoid !important;">
+                            <div style="page-break-inside: avoid !important; break-inside: avoid;">
                                 <p style="text-align:justify;">
                                     <strong>SEPTIMO:</strong>
                                     El presente contrato tendra duracion
@@ -218,31 +219,35 @@
                                     </t>
 
                                     Se deja constancia que la fecha de ingreso del trabajador es<strong>
-                                        <span t-esc="contract.format_date_es(contract.date_start)"/>.
+                                        <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>.
                                     </strong>
                                 </p>
+                                <t t-call="zhr_ajustes.contract_employee_signature_operador"/>
                             </div>
                         </t>
-
-                        <br/><br/><br/>
-
-
-
-                            <div style="width:49%; display:inline-block; text-align:center;">
-                                ___________________________<br/>
-                                <span t-esc="contract.employee_id.name"/><br/>
-                                R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
-                            </div>
-
-                            <div style="width:49%; display:inline-block; text-align:center;">
-                                ___________________________<br/>
-                                <span t-esc="company.name"/><br/>
-                                R.U.T.: <span t-esc="company.vat"/>
-                            </div>
 
                     </div>
                 </t>
             </t>
         </t>
+    </template>
+
+    <template id="contract_employee_signature_operador">
+        <div style="margin-top:45px; page-break-inside: avoid !important; break-inside: avoid;">
+            <table style="width:100%; border-collapse:collapse; page-break-inside: avoid !important; break-inside: avoid;">
+                <tr>
+                    <td style="width:50%; text-align:center; vertical-align:top;">
+                        ___________________________<br/>
+                        <span t-esc="contract.employee_id.name"/><br/>
+                        R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+                    </td>
+                    <td style="width:50%; text-align:center; vertical-align:top;">
+                        ___________________________<br/>
+                        <span t-esc="company.name"/><br/>
+                        R.U.T.: <span t-esc="company.vat"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </template>
 </odoo>

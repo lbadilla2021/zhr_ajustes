@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_readonly_show_private_information" model="ir.ui.view">
+        <field name="name">hr.employee.readonly.show.private.information</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <field name="hide_resume_for_readonly" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']" position="attributes">
+                <attribute name="groups">hr.group_hr_user,zhr_ajustes.group_zhr_employee_readonly</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_readonly_hide_resume_tab" model="ir.ui.view">
+        <field name="name">hr.employee.readonly.hide.resume.tab</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_skills.hr_employee_view_form"/>
+        <field name="priority" eval="99"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='skills_resume']" position="attributes">
+                <attribute name="invisible">hide_resume_for_readonly</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

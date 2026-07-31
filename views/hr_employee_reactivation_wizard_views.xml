@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="hr_employee_termination_wizard_view" model="ir.ui.view">
-        <field name="name">hr.employee.termination.wizard.form</field>
-        <field name="model">hr.employee.termination.wizard</field>
+    <record id="hr_employee_reactivation_wizard_view" model="ir.ui.view">
+        <field name="name">hr.employee.reactivation.wizard.form</field>
+        <field name="model">hr.employee.reactivation.wizard</field>
         <field name="arch" type="xml">
-            <form string="Dar de Baja">
+            <form string="Dar de Alta">
+                <div class="alert alert-warning" role="alert">
+                    Esta seguro de dar de alta al empleado?
+                </div>
                 <group>
                     <field name="employee_id" readonly="1"/>
-                    <field name="departure_reason_id"/>
-                    <field name="departure_date"/>
+                    <field name="fecha_contrato"/>
                 </group>
                 <footer>
                     <button string="Confirmar" type="object" name="action_confirm" class="btn-primary"/>

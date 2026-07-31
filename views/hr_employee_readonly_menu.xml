@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr.menu_hr_employee_payroll" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4, ref('zhr_ajustes.group_zhr_employee_readonly'))]"/>
+    </record>
+
+    <record id="hr_contract.hr_menu_contract" model="ir.ui.menu">
+        <field name="groups_id" eval="[(3, ref('zhr_ajustes.group_zhr_employee_readonly'))]"/>
+    </record>
+
+    <record id="hr_contract.menu_hr_employee_contracts" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4, ref('hr_contract.group_hr_contract_employee_manager'))]"/>
+    </record>
+
+    <record id="zhr_ajustes.menu_hr_tables_root" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4, ref('hr.group_hr_user'))]"/>
+    </record>
+</odoo>

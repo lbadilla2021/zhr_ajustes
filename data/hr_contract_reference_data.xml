@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="hr_contract_reference_contract" model="hr.contract.reference">
+        <field name="name">Contrato</field>
+        <field name="reference_type">contract</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="hr_contract_reference_annex_ipc" model="hr.contract.reference">
+        <field name="name">Anexo IPC</field>
+        <field name="reference_type">annex</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="hr_contract_reference_annex_workplace" model="hr.contract.reference">
+        <field name="name">Anexo Lugar trabajo</field>
+        <field name="reference_type">annex</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="hr_contract_reference_annex_job" model="hr.contract.reference">
+        <field name="name">Anexo Cargo</field>
+        <field name="reference_type">annex</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="hr_contract_reference_annex_multiple" model="hr.contract.reference">
+        <field name="name">Anexo Varios</field>
+        <field name="reference_type">annex</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="hr_contract_reference_annex_other" model="hr.contract.reference">
+        <field name="name">Anexo Otros</field>
+        <field name="reference_type">annex</field>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="hr_contract_reference_annex_schedule" model="hr.contract.reference">
+        <field name="name">Anexo Jornada</field>
+        <field name="reference_type">annex</field>
+        <field name="sequence">70</field>
+    </record>
+
+    <record id="hr_contract_reference_annex_renewal_indefinite" model="hr.contract.reference">
+        <field name="name">Anexo Renovacion Indefinido</field>
+        <field name="reference_type">contract</field>
+        <field name="sequence">75</field>
+    </record>
+
+    <record id="hr_contract_reference_settlement" model="hr.contract.reference">
+        <field name="name">Finiquito</field>
+        <field name="reference_type">contract</field>
+        <field name="sequence">80</field>
+    </record>
+</odoo>

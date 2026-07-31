@@ -26,9 +26,9 @@
         <span t-esc="contract.format_date_es(contract.date_start)"/>
         entre <strong><span t-esc="company.name"/>,
         R.U.T.: <span t-esc="company.vat"/>,</strong>,
-        representada legalmente por <strong> don Claudio Barrales Espinoza , RUT 12.702.854-0</strong>
+        representada legalmente por <strong>Claudio Barrales Espinoza , RUT 12.702.854-0</strong>
         con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
-        y don <strong><span t-esc="contract.employee_id.name"/>,
+        y <strong><span t-esc="contract.employee_id.name"/>,
         R.U.T.: <span t-esc="contract.employee_id.identification_id"/>,</strong>
         de nacionalidad chilena, fecha nacimiento 
         <span t-esc="contract.format_date_es(contract.employee_id.birthday)"/>

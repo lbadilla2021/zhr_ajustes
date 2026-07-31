@@ -1,0 +1,38 @@
+.o_form_view .o_statusbar_status {
+    .o_arrow_button[data-value="expired"],
+    .o_arrow_button[data-value="cancel"],
+    button[data-value="expired"],
+    button[data-value="cancel"] {
+        border-color: #adb5bd !important;
+        color: #495057 !important;
+    }
+
+    .o_arrow_button_current[data-value="expired"],
+    .o_arrow_button_current[data-value="cancel"],
+    .o_arrow_button[data-value="expired"].o_arrow_button_current,
+    .o_arrow_button[data-value="cancel"].o_arrow_button_current,
+    button[data-value="expired"].o_arrow_button_current,
+    button[data-value="cancel"].o_arrow_button_current {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: #fff !important;
+    }
+}
+
+.o_form_view .o_form_sheet_bg:has(.zhr_wage_positive_check:not(.o_invisible_modifier)) {
+    .o_field_widget[name="wage"] {
+        outline: 1px solid #dc3545;
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+
+    .zhr_wage_positive_check {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: 0;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+    }
+}

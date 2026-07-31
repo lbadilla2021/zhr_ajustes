@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_contract_duplicate_wizard_view" model="ir.ui.view">
+        <field name="name">hr.contract.duplicate.wizard.form</field>
+        <field name="model">hr.contract.duplicate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Duplicar contrato">
+                <group>
+                    <field name="contract_id"/>
+                    <field name="date_start"/>
+                    <field name="reference_id"
+                           placeholder="Contrato, Anexo IPC, Anexo Cargo..."/>
+                    <field name="name" readonly="1"/>
+                </group>
+                <footer>
+                    <button string="Aceptar" type="object" name="action_confirm" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -47,11 +47,69 @@
                     string="Actualización"
                     icon="fa-print"
                     class="btn-secondary btn-sm"
+                    groups="hr.group_hr_user"
                     help="Imprime actualización de contrato"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_print_actualizacion']" position="after">
+                <button
+                    name="action_open_duplicate_wizard"
+                    type="object"
+                    icon="fa-plus"
+                    class="btn-secondary btn-sm"
+                    groups="hr.group_hr_user"
+                    help="Duplica el contrato actual con nueva fecha de inicio y referencia"/>
+            </xpath>
+
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="statusbar_visible">draft,open,close,expired,cancel</attribute>
+                <attribute name="statusbar_colors">{'expired': 'gray', 'cancel': 'gray'}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="can_edit_fecha_contrato" invisible="1"/>
+                <field name="is_indefinite_contract" invisible="1"/>
+                <field name="reference_id"
+                       required="1"
+                       options="{'no_create': True, 'no_create_edit': True}"/>
+                <field name="fecha_contrato"
+                       readonly="not can_edit_fecha_contrato"/>
+                <field name="fecha_finiquito"
+                       readonly="is_indefinite_contract"/>
+            </xpath>
+
+            <xpath expr="//field[@name='date_start']" position="attributes">
+                <attribute name="string">Fecha inicio de vigencia</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='date_end']" position="attributes">
+                <attribute name="string">Fecha de finalización vigencia</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='date_end']" position="attributes">
+                <attribute name="readonly">is_indefinite_contract</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='wage']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='wage']" position="after">
+                <field name="wage_positive_check"
+                       class="zhr_wage_positive_check"
+                       required="wage &lt;= 0"
+                       invisible="wage &gt; 0"/>
             </xpath>
 
             <xpath expr="//field[@name='contract_type_id']" position="after">
                 <field name="is_por_obra" invisible="1"/>
+                <field name="departure_reason_id"
+                       readonly="1"
+                       invisible="not fecha_finiquito"/>
                 <field name="tipo_obra_id" invisible="not is_por_obra" required="is_por_obra"/>
                 <field name="duracion_obra" invisible="not is_por_obra" required="is_por_obra"/>
             </xpath>
@@ -80,6 +138,30 @@
                 <field name="identification_id"
                        string="Numero de Identificacion"
                        readonly="1"
+                       optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='date_start']" position="before">
+                <field name="fecha_contrato"
+                       string="Fecha Contrato"
+                       optional="show"/>
+                <field name="fecha_finiquito"
+                       string="Fecha Termino"
+                       optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='date_start']" position="attributes">
+                <attribute name="string">Fecha inicio de vigencia</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_end']" position="attributes">
+                <attribute name="string">Fecha de finalización vigencia</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="state"
+                       widget="badge"
+                       class="zhr_contract_state_badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'open'"
+                       decoration-warning="state == 'close'"
+                       decoration-muted="state == 'expired' or state == 'cancel'"
                        optional="show"/>
             </xpath>
         </field>

@@ -1,10 +1,158 @@
 import re
 
+import unicodedata
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
+
+EMPLOYEE_READONLY_GROUP = 'zhr_ajustes.group_zhr_employee_readonly'
+HR_PRIVATE_GROUP = 'hr.group_hr_user'
+CUSTOM_PRIVATE_EMPLOYEE_FIELDS = {
+    'rut_dv',
+    'apellido_paterno',
+    'apellido_materno',
+    'nombres',
+    'nombre_preferido',
+    'city_id',
+    'driver_license_expiration_date',
+    'analytic_account_id',
+    'afp_id',
+    'health_system_id',
+    'system_schedule',
+    'fecha_contrato',
+    'fecha_finiquito',
+    'fecha_primer_ingreso',
+    'state',
+    'accreditation_ids',
+    'assigned_resource_ids',
+    'payment_concept_line_ids',
+    'lugar_trabajo_line_ids',
+}
+READONLY_PRIVATE_EMPLOYEE_FIELDS = (
+    'company_country_id',
+    'company_country_code',
+    'private_street',
+    'private_street2',
+    'private_city',
+    'private_state_id',
+    'private_zip',
+    'private_country_id',
+    'private_phone',
+    'private_email',
+    'lang',
+    'country_id',
+    'gender',
+    'marital',
+    'spouse_complete_name',
+    'spouse_birthdate',
+    'children',
+    'place_of_birth',
+    'country_of_birth',
+    'birthday',
+    'ssnid',
+    'sinid',
+    'identification_id',
+    'passport_id',
+    'bank_account_id',
+    'permit_no',
+    'visa_no',
+    'visa_expire',
+    'work_permit_expiration_date',
+    'has_work_permit',
+    'additional_note',
+    'certificate',
+    'study_field',
+    'study_school',
+    'emergency_contact',
+    'emergency_phone',
+    'distance_home_work',
+    'km_home_work',
+    'distance_home_work_unit',
+    'employee_type',
+    'category_ids',
+    'notes',
+    'barcode',
+    'pin',
+    'departure_reason_id',
+    'departure_description',
+    'departure_date',
+    'message_main_attachment_id',
+    'message_is_follower',
+    'message_follower_ids',
+    'message_partner_ids',
+    'message_ids',
+    'has_message',
+    'message_needaction',
+    'message_needaction_counter',
+    'message_has_error',
+    'message_has_error_counter',
+    'message_attachment_count',
+    'activity_ids',
+    'activity_state',
+    'activity_user_id',
+    'activity_type_id',
+    'activity_type_icon',
+    'activity_date_deadline',
+    'my_activity_date_deadline',
+    'activity_summary',
+    'activity_exception_decoration',
+    'activity_exception_icon',
+    'id_card',
+    'driving_license',
+    'private_car_plate',
+    'currency_id',
+    'calendar_mismatch',
+    'contracts_count',
+    'contract_warning',
+    'current_leave_id',
+    'current_leave_state',
+    'first_contract_date',
+    'leave_date_from',
+    'leave_date_to',
+    'is_absent',
+    'show_leaves',
+    'allocation_display',
+    'allocation_remaining_display',
+    'hr_icon_display',
+    'rut_dv',
+    'apellido_paterno',
+    'apellido_materno',
+    'nombres',
+    'nombre_preferido',
+    'city_id',
+    'driver_license_expiration_date',
+    'analytic_account_id',
+    'afp_id',
+    'health_system_id',
+    'system_schedule',
+    'fecha_contrato',
+    'fecha_finiquito',
+    'fecha_primer_ingreso',
+    'state',
+    'accreditation_ids',
+    'assigned_resource_ids',
+    'payment_concept_line_ids',
+    'lugar_trabajo_line_ids',
+)
+
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
+
+    def _setup_complete(self):
+        super()._setup_complete()
+        for field_name in READONLY_PRIVATE_EMPLOYEE_FIELDS:
+            field = self._fields.get(field_name)
+            if not field:
+                continue
+            groups = [group for group in (field.groups or '').split(',') if group]
+            if not groups and field_name not in CUSTOM_PRIVATE_EMPLOYEE_FIELDS:
+                continue
+            if not groups and HR_PRIVATE_GROUP not in groups:
+                groups.append(HR_PRIVATE_GROUP)
+            if EMPLOYEE_READONLY_GROUP not in groups:
+                groups.append(EMPLOYEE_READONLY_GROUP)
+            field.groups = ','.join(groups)
 
     rut_dv = fields.Char(string='Digito Verificador', size=1)
     apellido_paterno = fields.Char(string='Apellido Paterno')
@@ -14,6 +162,29 @@ class HrEmployee(models.Model):
     city_id = fields.Many2one('hr.city', string='Ciudad')
     driver_license_expiration_date = fields.Date(
         string='Vencimiento licencia conducir',
+    )
+    fecha_contrato = fields.Date(
+        string='Fecha Contrato',
+        help=(
+            'Fecha documental asociada al contrato vigente del trabajador. Se '
+            'actualiza desde el boton Dar de Alta o al guardar un contrato en '
+            'estado Vigente.'
+        ),
+    )
+    fecha_finiquito = fields.Date(
+        string='Fecha Termino',
+        help=(
+            'Fecha documental de termino del trabajador. Se actualiza desde '
+            'el boton Dar de Baja usando la fecha de salida digitada.'
+        ),
+    )
+    fecha_primer_ingreso = fields.Date(
+        string='Fecha primer ingreso',
+        help=(
+            'Fecha historica del primer ingreso del trabajador. Se toma desde '
+            'el primer contrato real y no se modifica por anexos, finiquitos '
+            'o altas posteriores.'
+        ),
     )
     analytic_account_id = fields.Many2one(
         'account.analytic.account',
@@ -38,6 +209,10 @@ class HrEmployee(models.Model):
     )
     is_active_employee = fields.Boolean(
         compute='_compute_is_active_employee',
+        store=False,
+    )
+    hide_resume_for_readonly = fields.Boolean(
+        compute='_compute_hide_resume_for_readonly',
         store=False,
     )
     state = fields.Selection(
@@ -119,6 +294,90 @@ class HrEmployee(models.Model):
             vals['private_city'] = self.env['hr.city'].browse(vals['city_id']).name
         elif 'city_id' in vals:
             vals['private_city'] = False
+
+    def _sync_contract_work_dates(self, clear_without_open=False):
+        for employee in self.with_context(active_test=False).sudo():
+            contracts = employee.contract_ids.sudo()
+            open_contracts = contracts.filtered(
+                lambda contract: (
+                    contract.state == 'open'
+                    and contract._participates_in_contract_continuity()
+                )
+            ).sorted(key=lambda contract: (
+                contract.date_start or contract.fecha_contrato or fields.Date.to_date('0001-01-01'),
+                contract.id,
+            ))
+            if not open_contracts:
+                if clear_without_open:
+                    vals = {
+                        'fecha_contrato': False,
+                        'fecha_finiquito': False,
+                    }
+                    if not contracts:
+                        vals['fecha_primer_ingreso'] = False
+                    elif not employee.fecha_primer_ingreso:
+                        first_entry_date = employee._get_first_entry_contract_date(contracts)
+                        if first_entry_date:
+                            vals['fecha_primer_ingreso'] = first_entry_date
+                    employee.write(vals)
+                continue
+
+            current_contract = open_contracts[-1]
+            vals = {
+                'fecha_contrato': current_contract.fecha_contrato
+                or current_contract.date_start,
+                'fecha_finiquito': current_contract.fecha_finiquito,
+            }
+            vals.update(employee._get_contract_employee_sync_vals(current_contract))
+
+            first_entry_date = employee._get_first_entry_contract_date(contracts)
+            if first_entry_date and not employee.fecha_primer_ingreso:
+                vals['fecha_primer_ingreso'] = first_entry_date
+            if vals:
+                employee.write(vals)
+
+    def _get_contract_employee_sync_vals(self, contract):
+        self.ensure_one()
+        vals = {}
+        field_map = {
+            'job_id': 'job_id',
+            'department_id': 'department_id',
+            'resource_calendar_id': 'resource_calendar_id',
+            'work_location_id': 'work_location_id',
+        }
+        for contract_field, employee_field in field_map.items():
+            if contract_field not in contract._fields or employee_field not in self._fields:
+                continue
+            vals[employee_field] = contract[contract_field].id or False
+        return vals
+
+    def _get_first_entry_contract_date(self, contracts):
+        self.ensure_one()
+        valid_contracts = contracts.filtered(
+            lambda contract: (
+                (contract.date_start or contract.fecha_contrato)
+                and self._is_first_entry_contract_candidate(contract)
+            )
+        )
+        if not valid_contracts:
+            return False
+
+        return min(
+            contract.date_start or contract.fecha_contrato
+            for contract in valid_contracts
+            if contract.date_start or contract.fecha_contrato
+        )
+
+    def _is_first_entry_contract_candidate(self, contract):
+        reference_name = contract.reference_id.name or ''
+        normalized_name = unicodedata.normalize(
+            'NFKD',
+            reference_name,
+        ).encode('ascii', 'ignore').decode('ascii').strip().lower()
+        return not (
+            normalized_name.startswith('anexo')
+            or normalized_name == 'finiquito'
+        )
 
     def _build_employee_name(self):
         self.ensure_one()
@@ -259,12 +518,30 @@ class HrEmployee(models.Model):
         for rec in self:
             rec.is_active_employee = rec.state == 'active'
 
+    def _compute_hide_resume_for_readonly(self):
+        hide_resume = self.env.user.has_group(EMPLOYEE_READONLY_GROUP)
+        for rec in self:
+            rec.hide_resume_for_readonly = hide_resume
+
     def action_open_termination_wizard(self):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
             'name': 'Dar de Baja',
             'res_model': 'hr.employee.termination.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_employee_id': self.id,
+            },
+        }
+
+    def action_open_reactivation_wizard(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Dar de Alta',
+            'res_model': 'hr.employee.reactivation.wizard',
             'view_mode': 'form',
             'target': 'new',
             'context': {

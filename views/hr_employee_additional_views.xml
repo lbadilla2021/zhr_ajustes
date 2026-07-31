@@ -60,7 +60,15 @@
                         string="Dar de Baja"
                         type="object"
                         class="btn-danger"
-                        modifiers="{'invisible': [('state', '=', 'inactive')]}"/>
+                        groups="hr.group_hr_user"
+                        invisible="state == 'inactive'"/>
+
+                <button name="action_open_reactivation_wizard"
+                        string="Dar de Alta"
+                        type="object"
+                        class="btn-primary"
+                        groups="hr.group_hr_user"
+                        invisible="state != 'inactive'"/>
 
                 <!-- Statusbar del estado -->
                 <field name="state"
