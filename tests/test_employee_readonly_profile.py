@@ -240,7 +240,154 @@ class TestEmployeeReadonlyProfile(TransactionCase):
 
         self.assertEqual(contract.fecha_contrato, date(2026, 1, 5))
         contract.fecha_contrato = date(2025, 6, 1)
+        self.assertEqual(contract.fecha_contrato, date(2025, 6, 1))
+        self.assertEqual(contract.date_start, date(2026, 1, 1))
         self.assertEqual(self.employee.fecha_primer_ingreso, date(2025, 5, 10))
+
+    def test_contract_reference_date_overrides_stale_employee_date(self):
+        contract_reference = self.env.ref(
+            "zhr_ajustes.hr_contract_reference_contract"
+        )
+        self.employee.fecha_contrato = date(2020, 1, 1)
+        contract = self.env["hr.contract"].create(
+            {
+                "name": "Contrato corregido",
+                "employee_id": self.employee.id,
+                "reference_id": contract_reference.id,
+                "fecha_contrato": date(2026, 1, 5),
+                "date_start": date(2026, 1, 10),
+                "wage": 1000,
+                "state": "open",
+            }
+        )
+
+        self.assertTrue(contract.can_edit_fecha_contrato)
+        self.assertEqual(contract.fecha_contrato, date(2026, 1, 5))
+        contract.write({"fecha_contrato": date(2026, 1, 7)})
+        self.assertEqual(contract.fecha_contrato, date(2026, 1, 7))
+        self.assertEqual(contract.date_start, date(2026, 1, 10))
+        self.assertEqual(self.employee.fecha_contrato, date(2026, 1, 7))
+
+    def test_legacy_contract_becomes_editable_with_contract_reference(self):
+        employee = self.env["hr.employee"].create(
+            {
+                "name": "Empleado Contratos Migrados",
+                "company_id": self.env.company.id,
+            }
+        )
+        self.env["hr.contract"].create(
+            {
+                "name": "Contrato historico",
+                "employee_id": employee.id,
+                "fecha_contrato": date(2020, 1, 1),
+                "date_start": date(2020, 1, 1),
+                "date_end": date(2020, 12, 31),
+                "wage": 1000,
+                "state": "expired",
+            }
+        )
+        legacy_contract = self.env["hr.contract"].create(
+            {
+                "name": "Contrato migrado",
+                "employee_id": employee.id,
+                "fecha_contrato": date(2021, 1, 1),
+                "date_start": date(2021, 1, 1),
+                "wage": 1000,
+                "state": "open",
+            }
+        )
+
+        self.assertFalse(legacy_contract.can_edit_fecha_contrato)
+        legacy_contract.reference_id = self.env.ref(
+            "zhr_ajustes.hr_contract_reference_contract"
+        )
+        self.assertTrue(legacy_contract.can_edit_fecha_contrato)
+        legacy_contract.fecha_contrato = date(2021, 1, 15)
+        self.assertEqual(legacy_contract.fecha_contrato, date(2021, 1, 15))
+        self.assertEqual(legacy_contract.date_start, date(2021, 1, 1))
+
+    def test_schedule_details_are_multiline_text_fields(self):
+        self.assertEqual(
+            self.env["resource.calendar"]._fields["system_schedule"].type,
+            "text",
+        )
+        self.assertEqual(
+            self.env["hr.contract"]._fields["schedule_details"].type,
+            "text",
+        )
+        arch = self.env["resource.calendar"].get_view(view_type="form")["arch"]
+        self.assertIn('name="system_schedule"', arch)
+        self.assertIn('colspan="2"', arch)
+        self.assertIn('placeholder="Describa el horario de trabajo..."', arch)
+
+    def test_driver_license_accreditation_has_configured_types(self):
+        license_type = self.env.ref(
+            "zhr_ajustes.hr_accreditation_type_driver_license"
+        )
+        self.assertEqual(
+            set(license_type.subtype_ids.mapped("name")),
+            {"A1", "A2", "A3", "A4", "A5", "B", "C", "CR", "D", "E", "F"},
+        )
+
+    def test_accreditation_subtype_has_searchable_description(self):
+        subtype_model = self.env["hr.accreditation.subtype"]
+        self.assertEqual(subtype_model._fields["description"].type, "char")
+        self.assertIn("description", subtype_model._rec_names_search)
+
+        view = self.env.ref("zhr_ajustes.hr_accreditation_type_form_view")
+        self.assertIn('name="description"', view.arch_db)
+
+    def test_employee_accreditation_accepts_multiple_matching_types(self):
+        license_type = self.env.ref(
+            "zhr_ajustes.hr_accreditation_type_driver_license"
+        )
+        selected_types = license_type.subtype_ids.filtered(
+            lambda subtype: subtype.name in {"A1", "B", "CR"}
+        )
+        accreditation = self.env["hr.employee.accreditation"].create(
+            {
+                "employee_id": self.employee.id,
+                "accreditation_type_id": license_type.id,
+                "accreditation_subtype_ids": [(6, 0, selected_types.ids)],
+            }
+        )
+
+        self.assertEqual(
+            set(accreditation.accreditation_subtype_ids.mapped("name")),
+            {"A1", "B", "CR"},
+        )
+
+    def test_employee_accreditation_rejects_type_from_another_category(self):
+        license_type = self.env.ref(
+            "zhr_ajustes.hr_accreditation_type_driver_license"
+        )
+        other_category = self.env["hr.accreditation.type"].create(
+            {"name": "Certificación técnica"}
+        )
+        other_subtype = self.env["hr.accreditation.subtype"].create(
+            {
+                "name": "Nivel 1",
+                "accreditation_type_id": other_category.id,
+            }
+        )
+
+        with self.assertRaisesRegex(ValidationError, "deben pertenecer"):
+            self.env["hr.employee.accreditation"].create(
+                {
+                    "employee_id": self.employee.id,
+                    "accreditation_type_id": license_type.id,
+                    "accreditation_subtype_ids": [(6, 0, other_subtype.ids)],
+                }
+            )
+
+    def test_employee_accreditation_view_uses_filtered_multiselect(self):
+        arch = self.env["hr.employee"].get_view(view_type="form")["arch"]
+        self.assertIn('name="accreditation_subtype_ids"', arch)
+        self.assertIn('widget="many2many_tags"', arch)
+        self.assertIn(
+            "('accreditation_type_id', '=', accreditation_type_id)",
+            arch,
+        )
 
     def test_contract_reference_selector_updates_contract_name(self):
         reference = self.env.ref("zhr_ajustes.hr_contract_reference_annex_job")
@@ -256,7 +403,7 @@ class TestEmployeeReadonlyProfile(TransactionCase):
 
         self.assertEqual(contract.name, "Anexo Cargo - Empleado Consulta")
 
-    def test_new_contract_reference_preserves_first_contract_date(self):
+    def test_new_contract_reference_uses_explicit_contract_date(self):
         contract_reference = self.env.ref("zhr_ajustes.hr_contract_reference_contract")
         employee = self.env["hr.employee"].create(
             {
@@ -288,7 +435,7 @@ class TestEmployeeReadonlyProfile(TransactionCase):
             }
         )
 
-        self.assertEqual(new_contract.fecha_contrato, date(2026, 1, 1))
+        self.assertEqual(new_contract.fecha_contrato, date(2026, 2, 1))
         self.assertEqual(new_contract.date_start, date(2026, 2, 1))
 
     def test_open_contract_syncs_employee_work_dates(self):

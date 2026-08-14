@@ -9,6 +9,7 @@
         'security/hr_contract_reference_access.xml',
         'data/cleanup_stale_views.xml',
         'data/hr_contract_reference_data.xml',
+        'data/hr_accreditation_type_data.xml',
         'report/contract_report.xml',
         'report/paperformat.xml',
         'report/operador.xml',

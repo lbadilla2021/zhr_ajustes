@@ -58,8 +58,18 @@ class HrContract(models.Model):
     )
 
     schedule_pay = fields.Selection(
-        selection_add=[('daily', 'Diario')],
-        ondelete={'daily': 'set default'},
+        [
+            ('daily', 'Diario'),
+            ('weekly', 'Semanal'),
+            ('bi-weekly', 'Quincenal'),
+            ('bi-monthly', 'Bimensual'),
+            ('monthly', 'Mensual'),
+            ('quarterly', 'Trimestral'),
+            ('semi-annually', 'Semestral'),
+            ('annually', 'Anual'),
+        ],
+        string='Periodicidad de pago',
+        default='monthly',
     )
 
     wage_text = fields.Char(compute="_compute_wage_text")
@@ -187,7 +197,10 @@ class HrContract(models.Model):
     @api.onchange('fecha_contrato')
     def _onchange_fecha_contrato(self):
         for contract in self:
-            if contract.fecha_contrato:
+            if (
+                contract.fecha_contrato
+                and (not contract._origin.id or not contract.date_start)
+            ):
                 contract.date_start = contract.fecha_contrato
 
     @api.onchange('fecha_finiquito')
@@ -368,9 +381,12 @@ class HrContract(models.Model):
                 )
             )
 
-    @api.model
     def _prepare_contract_dates(self, vals):
-        if vals.get('fecha_contrato') and 'date_start' not in vals:
+        if (
+            vals.get('fecha_contrato')
+            and 'date_start' not in vals
+            and (not self or (len(self) == 1 and not self.date_start))
+        ):
             vals['date_start'] = vals['fecha_contrato']
         if vals.get('fecha_finiquito') and 'date_end' not in vals:
             vals['date_end'] = vals['fecha_finiquito']
@@ -403,6 +419,16 @@ class HrContract(models.Model):
 
         reference_id = vals.get('reference_id', self.reference_id.id if self else False)
         if not self._should_preserve_contract_date(reference_id):
+            return
+
+        # "Contrato" is the authoritative document: an explicitly entered
+        # date must win over dates inherited from deleted, historical or
+        # previously active contracts. Annexes and settlements still preserve
+        # the contract date as before.
+        if (
+            'fecha_contrato' in vals
+            and self._is_contract_reference(reference_id)
+        ):
             return
 
         employee_id = vals.get('employee_id', self.employee_id.id if self else False)
@@ -482,6 +508,8 @@ class HrContract(models.Model):
     def _can_edit_contract_date(self):
         self.ensure_one()
         if not self.id or not self.employee_id:
+            return True
+        if self._is_contract_reference(self.reference_id.id):
             return True
         first_contract = self._get_first_real_contract(self.employee_id.id)
         return not first_contract or first_contract == self
@@ -684,7 +712,7 @@ class HrContract(models.Model):
         new_contract = self.copy(new_contract_vals)
         return new_contract
 
-    schedule_details = fields.Char(
+    schedule_details = fields.Text(
         compute="_compute_schedule_details",
         help=(
             'Detalle del horario tomado desde el calendario de trabajo del '

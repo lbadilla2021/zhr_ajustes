@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="hr_accreditation_type_driver_license" model="hr.accreditation.type">
+        <field name="name">Licencia Conducir</field>
+    </record>
+
+    <record id="hr_accreditation_subtype_driver_a1" model="hr.accreditation.subtype">
+        <field name="name">A1</field>
+        <field name="accreditation_type_id" ref="hr_accreditation_type_driver_license"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="hr_accreditation_subtype_driver_a2" model="hr.accreditation.subtype">
+        <field name="name">A2</field>
+        <field name="accreditation_type_id" ref="hr_accreditation_type_driver_license"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="hr_accreditation_subtype_driver_a3" model="hr.accreditation.subtype">
+        <field name="name">A3</field>
+        <field name="accreditation_type_id" ref="hr_accreditation_type_driver_license"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="hr_accreditation_subtype_driver_a4" model="hr.accreditation.subtype">
+        <field name="name">A4</field>
+        <field name="accreditation_type_id" ref="hr_accreditation_type_driver_license"/>
+        <field name="sequence">40</field>
+    </record>
+    <record id="hr_accreditation_subtype_driver_a5" model="hr.accreditation.subtype">
+        <field name="name">A5</field>
+        <field name="accreditation_type_id" ref="hr_accreditation_type_driver_license"/>
+        <field name="sequence">50</field>
+    </record>
+    <record id="hr_accreditation_subtype_driver_b" model="hr.accreditation.subtype">
+        <field name="name">B</field>
+        <field name="accreditation_type_id" ref="hr_accreditation_type_driver_license"/>
+        <field name="sequence">60</field>
+    </record>
+    <record id="hr_accreditation_subtype_driver_c" model="hr.accreditation.subtype">
+        <field name="name">C</field>
+        <field name="accreditation_type_id" ref="hr_accreditation_type_driver_license"/>
+        <field name="sequence">70</field>
+    </record>
+    <record id="hr_accreditation_subtype_driver_cr" model="hr.accreditation.subtype">
+        <field name="name">CR</field>
+        <field name="accreditation_type_id" ref="hr_accreditation_type_driver_license"/>
+        <field name="sequence">80</field>
+    </record>
+    <record id="hr_accreditation_subtype_driver_d" model="hr.accreditation.subtype">
+        <field name="name">D</field>
+        <field name="accreditation_type_id" ref="hr_accreditation_type_driver_license"/>
+        <field name="sequence">90</field>
+    </record>
+    <record id="hr_accreditation_subtype_driver_e" model="hr.accreditation.subtype">
+        <field name="name">E</field>
+        <field name="accreditation_type_id" ref="hr_accreditation_type_driver_license"/>
+        <field name="sequence">100</field>
+    </record>
+    <record id="hr_accreditation_subtype_driver_f" model="hr.accreditation.subtype">
+        <field name="name">F</field>
+        <field name="accreditation_type_id" ref="hr_accreditation_type_driver_license"/>
+        <field name="sequence">110</field>
+    </record>
+</odoo>

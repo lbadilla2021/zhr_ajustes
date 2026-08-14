@@ -22,6 +22,11 @@
                     <field name="accreditation_ids">
                         <list editable="bottom">
                             <field name="accreditation_type_id"/>
+                            <field name="accreditation_subtype_ids"
+                                   string="Tipo"
+                                   widget="many2many_tags"
+                                   domain="[('accreditation_type_id', '=', accreditation_type_id), ('active', '=', True)]"
+                                   options="{'no_create': True, 'no_create_edit': True}"/>
                             <field name="date_start"/>
                             <field name="date_end"/>
                             <field name="active"/>

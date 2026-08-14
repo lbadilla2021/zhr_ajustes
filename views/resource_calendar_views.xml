@@ -6,7 +6,9 @@
         <field name="inherit_id" ref="resource.resource_calendar_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="system_schedule"/>
+                <field name="system_schedule"
+                       colspan="2"
+                       placeholder="Describa el horario de trabajo..."/>
             </xpath>
         </field>
     </record>
