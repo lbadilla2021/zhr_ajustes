@@ -2,8 +2,10 @@ import re
 
 import unicodedata
 
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from lxml import etree
+
+from odoo import Command, api, fields, models
+from odoo.exceptions import AccessError, ValidationError
 
 
 EMPLOYEE_READONLY_GROUP = 'zhr_ajustes.group_zhr_employee_readonly'
@@ -14,6 +16,7 @@ CUSTOM_PRIVATE_EMPLOYEE_FIELDS = {
     'apellido_materno',
     'nombres',
     'nombre_preferido',
+    'nivel_estudio_id',
     'city_id',
     'driver_license_expiration_date',
     'analytic_account_id',
@@ -62,6 +65,7 @@ READONLY_PRIVATE_EMPLOYEE_FIELDS = (
     'has_work_permit',
     'additional_note',
     'certificate',
+    'nivel_estudio_id',
     'study_field',
     'study_school',
     'emergency_contact',
@@ -138,6 +142,35 @@ READONLY_PRIVATE_EMPLOYEE_FIELDS = (
 
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
+
+    funcion_ids = fields.Many2many(
+        'it.funcion',
+        'it_funcion_hr_employee_rel',
+        'employee_id',
+        'funcion_id',
+        string='Funciones operativas',
+    )
+    nivel_estudio_id = fields.Many2one(
+        'hr.study.level',
+        string='Nivel Estudios',
+        ondelete='restrict',
+    )
+
+    @api.model
+    def get_view(self, view_id=None, view_type='form', **options):
+        view = super().get_view(view_id=view_id, view_type=view_type, **options)
+        if (
+            view_type == 'form'
+            and self.env.user.has_group(
+                'zhr_ajustes.group_zhr_employee_function_assignment'
+            )
+            and not self.env.user.has_group('hr.group_hr_user')
+        ):
+            arch = etree.fromstring(view['arch'])
+            for field_node in arch.xpath("//field[@name != 'funcion_ids']"):
+                field_node.set('readonly', '1')
+            view['arch'] = etree.tostring(arch, encoding='unicode')
+        return view
 
     def _setup_complete(self):
         super()._setup_complete()
@@ -262,6 +295,27 @@ class HrEmployee(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        function_assignment_only = (
+            not self.env.su
+            and self.env.user.has_group(
+                'zhr_ajustes.group_zhr_employee_function_assignment'
+            )
+            and not self.env.user.has_group('hr.group_hr_user')
+        )
+        if function_assignment_only:
+            if set(vals) - {'funcion_ids'}:
+                raise AccessError(
+                    'Este perfil solo puede modificar las funciones operativas '
+                    'del empleado.'
+                )
+            for employee in self:
+                employee_vals = dict(vals)
+                employee_vals['funcion_ids'] = employee._normalize_function_commands(
+                    vals.get('funcion_ids', [])
+                )
+                super(HrEmployee, employee).write(employee_vals)
+            return True
+
         name_fields = {'nombres', 'apellido_paterno', 'apellido_materno'}
         if len(self) > 1 and name_fields.intersection(vals):
             for employee in self:
@@ -273,6 +327,40 @@ class HrEmployee(models.Model):
         vals = dict(vals)
         self._prepare_employee_vals(vals)
         return super().write(vals)
+
+    def _normalize_function_commands(self, commands):
+        self.ensure_one()
+        all_functions = self.with_context(active_test=False).funcion_ids
+        inactive_ids = set(
+            all_functions.filtered(lambda function: not function.active).ids
+        )
+        selected_ids = set(all_functions.filtered('active').ids)
+
+        for command in commands:
+            operation = command[0]
+            if operation == Command.LINK:
+                selected_ids.add(command[1])
+            elif operation == Command.UNLINK:
+                selected_ids.discard(command[1])
+            elif operation == Command.CLEAR:
+                selected_ids.clear()
+            elif operation == Command.SET:
+                selected_ids = set(command[2]) - inactive_ids
+            else:
+                raise ValidationError(
+                    'Solo puede seleccionar funciones existentes.'
+                )
+
+        selected_functions = self.env['it.funcion'].with_context(
+            active_test=False
+        ).browse(selected_ids).exists()
+        if len(selected_functions) != len(selected_ids):
+            raise ValidationError('Una de las funciones seleccionadas no existe.')
+        if selected_functions.filtered(lambda function: not function.active):
+            raise ValidationError(
+                'Solo puede asignar funciones que se encuentren activas.'
+            )
+        return [Command.set(list(inactive_ids | selected_ids))]
 
     def _prepare_employee_vals(self, vals):
         employee = self[:1]

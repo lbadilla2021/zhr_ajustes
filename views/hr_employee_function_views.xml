@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_function_assignment_form" model="ir.ui.view">
+        <field name="name">hr.employee.function.assignment.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='job_id']" position="after">
+                <field name="funcion_ids"
+                       widget="many2many_tags"
+                       domain="[('active', '=', True)]"
+                       options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"
+                       groups="zhr_ajustes.group_zhr_employee_function_assignment"/>
+                <field name="funcion_ids"
+                       widget="many2many_tags"
+                       readonly="1"
+                       options="{'no_open': True}"
+                       groups="!zhr_ajustes.group_zhr_employee_function_assignment"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

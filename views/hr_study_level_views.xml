@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_study_level_list_view" model="ir.ui.view">
+        <field name="name">hr.study.level.list</field>
+        <field name="model">hr.study.level</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_study_level_form_view" model="ir.ui.view">
+        <field name="name">hr.study.level.form</field>
+        <field name="model">hr.study.level</field>
+        <field name="arch" type="xml">
+            <form string="Nivel de estudio">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_study_level_action" model="ir.actions.act_window">
+        <field name="name">Niveles de estudio</field>
+        <field name="res_model">hr.study.level</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <menuitem id="menu_hr_study_level"
+              name="Niveles de estudio"
+              parent="menu_hr_tables_root"
+              action="hr_study_level_action"
+              sequence="80"/>
+
+    <record id="hr_employee_study_level_field" model="ir.ui.view">
+        <field name="name">hr.employee.study.level.field</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <field name="certificate" position="after">
+                <field name="nivel_estudio_id"
+                       domain="[('active', '=', True)]"
+                       options="{'no_create': True, 'no_create_edit': True}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

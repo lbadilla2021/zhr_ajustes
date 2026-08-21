@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="it_funcion_lavador_1" model="it.funcion">
+        <field name="name">Lavador 1</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="it_funcion_lavador_2" model="it.funcion">
+        <field name="name">Lavador 2</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="it_funcion_lavador_3" model="it.funcion">
+        <field name="name">Lavador 3</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="it_funcion_operador_1" model="it.funcion">
+        <field name="name">Operador 1</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="it_funcion_operador_2" model="it.funcion">
+        <field name="name">Operador 2</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="it_funcion_operador_3" model="it.funcion">
+        <field name="name">Operador 3</field>
+        <field name="sequence">60</field>
+    </record>
+    <record id="it_funcion_supervisor_1" model="it.funcion">
+        <field name="name">Supervisor 1</field>
+        <field name="sequence">70</field>
+    </record>
+    <record id="it_funcion_supervisor_2" model="it.funcion">
+        <field name="name">Supervisor 2</field>
+        <field name="sequence">80</field>
+    </record>
+</odoo>

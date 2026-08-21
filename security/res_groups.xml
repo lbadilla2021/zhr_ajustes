@@ -5,4 +5,25 @@
         <field name="category_id" ref="base.module_category_human_resources_employees"/>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
+
+    <record id="group_zhr_employee_function_assignment" model="res.groups">
+        <field name="name">Asignar funciones a empleados</field>
+        <field name="category_id" ref="base.module_category_human_resources_employees"/>
+        <field name="implied_ids" eval="[(4, ref('zhr_ajustes.group_zhr_employee_readonly'))]"/>
+        <field name="comment">
+            Permite consultar la ficha completa del empleado y modificar solamente
+            sus funciones operativas.
+        </field>
+    </record>
+
+    <record id="group_zhr_function_manager" model="res.groups">
+        <field name="name">Gestionar funciones operativas</field>
+        <field name="category_id" ref="base.module_category_human_resources_employees"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">
+            Permite acceder al mantenedor de funciones operativas y activar o
+            desactivar sus registros. No permite crear, renombrar ni eliminar
+            funciones.
+        </field>
+    </record>
 </odoo>

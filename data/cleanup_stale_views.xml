@@ -4,4 +4,8 @@
             search="[('name', '=', 'employee.address.fields'), ('model', '=', 'hr.employee')]"/>
     <delete model="ir.ui.view"
             search="[('name', '=', 'employee.add.rut.dv'), ('model', '=', 'hr.employee')]"/>
+    <delete model="ir.ui.view"
+            search="[('name', '=', 'hr.employee.function.assignment.form'), ('model', '=', 'hr.employee')]"/>
+    <delete model="ir.ui.view"
+            search="[('name', '=', 'hr.employee.function.assignment.wizard.form'), ('model', '=', 'hr.employee.function.assignment.wizard')]"/>
 </odoo>

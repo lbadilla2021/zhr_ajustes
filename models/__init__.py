@@ -15,3 +15,6 @@ from . import hr_assigned_resource
 from . import hr_job_family
 from . import hr_fecha_pago
 from . import hr_city
+from . import it_funcion
+from . import hr_study_level
+from . import hr_job_classification

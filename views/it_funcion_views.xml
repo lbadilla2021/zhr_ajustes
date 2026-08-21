@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_it_funcion_list" model="ir.ui.view">
+        <field name="name">it.funcion.list</field>
+        <field name="model">it.funcion</field>
+        <field name="arch" type="xml">
+            <list string="Funciones operativas">
+                <field name="name" readonly="1"/>
+                <field name="active"
+                       widget="boolean_toggle"
+                       groups="zhr_ajustes.group_zhr_function_manager"/>
+                <field name="active_readonly"
+                       string="Activo"
+                       readonly="1"
+                       groups="!zhr_ajustes.group_zhr_function_manager"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_it_funcion_form" model="ir.ui.view">
+        <field name="name">it.funcion.form</field>
+        <field name="model">it.funcion</field>
+        <field name="arch" type="xml">
+            <form string="Función operativa">
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="active"
+                               widget="boolean_toggle"
+                               groups="zhr_ajustes.group_zhr_function_manager"/>
+                        <field name="active_readonly"
+                               string="Activo"
+                               readonly="1"
+                               groups="!zhr_ajustes.group_zhr_function_manager"/>
+                        <field name="sequence" invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_it_funcion_search" model="ir.ui.view">
+        <field name="name">it.funcion.search</field>
+        <field name="model">it.funcion</field>
+        <field name="arch" type="xml">
+            <search string="Funciones operativas">
+                <field name="name"/>
+                <filter string="Desactivadas"
+                        name="inactive"
+                        context="{'active_test': False}"
+                        domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_it_funcion" model="ir.actions.act_window">
+        <field name="name">Funciones operativas</field>
+        <field name="res_model">it.funcion</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_it_funcion_search"/>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <menuitem id="menu_it_funcion"
+              name="Funciones operativas"
+              parent="menu_hr_tables_root"
+              action="action_it_funcion"
+              groups="hr.group_hr_user,zhr_ajustes.group_zhr_function_manager"
+              sequence="79"/>
+</odoo>

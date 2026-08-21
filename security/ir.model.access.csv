@@ -61,3 +61,13 @@ access_zhr_readonly_hr_employee_assigned_resource,access.zhr.readonly.hr.employe
 access_zhr_readonly_hr_job_family,access.zhr.readonly.hr.job.family,zhr_ajustes.model_hr_job_family,zhr_ajustes.group_zhr_employee_readonly,1,0,0,0
 access_zhr_readonly_zhr_fecha_pago,access.zhr.readonly.zhr.fecha.pago,zhr_ajustes.model_zhr_fecha_pago,zhr_ajustes.group_zhr_employee_readonly,1,0,0,0
 access_zhr_readonly_hr_city,access.zhr.readonly.hr.city,zhr_ajustes.model_hr_city,zhr_ajustes.group_zhr_employee_readonly,1,0,0,0
+access_zhr_readonly_it_funcion,access.zhr.readonly.it.funcion,zhr_ajustes.model_it_funcion,zhr_ajustes.group_zhr_employee_readonly,1,0,0,0
+access_hr_it_funcion,access.hr.it.funcion,zhr_ajustes.model_it_funcion,hr.group_hr_user,1,0,0,0
+access_zhr_function_manager_it_funcion,access.zhr.function.manager.it.funcion,zhr_ajustes.model_it_funcion,zhr_ajustes.group_zhr_function_manager,1,1,0,0
+access_zhr_function_assignment_hr_employee,access.zhr.function.assignment.hr.employee,hr.model_hr_employee,zhr_ajustes.group_zhr_employee_function_assignment,1,1,0,0
+access_hr_study_level,access.hr.study.level,zhr_ajustes.model_hr_study_level,hr.group_hr_user,1,1,1,1
+access_zhr_readonly_hr_study_level,access.zhr.readonly.hr.study.level,zhr_ajustes.model_hr_study_level,zhr_ajustes.group_zhr_employee_readonly,1,0,0,0
+access_hr_job_sence_classification,access.hr.job.sence.classification,zhr_ajustes.model_hr_job_sence_classification,hr.group_hr_user,1,1,1,1
+access_hr_job_sence_classification_user_read,access.hr.job.sence.classification.user.read,zhr_ajustes.model_hr_job_sence_classification,base.group_user,1,0,0,0
+access_hr_job_ine_classification,access.hr.job.ine.classification,zhr_ajustes.model_hr_job_ine_classification,hr.group_hr_user,1,1,1,1
+access_hr_job_ine_classification_user_read,access.hr.job.ine.classification.user.read,zhr_ajustes.model_hr_job_ine_classification,base.group_user,1,0,0,0

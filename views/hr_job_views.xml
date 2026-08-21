@@ -9,6 +9,12 @@
                 <group name="job_family_details">
                     <group>
                         <field name="job_family_id" string="Familia"/>
+                        <field name="sence_classification_id"
+                               domain="[('active', '=', True)]"
+                               options="{'no_create': True, 'no_create_edit': True}"/>
+                        <field name="ine_classification_id"
+                               domain="[('active', '=', True)]"
+                               options="{'no_create': True, 'no_create_edit': True}"/>
                         <field name="job_creation_date" string="Fecha"/>
                     </group>
                 </group>
@@ -23,6 +29,8 @@
         <field name="arch" type="xml">
             <xpath expr="//list" position="inside">
                 <field name="job_family_id" optional="show"/>
+                <field name="sence_classification_id" string="Sence" optional="show"/>
+                <field name="ine_classification_id" string="INE" optional="show"/>
                 <field name="job_creation_date" optional="show"/>
             </xpath>
         </field>

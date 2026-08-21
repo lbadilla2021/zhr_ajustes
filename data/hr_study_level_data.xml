@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="hr_study_level_si" model="hr.study.level">
+        <field name="name">Sin Escolaridad</field>
+        <field name="code">SI</field>
+    </record>
+    <record id="hr_study_level_bi" model="hr.study.level">
+        <field name="name">Básica Incompleta</field>
+        <field name="code">BI</field>
+    </record>
+    <record id="hr_study_level_bc" model="hr.study.level">
+        <field name="name">Básica Completa</field>
+        <field name="code">BC</field>
+    </record>
+    <record id="hr_study_level_mi" model="hr.study.level">
+        <field name="name">Media Incompleta</field>
+        <field name="code">MI</field>
+    </record>
+    <record id="hr_study_level_mc" model="hr.study.level">
+        <field name="name">Media Completa</field>
+        <field name="code">MC</field>
+    </record>
+    <record id="hr_study_level_tpi" model="hr.study.level">
+        <field name="name">Técnico Profesional Incompleta</field>
+        <field name="code">TPI</field>
+    </record>
+    <record id="hr_study_level_tpc" model="hr.study.level">
+        <field name="name">Técnico Profesional Completa</field>
+        <field name="code">TPC</field>
+    </record>
+    <record id="hr_study_level_ui" model="hr.study.level">
+        <field name="name">Universitaria Incompleta</field>
+        <field name="code">UI</field>
+    </record>
+    <record id="hr_study_level_uc" model="hr.study.level">
+        <field name="name">Universitaria Completa</field>
+        <field name="code">UC</field>
+    </record>
+</odoo>
