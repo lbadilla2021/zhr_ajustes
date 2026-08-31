@@ -41,11 +41,38 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='private_street2']" position="attributes">
-                <attribute name="string">Numeración dirección</attribute>
-            </xpath>
-            <xpath expr="//field[@name='private_city']" position="replace">
-                <field name="city_id" string="Ciudad"/>
+            <xpath expr="//field[@name='private_street']/ancestor::div[hasclass('o_address_format')][1]" position="replace">
+                <div class="o_address_format">
+                    <field name="private_country_id"
+                           string="País"
+                           placeholder="País"
+                           class="o_address_country"
+                           options="{'no_open': True, 'no_create': True}"/>
+                    <field name="private_state_id"
+                           string="Región"
+                           placeholder="Región"
+                           class="o_address_state"
+                           domain="[('country_id', '=', private_country_id)]"
+                           options="{'no_open': True, 'no_quick_create': True}"
+                           context="{'default_country_id': private_country_id}"/>
+                    <field name="city_id"
+                           string="Ciudad"
+                           placeholder="Ciudad"
+                           class="o_address_city"
+                           domain="[('country_id', '=', private_country_id), ('state_id', '=', private_state_id)]"/>
+                    <field name="private_street"
+                           string="Calle 1"
+                           placeholder="Calle 1..."
+                           class="o_address_street"/>
+                    <field name="private_street2"
+                           string="Calle 2"
+                           placeholder="Calle 2..."
+                           class="o_address_street"/>
+                    <field name="private_zip"
+                           string="Código postal"
+                           placeholder="C.P."
+                           class="o_address_zip"/>
+                </div>
             </xpath>
         </field>
     </record>

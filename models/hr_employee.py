@@ -192,7 +192,17 @@ class HrEmployee(models.Model):
     apellido_materno = fields.Char(string='Apellido Materno')
     nombres = fields.Char(string='Nombres')
     nombre_preferido = fields.Char(string='Nombre Preferido')
-    city_id = fields.Many2one('hr.city', string='Ciudad')
+    private_country_id = fields.Many2one(
+        default=lambda self: self.env.ref('base.cl', raise_if_not_found=False),
+    )
+    city_id = fields.Many2one(
+        'hr.city',
+        string='Ciudad',
+        domain=(
+            "[('country_id', '=', private_country_id), "
+            "('state_id', '=', private_state_id)]"
+        ),
+    )
     driver_license_expiration_date = fields.Date(
         string='Vencimiento licencia conducir',
     )
@@ -287,6 +297,22 @@ class HrEmployee(models.Model):
     def _onchange_city_id(self):
         for employee in self:
             employee.private_city = employee.city_id.name if employee.city_id else False
+            if employee.city_id:
+                employee.private_state_id = employee.city_id.state_id
+                employee.private_country_id = employee.city_id.country_id
+
+    @api.onchange('private_country_id')
+    def _onchange_private_country_id_city(self):
+        for employee in self:
+            if employee.private_state_id.country_id != employee.private_country_id:
+                employee.private_state_id = False
+                employee.city_id = False
+
+    @api.onchange('private_state_id')
+    def _onchange_private_state_id_city(self):
+        for employee in self:
+            if employee.city_id.state_id != employee.private_state_id:
+                employee.city_id = False
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -379,7 +405,14 @@ class HrEmployee(models.Model):
             )
 
         if vals.get('city_id'):
-            vals['private_city'] = self.env['hr.city'].browse(vals['city_id']).name
+            city = self.env['hr.city'].browse(vals['city_id'])
+            vals.update(
+                {
+                    'private_city': city.name,
+                    'private_country_id': city.country_id.id,
+                    'private_state_id': city.state_id.id,
+                }
+            )
         elif 'city_id' in vals:
             vals['private_city'] = False
 
