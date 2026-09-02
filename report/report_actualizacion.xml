@@ -35,7 +35,7 @@
                         representada legalmente por <strong> don Claudio Barrales Espinoza, RUT 12.702.854-0</strong>
                         con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
                         y don <strong><span t-esc="contract.employee_id.name"/>,
-                        R.U.T.: <span t-esc="contract.employee_id.identification_id"/>,</strong>
+                        R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>,</strong>
                         de nacionalidad chilena, fecha nacimiento
                         <span t-esc="contract.format_date_es(contract.employee_id.birthday)"/>
                         domiciliado en
@@ -105,7 +105,7 @@
                             <div style="width:49%; display:inline-block; text-align:center;">
                                 ___________________________<br/>
                                 <span t-esc="contract.employee_id.name"/><br/>
-                                R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+                                R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>
                             </div>
 
                             <div style="width:49%; display:inline-block; text-align:center; float:right;">
@@ -137,7 +137,7 @@
                         representada legalmente por <strong> don Claudio Barrales Espinoza, RUT 12.702.854-0</strong>
                         con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
                         y don <strong><span t-esc="contract.employee_id.name"/>,
-                        R.U.T.: <span t-esc="contract.employee_id.identification_id"/>,</strong>
+                        R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>,</strong>
                         de nacionalidad chilena, fecha nacimiento
                         <span t-esc="contract.format_date_es(contract.employee_id.birthday)"/>
                         domiciliado en
@@ -172,8 +172,8 @@
 
                         <p style="margin:0; text-align:justify;"><strong>SEGUNDO: </strong>
                         Se deja constancia que todas las otras obligaciones del cargo, asi como los beneficios, bonos y clausulas derivadas del contrato original,
-                        salvo los indicados en este anexo, suscrito el <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>, se
-                        mantienen vigentes Se deja constancia que la fecha de ingreso del trabajador es <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>.
+                        salvo los indicados en este anexo, suscrito el <span t-esc="contract.format_date_es(contract.employee_id.fecha_contrato)"/>, se
+                        mantienen vigentes Se deja constancia que la fecha de ingreso del trabajador es <span t-esc="contract.format_date_es(contract.employee_id.fecha_contrato)"/>.
                         </p>
                         <br/>
 
@@ -187,7 +187,7 @@
                             <div style="width:49%; display:inline-block; text-align:center;">
                                 ___________________________<br/>
                                 <span t-esc="contract.employee_id.name"/><br/>
-                                R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+                                R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>
                             </div>
 
                             <div style="width:49%; display:inline-block; text-align:center; float:right;">

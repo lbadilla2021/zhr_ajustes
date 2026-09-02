@@ -1,6 +1,6 @@
 {
     'name': 'Barca Ajustes Modulo HR',
-    'version': '18.0.2.6.1',
+    'version': '18.0.2.6.2',
     'depends': ['hr', 'hr_contract', 'hr_skills', 'account'],
     'data': [
         'security/res_groups.xml',

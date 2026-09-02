@@ -31,7 +31,7 @@
                         representada legalmente por <strong>Claudio Barrales Espinoza , RUT 12.702.854-0</strong>
                          con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
                         y <strong><span t-esc="contract.employee_id.name"/>,
-                        R.U.T.: <span t-esc="contract.employee_id.identification_id"/>,</strong>
+                        R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>,</strong>
                         de nacionalidad chilena, fecha nacimiento 
                         <span t-esc="contract.format_date_es(contract.employee_id.birthday)"/>
                         domiciliado en 
@@ -239,7 +239,7 @@
                     <td style="width:50%; text-align:center; vertical-align:top;">
                         ___________________________<br/>
                         <span t-esc="contract.employee_id.name"/><br/>
-                        R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+                        R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>
                     </td>
                     <td style="width:50%; text-align:center; vertical-align:top;">
                         ___________________________<br/>

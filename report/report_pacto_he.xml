@@ -34,7 +34,7 @@
                         con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
                         y la persona trabajadora
                         <b><span t-esc="doc.employee_id.name"/>,
-                        R.U.T.: <span t-esc="doc.employee_id.identification_id"/></b>,
+                        R.U.T.: <span t-esc="(doc.employee_id.identification_id or '') + (('-' + doc.employee_id.rut_dv) if doc.employee_id.identification_id and doc.employee_id.rut_dv else '')"/></b>,
                         se ha convenido el siguiente Pacto de Horas Extraordinarias:
                     </p>
 
@@ -117,7 +117,7 @@
                                     <td width="50%" style="text-align:center; border:none;">
                                         ___________________________<br/>
                                         <span t-esc="doc.employee_id.name"/><br/>
-                                        R.U.T.: <span t-esc="doc.employee_id.identification_id or ''"/>
+                                        R.U.T.: <span t-esc="(doc.employee_id.identification_id or '') + (('-' + doc.employee_id.rut_dv) if doc.employee_id.identification_id and doc.employee_id.rut_dv else '')"/>
                                     </td>
                                     <td width="50%" style="text-align:center; border:none;">
                                         ___________________________<br/>

@@ -30,7 +30,7 @@
                         con domicilio en Lote 4 Sector la Quinta, Cabrero, en adelante
                         <b>Empleador</b> y
                         <b><span t-esc="contract.employee_id.name"/></b>,
-                        Rut: <span t-esc="contract.employee_id.identification_id"/>,
+                        Rut: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>,
                         en adelante <b>Trabajador</b> acuerdan lo siguiente como anexo
                         al contrato de trabajo:
                     </p>
@@ -70,7 +70,7 @@
                                     <td width="50%" style="text-align:center;">
                                         ___________________________<br/>
                                         <span t-esc="contract.employee_id.name"/><br/>
-                                        R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+                                        R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>
                                     </td>
                                     <td width="50%" style="text-align:center;">
                                         ___________________________<br/>
@@ -97,7 +97,7 @@
                         con domicilio en Lote 4 Sector la Quinta, Cabrero, en adelante
                         <b>Empleador</b> y
                         <b><span t-esc="contract.employee_id.name"/></b>,
-                        Rut: <span t-esc="contract.employee_id.identification_id"/>,
+                        Rut: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>,
                         en adelante <b>Trabajador</b> acuerdan lo siguiente como anexo
                         al contrato de trabajo:
                     </p>
@@ -134,12 +134,12 @@
                                     <td width="50%" style="text-align:center; border:none;">
                                         ___________________________<br/>
                                         <span t-esc="contract.employee_id.name"/><br/>
-                                        R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+                                        R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>
                                     </td>
                                     <td width="50%" style="text-align:center; border:none;">
                                         ___________________________<br/>
                                         Servicios Barca SPA.<br/>
-                                        R.U.T.: 76.766.106 – 1
+                                        R.U.T.: 76766106–1
                                     </td>
                                 </tr>
                             </table>
@@ -162,7 +162,7 @@
                         con domicilio en Lote 4 Sector la Quinta, Cabrero, en adelante
                         <b>Empleador</b> y
                         <b><span t-esc="contract.employee_id.name"/></b>,
-                        Rut: <span t-esc="contract.employee_id.identification_id"/>,
+                        Rut: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>,
                         en adelante <b>Trabajador</b> acuerdan lo siguiente como anexo
                         al contrato de trabajo:
                     </p>
@@ -192,12 +192,12 @@
                                     <td width="50%" style="text-align:center; border:none;">
                                         ___________________________<br/>
                                         <span t-esc="contract.employee_id.name"/><br/>
-                                        R.U.T.: <span t-esc="contract.employee_id.identification_id or ''"/>
+                                        R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>
                                     </td>
                                     <td width="50%" style="text-align:center; border:none;">
                                         ___________________________<br/>
                                         Servicios Barca SPA.<br/>
-                                        R.U.T.: 76.766.106 – 1
+                                        R.U.T.: 76766106–1
                                     </td>
                                 </tr>
                             </table>
