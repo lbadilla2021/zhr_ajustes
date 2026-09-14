@@ -8,6 +8,7 @@ from . import hr_health_system
 from . import resource_calendar
 from . import hr_contract
 from . import hr_contract_reference
+from . import hr_plant_annex_client
 from . import hr_payment_concept
 from . import hr_lugares_trabajo
 from . import hr_tipo_obra

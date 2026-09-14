@@ -422,7 +422,7 @@ class HrEmployee(models.Model):
             open_contracts = contracts.filtered(
                 lambda contract: (
                     contract.state == 'open'
-                    and contract._participates_in_contract_continuity()
+                    and not contract._is_settlement_reference(contract.reference_id)
                 )
             ).sorted(key=lambda contract: (
                 contract.date_start or contract.fecha_contrato or fields.Date.to_date('0001-01-01'),

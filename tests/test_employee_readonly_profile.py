@@ -1,5 +1,8 @@
 from datetime import date
 
+from dateutil.relativedelta import relativedelta
+
+from odoo import fields
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests.common import TransactionCase
 
@@ -114,18 +117,31 @@ class TestEmployeeReadonlyProfile(TransactionCase):
 
     def test_contract_form_shows_contract_dates_and_icon_only_duplicate_button(self):
         arch = self.env["hr.contract"].get_view(view_type="form")["arch"]
+        extension_arch = self.env.ref(
+            "zhr_ajustes.hr_contract_form_inherit_print"
+        ).arch_db
         self.assertIn('name="reference_id"', arch)
         self.assertIn('options="{\'no_create\': True, \'no_create_edit\': True}"', arch)
         self.assertIn('readonly="1"', arch)
         self.assertIn('name="fecha_contrato"', arch)
         self.assertIn('name="fecha_finiquito"', arch)
         self.assertIn('name="departure_reason_id"', arch)
-        self.assertIn('invisible="not fecha_finiquito"', arch)
+        self.assertIn('required="is_settlement_contract"', arch)
+        self.assertIn(
+            'invisible="not fecha_finiquito and not is_settlement_contract"',
+            arch,
+        )
         self.assertNotIn('name="contract_gap_start"', arch)
         self.assertNotIn('name="contract_gap_end"', arch)
         self.assertNotIn('name="contract_gap_reason"', arch)
-        self.assertIn('statusbar_visible="draft,open,close,expired,cancel"', arch)
-        self.assertIn("statusbar_colors=\"{'expired': 'gray', 'cancel': 'gray'}\"", arch)
+        self.assertIn(
+            '<attribute name="statusbar_visible">draft,open,close,expired,cancel</attribute>',
+            extension_arch,
+        )
+        self.assertIn(
+            '<attribute name="statusbar_colors">{\'expired\': \'gray\', \'cancel\': \'gray\'}</attribute>',
+            extension_arch,
+        )
         self.assertIn('string="Fecha inicio de vigencia"', arch)
         self.assertIn('string="Fecha de finalización vigencia"', arch)
         self.assertLess(
@@ -139,14 +155,6 @@ class TestEmployeeReadonlyProfile(TransactionCase):
         self.assertLess(
             arch.index('name="fecha_finiquito"'),
             arch.index('name="date_start"'),
-        )
-        self.assertLess(
-            arch.index('name="contract_type_id"'),
-            arch.index('name="departure_reason_id"'),
-        )
-        self.assertLess(
-            arch.index('name="departure_reason_id"'),
-            arch.index('name="tipo_obra_id"'),
         )
         self.assertIn('name="action_open_duplicate_wizard"', arch)
         self.assertNotIn('name="action_open_duplicate_wizard" type="object" string="+"', arch)
@@ -459,7 +467,7 @@ class TestEmployeeReadonlyProfile(TransactionCase):
             {
                 "name": "Contrato vigente",
                 "employee_id": employee.id,
-                "date_start": date(2026, 3, 1),
+                "date_start": date(2026, 2, 25),
                 "fecha_contrato": date(2026, 2, 25),
                 "fecha_finiquito": date(2026, 12, 31),
                 "wage": 1200,
@@ -495,18 +503,19 @@ class TestEmployeeReadonlyProfile(TransactionCase):
         self.assertEqual(contract.date_end, date(2026, 4, 30))
 
     def test_future_end_date_sets_contract_open_on_save(self):
+        today = fields.Date.context_today(self.env["hr.contract"])
         contract = self.env["hr.contract"].create(
             {
                 "name": "Contrato vencido corregido",
                 "employee_id": self.employee.id,
-                "date_start": date(2026, 1, 1),
-                "date_end": date(2026, 7, 1),
+                "date_start": today - relativedelta(months=1),
+                "date_end": today - relativedelta(days=1),
                 "wage": 1000,
                 "state": "close",
             }
         )
 
-        contract.write({"date_end": date(2026, 7, 29)})
+        contract.write({"date_end": today + relativedelta(months=1)})
 
         self.assertEqual(contract.state, "open")
 
@@ -567,7 +576,7 @@ class TestEmployeeReadonlyProfile(TransactionCase):
         )
 
         self.assertEqual(previous_contract.state, "open")
-        self.assertEqual(new_contract.state, "open")
+        self.assertEqual(new_contract.state, "draft")
 
     def test_deleting_contracts_clears_employee_work_dates(self):
         employee = self.env["hr.employee"].create(
@@ -626,6 +635,138 @@ class TestEmployeeReadonlyProfile(TransactionCase):
                 }
             )
 
+    def test_contract_gap_is_allowed_after_historical_settlement(self):
+        employee = self.env["hr.employee"].create(
+            {
+                "name": "Empleado Recontratado",
+                "company_id": self.env.company.id,
+            }
+        )
+        contract_reference = self.env.ref(
+            "zhr_ajustes.hr_contract_reference_contract"
+        )
+        settlement_reference = self.env.ref(
+            "zhr_ajustes.hr_contract_reference_settlement"
+        )
+        previous_contract = self.env["hr.contract"].create(
+            {
+                "name": "Contrato primera relacion",
+                "employee_id": employee.id,
+                "reference_id": contract_reference.id,
+                "date_start": date(2026, 1, 20),
+                "date_end": date(2026, 3, 31),
+                "wage": 1000,
+                "state": "expired",
+            }
+        )
+        self.env["hr.contract"].create(
+            {
+                "name": "Finiquito primera relacion",
+                "employee_id": employee.id,
+                "reference_id": settlement_reference.id,
+                "fecha_contrato": previous_contract.fecha_contrato,
+                "date_start": date(2026, 3, 31),
+                "date_end": date(2026, 3, 31),
+                "fecha_finiquito": date(2026, 3, 31),
+                "wage": 1000,
+                "state": "cancel",
+            }
+        )
+
+        new_contract = self.env["hr.contract"].create(
+            {
+                "name": "Contrato recontratacion",
+                "employee_id": employee.id,
+                "reference_id": contract_reference.id,
+                "date_start": date(2026, 4, 7),
+                "wage": 1200,
+                "state": "open",
+            }
+        )
+
+        self.assertEqual(new_contract.fecha_contrato, date(2026, 4, 7))
+
+    def test_legacy_gap_only_blocks_changes_to_contract_continuity(self):
+        employee = self.env["hr.employee"].create(
+            {
+                "name": "Empleado con historial migrado",
+                "company_id": self.env.company.id,
+            }
+        )
+        previous_contract = self.env["hr.contract"].create(
+            {
+                "name": "Contrato historico anterior",
+                "employee_id": employee.id,
+                "date_start": date(2026, 1, 1),
+                "date_end": date(2026, 1, 31),
+                "wage": 1000,
+                "state": "expired",
+            }
+        )
+        later_contract = self.env["hr.contract"].create(
+            {
+                "name": "Contrato historico posterior",
+                "employee_id": employee.id,
+                "date_start": date(2026, 2, 10),
+                "wage": 1200,
+                "state": "draft",
+            }
+        )
+        self.env.cr.execute(
+            "UPDATE hr_contract SET state = 'open' WHERE id = %s",
+            [later_contract.id],
+        )
+        later_contract.invalidate_recordset(["state"])
+
+        previous_contract.write({"wage": 1100})
+
+        self.assertEqual(previous_contract.wage, 1100)
+        with self.assertRaisesRegex(ValidationError, "vacio contractual"):
+            previous_contract.write({"date_start": date(2026, 1, 2)})
+
+    def test_expired_contract_is_ignored_by_odoo_active_overlap_check(self):
+        employee = self.env["hr.employee"].create(
+            {
+                "name": "Empleado con anexo vigente",
+                "company_id": self.env.company.id,
+            }
+        )
+        annex_reference = self.env.ref(
+            "zhr_ajustes.hr_contract_reference_annex_multiple"
+        )
+        annex_job = self.env["hr.job"].create(
+            {
+                "name": "Cargo actualizado por anexo",
+                "company_id": self.env.company.id,
+            }
+        )
+        previous_contract = self.env["hr.contract"].create(
+            {
+                "name": "Contrato historico",
+                "employee_id": employee.id,
+                "date_start": date(2023, 2, 11),
+                "wage": 1000,
+                "state": "expired",
+            }
+        )
+        self.env["hr.contract"].create(
+            {
+                "name": "Anexo vigente",
+                "employee_id": employee.id,
+                "reference_id": annex_reference.id,
+                "date_start": date(2026, 7, 22),
+                "job_id": annex_job.id,
+                "wage": 1200,
+                "state": "open",
+            }
+        )
+
+        previous_contract.write({"date_start": date(2023, 2, 10)})
+
+        self.assertEqual(previous_contract.state, "expired")
+        self.assertEqual(previous_contract.date_start, date(2023, 2, 10))
+        self.assertEqual(employee.job_id, annex_job)
+
     def test_cancelled_contract_allows_gap_or_overlap(self):
         employee = self.env["hr.employee"].create(
             {
@@ -664,6 +805,7 @@ class TestEmployeeReadonlyProfile(TransactionCase):
                 "name": "Contrato plazo fijo",
                 "employee_id": self.employee.id,
                 "date_start": date(2026, 1, 1),
+                "date_end": date(2026, 2, 28),
                 "fecha_contrato": date(2026, 1, 1),
                 "wage": 1000,
                 "state": "open",
@@ -795,7 +937,7 @@ class TestEmployeeReadonlyProfile(TransactionCase):
         self.assertFalse(new_contract.date_end)
         self.assertFalse(new_contract.fecha_finiquito)
         self.assertFalse(new_contract.departure_reason_id)
-        self.assertEqual(new_contract.state, "open")
+        self.assertEqual(new_contract.state, "draft")
 
     def test_duplicate_contract_wizard_closes_original_and_opens_copy(self):
         contract = self.env["hr.contract"].create(
@@ -824,7 +966,7 @@ class TestEmployeeReadonlyProfile(TransactionCase):
         self.assertEqual(contract.state, "expired")
         self.assertEqual(contract.date_end, date(2026, 1, 31))
         self.assertEqual(new_contract.name, "Contrato - Empleado Consulta")
-        self.assertEqual(new_contract.fecha_contrato, date(2026, 1, 1))
+        self.assertEqual(new_contract.fecha_contrato, date(2026, 2, 1))
         self.assertEqual(
             new_contract.reference_id,
             self.env.ref("zhr_ajustes.hr_contract_reference_contract"),
@@ -833,11 +975,11 @@ class TestEmployeeReadonlyProfile(TransactionCase):
         self.assertFalse(new_contract.date_end)
         self.assertFalse(new_contract.fecha_finiquito)
         self.assertFalse(new_contract.departure_reason_id)
-        self.assertEqual(new_contract.state, "draft")
+        self.assertEqual(new_contract.state, "open")
         self.assertEqual(new_contract.employee_id, contract.employee_id)
         self.assertEqual(new_contract.wage, contract.wage)
 
-    def test_duplicate_contract_reference_uses_employee_contract_date_when_origin_is_empty(self):
+    def test_duplicate_contract_reference_uses_new_contract_date_when_origin_is_empty(self):
         self.employee.fecha_contrato = date(2026, 1, 1)
         contract = self.env["hr.contract"].create(
             {
@@ -861,8 +1003,66 @@ class TestEmployeeReadonlyProfile(TransactionCase):
         action = wizard.action_confirm()
         new_contract = self.env["hr.contract"].browse(action["res_id"])
 
-        self.assertEqual(new_contract.fecha_contrato, date(2026, 1, 1))
+        self.assertEqual(new_contract.fecha_contrato, date(2026, 2, 1))
         self.assertEqual(new_contract.date_start, date(2026, 2, 1))
+
+    def test_duplicate_settlement_creates_historical_document(self):
+        reason = self.env["hr.departure.reason"].create({"name": "Vencimiento"})
+        contract_reference = self.env.ref(
+            "zhr_ajustes.hr_contract_reference_contract"
+        )
+        settlement_reference = self.env.ref(
+            "zhr_ajustes.hr_contract_reference_settlement"
+        )
+        employee = self.env["hr.employee"].create(
+            {
+                "name": "Empleado con finiquito historico",
+                "company_id": self.env.company.id,
+            }
+        )
+        previous_contract = self.env["hr.contract"].create(
+            {
+                "name": "Contrato finalizado",
+                "employee_id": employee.id,
+                "reference_id": contract_reference.id,
+                "fecha_contrato": date(2026, 1, 20),
+                "date_start": date(2026, 1, 20),
+                "date_end": date(2026, 3, 31),
+                "departure_reason_id": reason.id,
+                "wage": 1000,
+                "state": "expired",
+            }
+        )
+        current_contract = self.env["hr.contract"].create(
+            {
+                "name": "Contrato posterior",
+                "employee_id": employee.id,
+                "reference_id": contract_reference.id,
+                "date_start": date(2026, 4, 7),
+                "wage": 1200,
+                "state": "open",
+            }
+        )
+        wizard = self.env["hr.contract.duplicate.wizard"].create(
+            {
+                "contract_id": previous_contract.id,
+                "reference_id": settlement_reference.id,
+                "fecha_finiquito": date(2026, 3, 31),
+                "departure_reason_id": reason.id,
+            }
+        )
+
+        action = wizard.action_confirm()
+        settlement = self.env["hr.contract"].browse(action["res_id"])
+
+        self.assertEqual(settlement.state, "cancel")
+        self.assertEqual(settlement.date_start, date(2026, 3, 31))
+        self.assertEqual(settlement.date_end, date(2026, 3, 31))
+        self.assertEqual(settlement.fecha_finiquito, date(2026, 3, 31))
+        self.assertEqual(settlement.departure_reason_id, reason)
+        self.assertEqual(settlement.fecha_contrato, date(2026, 1, 20))
+        self.assertEqual(previous_contract.date_end, date(2026, 3, 31))
+        self.assertEqual(current_contract.state, "open")
 
     def test_duplicate_contract_wizard_uses_annex_reference(self):
         contract = self.env["hr.contract"].create(

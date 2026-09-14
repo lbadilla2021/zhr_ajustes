@@ -9,6 +9,14 @@
                     <field name="contract_ids" invisible="1"/>
                     <field name="employee_ids" widget="many2many_tags" readonly="1"/>
                     <field name="show_actualizacion_options" invisible="1"/>
+                    <field name="show_plant_annex_options" invisible="1"/>
+                </group>
+
+                <group string="Opciones para Anexo Planta"
+                       invisible="not show_plant_annex_options">
+                    <field name="plant_annex_client_id"
+                           required="show_plant_annex_options"
+                           options="{'no_create': True, 'no_create_edit': True}"/>
                 </group>
 
                 <group string="Opciones para Actualizacion"
@@ -29,7 +37,14 @@
                             type="object"
                             name="action_print_anexo_planta"
                             icon="fa-print"
-                            class="btn-secondary"/>
+                            class="btn-secondary"
+                            invisible="show_plant_annex_options"/>
+                    <button string="Imprimir Anexo Planta"
+                            type="object"
+                            name="action_confirm_anexo_planta"
+                            icon="fa-print"
+                            class="btn-primary"
+                            invisible="not show_plant_annex_options"/>
                     <button string="Pacto HE"
                             type="object"
                             name="action_print_pacto_he"

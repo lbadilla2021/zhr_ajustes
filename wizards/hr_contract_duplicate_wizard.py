@@ -33,6 +33,17 @@ class HrContractDuplicateWizard(models.TransientModel):
         compute='_compute_name',
         readonly=True,
     )
+    is_settlement_reference = fields.Boolean(
+        compute='_compute_is_settlement_reference',
+    )
+    fecha_finiquito = fields.Date(
+        string='Fecha de termino',
+        default=lambda self: self._default_settlement_date(),
+    )
+    departure_reason_id = fields.Many2one(
+        'hr.departure.reason',
+        string='Motivo de salida',
+    )
 
     def _default_date_start(self):
         contract_id = self.env.context.get('default_contract_id')
@@ -42,6 +53,22 @@ class HrContractDuplicateWizard(models.TransientModel):
             if previous_end:
                 return previous_end + relativedelta(days=1)
         return fields.Date.context_today(self)
+
+    def _default_settlement_date(self):
+        contract_id = self.env.context.get('default_contract_id')
+        if contract_id:
+            contract = self.env['hr.contract'].browse(contract_id)
+            return contract.fecha_finiquito or contract.date_end
+        return False
+
+    @api.depends('reference_id')
+    def _compute_is_settlement_reference(self):
+        for wizard in self:
+            wizard.is_settlement_reference = (
+                wizard.contract_id._is_settlement_reference(wizard.reference_id)
+                if wizard.contract_id
+                else False
+            )
 
     @api.depends(
         'reference_id',
@@ -63,9 +90,11 @@ class HrContractDuplicateWizard(models.TransientModel):
             raise ValidationError('Debe seleccionar la referencia del contrato.')
 
         new_contract = self.contract_id.action_duplicate_with_new_reference(
-            self.date_start,
+            self.fecha_finiquito if self.is_settlement_reference else self.date_start,
             self._build_reference_name(),
             self.reference_id.id,
+            fecha_finiquito=self.fecha_finiquito,
+            departure_reason_id=self.departure_reason_id.id,
         )
         return {
             'type': 'ir.actions.act_window',

@@ -26,7 +26,7 @@ Documento resumido de uso funcional y uso tecnico del modulo `zhr_ajustes`.
 |---|---|---|
 | Referencia de contrato | Obliga a seleccionar una referencia controlada para nombrar contratos y anexos. | Usa `reference_id` hacia `hr.contract.reference`; `_prepare_reference_name()` y `_build_reference_name()` concatenan referencia + empleado. |
 | Mantenedor de referencias | Permite administrar tipos como Contrato, Anexo IPC, Anexo Cargo, Finiquito, etc. | Modelo `hr.contract.reference` con `name`, `reference_type`, `sequence`, `active`. |
-| Fecha Contrato | Registra la fecha documental del contrato original del trabajador. | Usa `fecha_contrato`; `_prepare_preserved_contract_date()` conserva la fecha para anexos/finiquitos y solo se edita en el primer contrato real. |
+| Fecha Contrato | Registra la fecha documental de cada contrato base del trabajador. | Usa `fecha_contrato`; un nuevo `Contrato` toma su propia fecha, mientras anexos, renovaciones y finiquitos conservan la fecha del contrato de origen. |
 | Fecha inicio de vigencia | Indica desde cuando rige el contrato o anexo. | Usa `date_start`, renombrado visualmente a "Fecha inicio de vigencia"; `_prepare_contract_dates()` lo llena desde `fecha_contrato` cuando corresponde. |
 | Fecha finalizacion vigencia | Indica hasta cuando rige el contrato o anexo. | Usa `date_end`, renombrado visualmente a "Fecha de finalizacion vigencia"; se limpia en contratos indefinidos. |
 | Fecha Termino | Registra la fecha documental de termino o finiquito. | Usa `fecha_finiquito`; `_prepare_contract_dates()` sincroniza `date_end` cuando se informa esta fecha. |
@@ -40,12 +40,13 @@ Documento resumido de uso funcional y uso tecnico del modulo `zhr_ajustes`.
 | Lugar de trabajo | Permite registrar lugar de prestacion de servicios del contrato. | Usa `lugar_trabajo_id` y lineas `hr.employee.lugar.trabajo`; se usa en vistas/reportes. |
 | Conceptos de pago | Permite agregar conceptos adicionales con valor en el contrato. | Usa `employee_payment_concept_ids`, modelo `hr.employee.payment.concept`, con `payment_concept_id` y `amount`. |
 | Contrato indefinido | Bloquea fechas de termino cuando el tipo de contrato es Indefinido. | Usa `is_indefinite_contract`; `_onchange_contract_type_id_indefinite_dates()` limpia `date_end` y `fecha_finiquito`. |
-| Sin vacios entre contratos reales | Evita que existan saltos o traslapes entre contratos reales del trabajador. | `_check_contract_date_continuity()` valida `date_start` y `date_end` solo en referencias que participan en continuidad. |
+| Sin vacios entre contratos reales | Evita saltos dentro de una misma relacion laboral y permite una nueva relacion despues de un finiquito o motivo de salida. | `_check_contract_date_continuity()` valida `date_start` y `date_end`; `_has_employment_break_between()` reconoce el corte laboral. |
 | Anexos sin continuidad contractual | Permite crear anexos que no generen error por vacios o traslapes. | `_participates_in_contract_continuity()` excluye referencias con `reference_type = 'annex'`. |
-| Duplicar contrato con boton `+` | Permite crear un contrato/anexo desde el contrato actual con nueva fecha y referencia. | `action_open_duplicate_wizard()` abre `hr.contract.duplicate.wizard`; `action_duplicate_with_new_reference()` copia el contrato, deja el anterior `expired` y el nuevo `open`. |
+| Duplicar contrato con boton `+` | Permite crear un contrato, anexo o finiquito desde el registro actual. | `action_open_duplicate_wizard()` abre `hr.contract.duplicate.wizard`; `action_duplicate_with_new_reference()` aplica la fecha y el estado segun el tipo de referencia. |
+| Finiquito historico desde duplicar | Permite reconstruir un finiquito sin dar de baja a un trabajador actualmente recontratado. | El duplicador solicita fecha de termino y motivo; crea un documento de un dia en `cancel`, conserva la fecha del contrato de origen y no altera contratos posteriores. |
 | Anexo Renovacion | Permite extender la vigencia contractual manteniendo la Fecha Contrato original. | `_is_renewal_annex_reference()` detecta "Anexo Renovacion"; el origen queda `expired` y el nuevo anexo queda `open`. |
 | Anexo Renovacion Indefinido | Permite renovar un contrato y dejarlo como indefinido. | `_is_indefinite_renewal_annex_reference()` detecta el tipo y `_get_indefinite_contract_type()` asigna `contract_type_id` Indefinido. |
-| Sincronizacion contrato-empleado | Permite que la ficha del trabajador refleje el contrato vigente. | `_sync_employee_work_dates()` actualiza fechas laborales, cargo, departamento, horario y lugar de trabajo desde el contrato `open`. |
+| Sincronizacion contrato-empleado | Permite que la ficha del trabajador refleje el contrato o anexo vigente mas reciente. | `_sync_employee_work_dates()` actualiza fechas laborales, cargo, departamento, horario y lugar de trabajo desde el registro `open`, excluyendo finiquitos. |
 | Eliminacion de contratos | Mantiene limpias las fechas del empleado si se eliminan contratos. | `unlink()` llama `_sync_contract_work_dates(clear_without_open=True)` para recalcular o limpiar fechas laborales. |
 
 ## Impresiones y reportes
@@ -56,7 +57,7 @@ Documento resumido de uso funcional y uso tecnico del modulo `zhr_ajustes`.
 | Contrato Operador | Imprime formato contractual para estructura operativa. | Reporte `action_report_contract_employee_operador` y template `contract_employee_template_operador`. |
 | Contrato Profesional | Imprime formato contractual para estructura profesional. | Reporte `action_report_contract_employee_profesional` y template `contract_employee_template_profesional`. |
 | Contrato Ejecutivo | Imprime formato contractual para estructura ejecutivo. | Reporte `action_report_contract_employee_ejecutivo` y template `contract_employee_template_ejecutivo`. |
-| Anexo Planta | Imprime anexo de planta desde el contrato. | `action_print_anexo_planta()` llama `action_report_anexo_planta`. |
+| Anexo Planta | Abre un asistente para seleccionar cliente e imprime un anexo de una pagina. | `action_print_anexo_planta()` abre `hr.contract.plant.annex.wizard`; el reporte obtiene la lista desde `hr.plant.annex.client` y envia el cliente por contexto para conservar los IDs del contrato y evitar PDFs vacios. |
 | Pacto HE | Imprime pacto de horas extraordinarias. | `action_print_pacto_he()` llama `action_report_pacto_he`. |
 | Actualizacion / Renovacion | Permite elegir tipo de anexo y variables a mostrar. | `hr.contract.actualizacion.wizard` usa `report_type`, `show_sueldo_base`, `show_cargo_actual`, `show_jornada_trabajo`. |
 | Impresion masiva | Permite seleccionar varios contratos y descargar un PDF unificado. | `hr.contract.mass.print.wizard` renderiza PDFs con `_render_qweb_pdf()` y los une con `_merge_pdfs()`. |
@@ -75,6 +76,7 @@ Documento resumido de uso funcional y uso tecnico del modulo `zhr_ajustes`.
 | Tipo de obra | Mantiene nombres de obras/faenas. | Modelo `hr.tipo.obra`, usado por `contract.tipo_obra_id`. |
 | Duracion de obra | Mantiene duraciones tipo para obras. | Modelo `hr.duracion.obra`. |
 | Lugares de trabajo | Mantiene lugares disponibles para contratos. | Modelo `hr.lugar.trabajo`, usado por `lugar_trabajo_id` y `hr.employee.lugar.trabajo`. |
+| Clientes Anexo Planta | Mantiene el cliente y la clausula HTML con las plantas que se imprimen en el anexo. | Modelo `hr.plant.annex.client`; incluye inicialmente Arauco y CMPC y se administra desde `Empleados > Tablas`. |
 | Conceptos de pago | Mantiene conceptos remuneracionales adicionales. | Modelo `hr.payment.concept`, usado por `hr.employee.payment.concept`. |
 | Recursos asignables | Mantiene recursos que pueden entregarse a empleados. | Modelo `hr.assigned.resource`, usado por `hr.employee.assigned.resource`. |
 | Tipos de acreditacion | Mantiene catalogo de acreditaciones. | Modelo `hr.accreditation.type`, usado por `hr.employee.accreditation`. |
@@ -99,4 +101,3 @@ Documento resumido de uso funcional y uso tecnico del modulo `zhr_ajustes`.
 | Reporte de uso de campos | Permite descargar CSV con campos de empleados y cantidad de registros con valor. | `employee.field.usage.report.action_generate_report()` recorre `hr.employee._fields`, crea CSV y lo descarga como adjunto. |
 | Limpieza de vistas obsoletas | Evita errores por vistas heredadas antiguas al actualizar. | `data/cleanup_stale_views.xml` elimina o corrige referencias antiguas segun datos del modulo. |
 | Estilos de estados | Hace coherente el color visual de `Expirado` y `Terminado`. | `static/src/scss/hr_contract_status.scss` ajusta statusbar y validacion visual de salario. |
-

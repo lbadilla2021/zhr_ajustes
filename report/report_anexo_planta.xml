@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-
     <record id="action_report_anexo_planta" model="ir.actions.report">
         <field name="name">Anexo Planta</field>
         <field name="model">hr.contract</field>
@@ -10,203 +9,69 @@
         <field name="print_report_name">'Anexo Planta - %s' % (object.employee_id.name)</field>
     </record>
 
-<template id="report_anexo_planta">
-        
-    <t t-call="web.html_container">
-    <t t-foreach="docs" t-as="contract">
-    <t t-call="web.external_layout">
-                <div class="page">
+    <template id="report_anexo_planta">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="contract">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <p style="text-align:center;">
+                            <b>ANEXO AL CONTRATO DE TRABAJO</b>
+                        </p>
 
-                    <p style="text-align:center;">
-                        <b>ANEXO AL CONTRATO DE TRABAJO</b>
-                    </p>
+                        <br/>
 
-                    <br/>
+                        <p style="text-align:justify;">
+                            En Cabrero, a
+                            <span t-esc="contract.format_date_es(contract.date_start)"/>
+                            entre <b>Servicios Barca S.P.A. R.U.T.: 76766106-1,</b>
+                            con domicilio en Lote 4 Sector la Quinta, Cabrero, en adelante
+                            <b>Empleador</b> y
+                            <b><span t-esc="contract.employee_id.name"/></b>,
+                            Rut: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>,
+                            en adelante <b>Trabajador</b> acuerdan lo siguiente como anexo
+                            al contrato de trabajo:
+                        </p>
 
-                    <p style="text-align:justify;">
-                        En Cabrero, a 
-                        <span t-esc="contract.format_date_es(contract.date_start)"/>
-                        entre <b>Servicios Barca S.P.A. R.U.T.: 76.766.106-1,</b>
-                        con domicilio en Lote 4 Sector la Quinta, Cabrero, en adelante
-                        <b>Empleador</b> y
-                        <b><span t-esc="contract.employee_id.name"/></b>,
-                        Rut: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>,
-                        en adelante <b>Trabajador</b> acuerdan lo siguiente como anexo
-                        al contrato de trabajo:
-                    </p>
+                        <br/>
 
-                    <br/>
+                        <p style="text-align:justify;">
+                            <b>PRIMERO:</b> Conforme a lo establecido en el artículo 12°
+                            inciso primero del Código del Trabajo, el Trabajador, en
+                            adelante, podrá ser trasladado a las siguientes plantas o
+                            domicilios para ejercer su labor, sin conllevar esto
+                            menoscabo alguno:
+                        </p>
 
-                    <p style="text-align:justify;">
-                        <b>PRIMERO:</b> Conforme a lo establecido en el artículo 12°
-                        inciso primero del Código del Trabajo, el Trabajador, en
-                        adelante, podrá ser trasladado a las siguientes plantas o
-                        domicilios para ejercer su labor, sin conllevar esto
-                        menoscabo alguno:
-                    </p>
+                        <br/>
 
-                    <br/>
+                        <div t-field="plant_annex_client.clause_html"/>
 
-                    <ul>
-                        <li>CELULOSA ARAUCO LOS HORCONES S/N, ARAUCO</li>
-                        <li>CELULOSA CONSTITUCIÓN AVDA. ENRIQUE MAC-IVER N.º 505</li>
-                        <li>CELULOSA VALDIVIA RUTA 5 SUR KM 788, SECTOR RUCACO S/N</li>
-                        <li>CELULOSA LICANCEL CAMINO A ILOCA KM 3</li>
-                        <li>CELULOSA NUEVA ALDEA AUTOPISTA DEL ITATA KM.21, NUEVA ALDEA</li>
-                        <li>CELULOSA MAPA LOS HORCONES S/N ARAUCO</li>
-                    </ul>
+                        <br/>
 
-                    <br/>
+                        <p style="text-align:justify;">
+                            <b>SEGUNDO:</b> El presente anexo se firma en dos ejemplares
+                            quedando uno en poder del empleador y uno en poder del trabajador.
+                        </p>
 
-                    <p style="text-align:justify;">
-                        <b>SEGUNDO:</b> El presente anexo se firma en dos ejemplares
-                        quedando uno en poder del empleador y uno en poder del trabajador.
-                    </p>
+                        <br/><br/><br/>
 
-<br/><br/><br/>
-
-                            <table width="100%" style="margin-top:50px;">
-                                <tr>
-                                    <td width="50%" style="text-align:center;">
-                                        ___________________________<br/>
-                                        <span t-esc="contract.employee_id.name"/><br/>
-                                        R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>
-                                    </td>
-                                    <td width="50%" style="text-align:center;">
-                                        ___________________________<br/>
-                                        Servicios Barca SPA.<br/>
-                                        R.U.T.: 76.766.106 – 1
-                                    </td>
-                                </tr>
-                            </table>
-
-                </div>
-        <div style="page-break-before: always;"></div>
-                <div class="page">
-
-                    <p style="text-align:center;">
-                        <b>ANEXO AL CONTRATO DE TRABAJO</b>
-                    </p>
-
-                    <br/>
-
-                    <p style="text-align:justify;">
-                        En Cabrero, a 
-                        <span t-esc="contract.format_date_es(contract.date_start)"/>
-                        entre <b>Servicios Barca S.P.A. R.U.T.: 76.766.106-1,</b>
-                        con domicilio en Lote 4 Sector la Quinta, Cabrero, en adelante
-                        <b>Empleador</b> y
-                        <b><span t-esc="contract.employee_id.name"/></b>,
-                        Rut: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>,
-                        en adelante <b>Trabajador</b> acuerdan lo siguiente como anexo
-                        al contrato de trabajo:
-                    </p>
-
-                    <br/>
-
-                    <p style="text-align:justify;">
-                        <b>PRIMERO:</b> Conforme a lo establecido en el artículo 12°
-                        inciso primero del Código del Trabajo, el Trabajador, en
-                        adelante, podrá ser trasladado a las siguientes plantas o
-                        domicilios para ejercer su labor, sin conllevar esto
-                        menoscabo alguno:
-                    </p>
-
-                    <br/>
-
-                    <ul>
-                        <li>CMPC PULP PLANTA LAJA, UBICADA EN BALMACEDA N 30, LAJA</li>
-                        <li>CMPC PULP PLANTA SANTA FE, UBICADA EN JULIO HEMMELMANN 670, NACIMIENTO</li>
-                        <li>CMPC PULP PLANTA PACIFICO, UBICADA EN AV. ALESSANDRI N001, MININCO</li>
-                    </ul>
-
-                    <br/>
-
-                    <p style="text-align:justify;">
-                        <b>SEGUNDO:</b> El presente anexo se firma en dos ejemplares
-                        quedando uno en poder del empleador y uno en poder del trabajador.
-                    </p>
-
-<br/><br/><br/>
-
-                            <table width="100%" style="margin-top:50px; border:none; border-collapse:collapse;">
-                                <tr>
-                                    <td width="50%" style="text-align:center; border:none;">
-                                        ___________________________<br/>
-                                        <span t-esc="contract.employee_id.name"/><br/>
-                                        R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>
-                                    </td>
-                                    <td width="50%" style="text-align:center; border:none;">
-                                        ___________________________<br/>
-                                        Servicios Barca SPA.<br/>
-                                        R.U.T.: 76766106–1
-                                    </td>
-                                </tr>
-                            </table>
-
-                </div>
-
-       <div style="page-break-before: always;"></div>
-                <div class="page">
-
-                    <p style="text-align:center;">
-                        <b>ANEXO AL CONTRATO DE TRABAJO</b>
-                    </p>
-
-                    <br/>
-
-                    <p style="text-align:justify;">
-                        En Cabrero, a 
-                        <span t-esc="contract.format_date_es(contract.date_start)"/>
-                        entre <b>Servicios Barca S.P.A. R.U.T.: 76.766.106-1,</b>
-                        con domicilio en Lote 4 Sector la Quinta, Cabrero, en adelante
-                        <b>Empleador</b> y
-                        <b><span t-esc="contract.employee_id.name"/></b>,
-                        Rut: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>,
-                        en adelante <b>Trabajador</b> acuerdan lo siguiente como anexo
-                        al contrato de trabajo:
-                    </p>
-
-                    <br/>
-
-                    <p style="text-align:justify;">
-                        <b>PRIMERO:</b> Conforme a lo establecido en el artículo 12°
-                        inciso primero del Código del Trabajo, el Trabajador, en
-                        adelante, podrá ser trasladado al establecimiento de  
-                        FORESTAL Y PAPELERA CONCEPCION S.A (FPC), ubicada en 
-                        Parque Industrial Escuadrón II Km 17,5 Coronel, Región Biobío, 
-                        sin conllevar esto menoscabo alguno.
-                    </p>
-
-                    <br/>
-
-                    <p style="text-align:justify;">
-                        <b>SEGUNDO:</b> El presente anexo se firma en dos ejemplares
-                        quedando uno en poder del empleador y uno en poder del trabajador.
-                    </p>
-
-<br/><br/><br/>
-
-                            <table width="100%" style="margin-top:50px; border:none; border-collapse:collapse;">
-                                <tr>
-                                    <td width="50%" style="text-align:center; border:none;">
-                                        ___________________________<br/>
-                                        <span t-esc="contract.employee_id.name"/><br/>
-                                        R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>
-                                    </td>
-                                    <td width="50%" style="text-align:center; border:none;">
-                                        ___________________________<br/>
-                                        Servicios Barca SPA.<br/>
-                                        R.U.T.: 76766106–1
-                                    </td>
-                                </tr>
-                            </table>
-
-                </div>
-                
-
-    </t>
-    </t>
-    </t>
-</template>
+                        <table width="100%" style="margin-top:50px; border:none; border-collapse:collapse;">
+                            <tr>
+                                <td width="50%" style="text-align:center; border:none;">
+                                    ___________________________<br/>
+                                    <span t-esc="contract.employee_id.name"/><br/>
+                                    R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>
+                                </td>
+                                <td width="50%" style="text-align:center; border:none;">
+                                    ___________________________<br/>
+                                    Servicios Barca SPA.<br/>
+                                    R.U.T.: 76766106–1
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
 </odoo>

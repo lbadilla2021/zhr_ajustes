@@ -1,6 +1,6 @@
 {
     'name': 'Barca Ajustes Modulo HR',
-    'version': '18.0.2.6.2',
+    'version': '18.0.2.8.1',
     'depends': ['hr', 'hr_contract', 'hr_skills', 'account'],
     'data': [
         'security/res_groups.xml',
@@ -14,6 +14,7 @@
         'data/hr_study_level_data.xml',
         'data/hr_job_sence_classification_data.xml',
         'data/hr_city_data.xml',
+        'data/hr_plant_annex_client_data.xml',
         'report/contract_report.xml',
         'report/paperformat.xml',
         'report/operador.xml',
@@ -29,6 +30,7 @@
         'views/hr_payment_concept_views.xml',
         'views/hr_contract_view.xml',
         'views/hr_contract_reference_views.xml',
+        'views/hr_plant_annex_client_views.xml',
         'views/hr_tipo_obra_views.xml',
         'views/hr_city_views.xml',
         'views/hr_study_level_views.xml',
@@ -44,6 +46,7 @@
         'views/hr_employee_readonly_views.xml',
         'views/hr_employee_function_views.xml',
         'views/hr_contract_duplicate_wizard_views.xml',
+        'views/hr_contract_plant_annex_wizard_views.xml',
         'views/hr_contract_actualizacion_wizard_views.xml',
         'views/hr_contract_mass_print_wizard_views.xml',
         'views/hr_employee_termination_wizard_views.xml',

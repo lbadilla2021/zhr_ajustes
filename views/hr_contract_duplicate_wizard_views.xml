@@ -7,9 +7,18 @@
             <form string="Duplicar contrato">
                 <group>
                     <field name="contract_id"/>
-                    <field name="date_start"/>
                     <field name="reference_id"
                            placeholder="Contrato, Anexo IPC, Anexo Cargo..."/>
+                    <field name="is_settlement_reference" invisible="1"/>
+                    <field name="date_start"
+                           invisible="is_settlement_reference"
+                           required="not is_settlement_reference"/>
+                    <field name="fecha_finiquito"
+                           invisible="not is_settlement_reference"
+                           required="is_settlement_reference"/>
+                    <field name="departure_reason_id"
+                           invisible="not is_settlement_reference"
+                           required="is_settlement_reference"/>
                     <field name="name" readonly="1"/>
                 </group>
                 <footer>

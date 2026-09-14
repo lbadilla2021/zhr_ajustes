@@ -20,6 +20,11 @@ class HrContractMassPrintWizard(models.TransientModel):
         compute='_compute_employee_ids',
     )
     show_actualizacion_options = fields.Boolean(default=False)
+    show_plant_annex_options = fields.Boolean(default=False)
+    plant_annex_client_id = fields.Many2one(
+        'hr.plant.annex.client',
+        string='Cliente Anexo Planta',
+    )
     actualizacion_report_type = fields.Selection(
         [
             ('actualizacion', 'Anexo Actualizacion'),
@@ -45,6 +50,21 @@ class HrContractMassPrintWizard(models.TransientModel):
         return self._generate_merged_pdf('contract')
 
     def action_print_anexo_planta(self):
+        self.ensure_one()
+        self.show_plant_annex_options = True
+        self.show_actualizacion_options = False
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Impresion masiva de contratos',
+            'res_model': self._name,
+            'view_mode': 'form',
+            'res_id': self.id,
+            'target': 'new',
+        }
+
+    def action_confirm_anexo_planta(self):
+        if not self.plant_annex_client_id:
+            raise UserError('Debe seleccionar el cliente del Anexo Planta.')
         return self._generate_merged_pdf('anexo_planta')
 
     def action_print_pacto_he(self):
@@ -53,6 +73,7 @@ class HrContractMassPrintWizard(models.TransientModel):
     def action_print_actualizacion(self):
         self.ensure_one()
         self.show_actualizacion_options = True
+        self.show_plant_annex_options = False
         return {
             'type': 'ir.actions.act_window',
             'name': 'Impresion masiva de contratos',
@@ -79,9 +100,13 @@ class HrContractMassPrintWizard(models.TransientModel):
         streams = []
         for contract in self.contract_ids:
             report_xml_id, record = self._get_report_record(document_type, contract)
+            data = None
+            if document_type == 'anexo_planta':
+                data = {'plant_annex_client_id': self.plant_annex_client_id.id}
             pdf_content, _content_type = report_model._render_qweb_pdf(
                 self.env.ref(report_xml_id),
                 res_ids=record.ids,
+                data=data,
             )
             streams.append(io.BytesIO(pdf_content))
 

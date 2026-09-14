@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="hr_plant_annex_client_arauco" model="hr.plant.annex.client">
+        <field name="name">Arauco</field>
+        <field name="clause_html" type="html">
+            <ul>
+                <li>CELULOSA ARAUCO LOS HORCONES S/N, ARAUCO</li>
+                <li>CELULOSA CONSTITUCIÓN AVDA. ENRIQUE MAC-IVER N.º 505</li>
+                <li>CELULOSA VALDIVIA RUTA 5 SUR KM 788, SECTOR RUCACO S/N</li>
+                <li>CELULOSA NUEVA ALDEA AUTOPISTA DEL ITATA KM.21, NUEVA ALDEA</li>
+                <li>CELULOSA MAPA LOS HORCONES S/N ARAUCO</li>
+                <li>PANELES ARAUCTO PLANTA TRUPAN, CHOLGUAN S/N, YUNGAY</li>
+                <li>PANELES ARAUCO MDP. TENO, RUTA J 25 KM 2,7 CAMINO A LA MONTAÑA DE TENO, CURICÓ</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="hr_plant_annex_client_cmpc" model="hr.plant.annex.client">
+        <field name="name">CMPC</field>
+        <field name="clause_html" type="html">
+            <ul>
+                <li>CMPC PULP PLANTA LAJA, UBICADA EN BALMACEDA N 30, LAJA</li>
+                <li>CMPC PULP PLANTA SANTA FE, UBICADA EN JULIO HEMMELMANN 670, NACIMIENTO</li>
+                <li>CMPC PULP PLANTA PACIFICO, UBICADA EN AV. ALESSANDRI N001, MININCO</li>
+            </ul>
+        </field>
+    </record>
+</odoo>

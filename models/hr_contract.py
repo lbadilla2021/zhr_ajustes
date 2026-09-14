@@ -3,10 +3,18 @@ import unicodedata
 from babel.dates import format_date
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, models, api
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 
 REAL_CONTRACT_STATES = ('open', 'close', 'expired')
+CONTINUITY_FIELDS = {
+    'employee_id',
+    'state',
+    'date_start',
+    'date_end',
+    'reference_id',
+}
 
 class HrContract(models.Model):
     _inherit = 'hr.contract'
@@ -166,6 +174,9 @@ class HrContract(models.Model):
     can_edit_fecha_contrato = fields.Boolean(
         compute='_compute_can_edit_fecha_contrato',
     )
+    is_settlement_contract = fields.Boolean(
+        compute='_compute_is_settlement_contract',
+    )
 
     @api.depends('contract_type_id')
     def _compute_is_por_obra(self):
@@ -180,10 +191,76 @@ class HrContract(models.Model):
                 rec.contract_type_id
             )
 
+    @api.depends('reference_id')
+    def _compute_is_settlement_contract(self):
+        for contract in self:
+            contract.is_settlement_contract = contract._is_settlement_reference(
+                contract.reference_id
+            )
+
     @api.depends('employee_id', 'fecha_contrato', 'date_start', 'reference_id')
     def _compute_can_edit_fecha_contrato(self):
         for contract in self:
             contract.can_edit_fecha_contrato = contract._can_edit_contract_date()
+
+    @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')
+    def _check_current_contract(self):
+        """Adapt Odoo's overlap check to Barca's historical document states."""
+        # A new real contract created through the controlled continuity flow
+        # closes the previous open contract immediately after ``create``.
+        # Let that flow reach its closing step before validating the result.
+        if self.env.context.get('close_previous_contract'):
+            return
+
+        settlement_reference = self.env.ref(
+            'zhr_ajustes.hr_contract_reference_settlement',
+            raise_if_not_found=False,
+        )
+        contracts_to_check = self.filtered(
+            lambda contract: (
+                contract.state not in ('draft', 'cancel', 'expired')
+                or contract.state == 'draft' and contract.kanban_state == 'done'
+            )
+            and contract.employee_id
+            and not contract._is_settlement_reference(contract.reference_id)
+        )
+        for contract in contracts_to_check:
+            domain = [
+                ('id', '!=', contract.id),
+                ('employee_id', '=', contract.employee_id.id),
+                ('company_id', '=', contract.company_id.id),
+                '|',
+                    ('state', 'in', ['open', 'close']),
+                    '&',
+                        ('state', '=', 'draft'),
+                        ('kanban_state', '=', 'done'),
+            ]
+            if settlement_reference:
+                domain.append(('reference_id', '!=', settlement_reference.id))
+
+            if not contract.date_end:
+                start_domain = []
+                end_domain = [
+                    '|',
+                    ('date_end', '>=', contract.date_start),
+                    ('date_end', '=', False),
+                ]
+            else:
+                start_domain = [('date_start', '<=', contract.date_end)]
+                end_domain = [
+                    '|',
+                    ('date_end', '>', contract.date_start),
+                    ('date_end', '=', False),
+                ]
+
+            domain = expression.AND([domain, start_domain, end_domain])
+            if self.search_count(domain):
+                raise ValidationError(_(
+                    'Un empleado solo puede tener un contrato al mismo tiempo. '
+                    '(sin incluir contratos en estado de borrador, cancelados '
+                    'o expirados).\n\nEmpleado: %(employee_name)s',
+                    employee_name=contract.employee_id.name,
+                ))
 
     @api.onchange('reference_id', 'employee_id')
     def _onchange_reference_id_employee_id(self):
@@ -228,7 +305,10 @@ class HrContract(models.Model):
     @api.onchange('contract_type_id')
     def _onchange_contract_type_id_indefinite_dates(self):
         for contract in self:
-            if contract._is_indefinite_contract_type(contract.contract_type_id):
+            if (
+                contract._is_indefinite_contract_type(contract.contract_type_id)
+                and not contract._is_settlement_reference(contract.reference_id)
+            ):
                 contract.date_end = False
                 contract.fecha_finiquito = False
 
@@ -240,7 +320,14 @@ class HrContract(models.Model):
             self._prepare_contract_dates(vals)
         contracts = super().create(vals_list)
         contracts._close_previous_open_contracts()
-        contracts._check_contract_date_continuity()
+        continuity_contracts = contracts.filtered(
+            lambda contract: (
+                contract.state in REAL_CONTRACT_STATES
+                and contract._participates_in_contract_continuity()
+            )
+        )
+        if continuity_contracts:
+            continuity_contracts._check_contract_date_continuity()
         contracts._sync_employee_work_dates()
         return contracts
 
@@ -270,9 +357,14 @@ class HrContract(models.Model):
             self._prepare_contract_dates(vals)
             if len(self) == 1:
                 self._prepare_state_from_contract_dates(vals)
+            should_check_continuity = bool(CONTINUITY_FIELDS.intersection(vals))
             result = super().write(vals)
             self._close_previous_open_contracts()
-            self._check_contract_date_continuity()
+            continuity_contracts = self.filtered(
+                lambda contract: contract._participates_in_contract_continuity()
+            )
+            if should_check_continuity and continuity_contracts:
+                continuity_contracts._check_contract_date_continuity()
             if should_sync:
                 (employees | self.mapped('employee_id'))._sync_contract_work_dates()
             return result
@@ -285,7 +377,9 @@ class HrContract(models.Model):
             contract._prepare_state_from_contract_dates(contract_vals)
             super(HrContract, contract).write(contract_vals)
         self._close_previous_open_contracts()
-        self._check_contract_date_continuity()
+        should_check_continuity = bool(CONTINUITY_FIELDS.intersection(vals))
+        if should_check_continuity:
+            self._check_contract_date_continuity()
         if should_sync:
             (employees | self.mapped('employee_id'))._sync_contract_work_dates()
         return True
@@ -370,6 +464,8 @@ class HrContract(models.Model):
 
         expected_start = previous_contract.date_end + relativedelta(days=1)
         if self.date_start > expected_start:
+            if self._has_employment_break_between(previous_contract):
+                return
             raise ValidationError(
                 'No puede guardar el contrato "%s" porque existe un vacio '
                 'contractual entre el %s y el %s. Revise las fechas de '
@@ -380,6 +476,22 @@ class HrContract(models.Model):
                     (self.date_start - relativedelta(days=1)).strftime('%d/%m/%Y'),
                 )
             )
+
+    def _has_employment_break_between(self, previous_contract):
+        self.ensure_one()
+        if previous_contract.departure_reason_id:
+            return True
+
+        documents = self.with_context(active_test=False).sudo().search([
+            ('employee_id', '=', self.employee_id.id),
+            ('id', 'not in', (self.id, previous_contract.id)),
+            ('date_start', '>=', previous_contract.date_start),
+            ('date_start', '<', self.date_start),
+        ])
+        return any(
+            document._is_settlement_reference(document.reference_id)
+            for document in documents
+        )
 
     def _prepare_contract_dates(self, vals):
         if (
@@ -418,17 +530,11 @@ class HrContract(models.Model):
             return
 
         reference_id = vals.get('reference_id', self.reference_id.id if self else False)
-        if not self._should_preserve_contract_date(reference_id):
+        if self._is_contract_reference(reference_id):
+            if not self and not vals.get('fecha_contrato') and vals.get('date_start'):
+                vals['fecha_contrato'] = vals['date_start']
             return
-
-        # "Contrato" is the authoritative document: an explicitly entered
-        # date must win over dates inherited from deleted, historical or
-        # previously active contracts. Annexes and settlements still preserve
-        # the contract date as before.
-        if (
-            'fecha_contrato' in vals
-            and self._is_contract_reference(reference_id)
-        ):
+        if not self._should_preserve_contract_date(reference_id):
             return
 
         employee_id = vals.get('employee_id', self.employee_id.id if self else False)
@@ -437,7 +543,7 @@ class HrContract(models.Model):
             vals['fecha_contrato'] = preserved_date
 
     def _should_preserve_contract_date(self, reference_id):
-        return bool(reference_id)
+        return bool(reference_id and not self._is_contract_reference(reference_id))
 
     def _is_contract_reference(self, reference_id):
         if not reference_id:
@@ -455,8 +561,9 @@ class HrContract(models.Model):
     def _participates_in_contract_continuity(self):
         self.ensure_one()
         return not (
-            self.reference_id
-            and self.reference_id.reference_type == 'annex'
+            self._is_annex_reference(self.reference_id)
+            or self._is_renewal_annex_reference(self.reference_id)
+            or self._is_settlement_reference(self.reference_id)
         )
 
     def _is_annex_reference(self, reference):
@@ -465,6 +572,23 @@ class HrContract(models.Model):
         if isinstance(reference, int):
             reference = self.env['hr.contract.reference'].browse(reference)
         return reference.reference_type == 'annex'
+
+    def _is_settlement_reference(self, reference):
+        if not reference:
+            return False
+        if isinstance(reference, int):
+            reference = self.env['hr.contract.reference'].browse(reference)
+        settlement_reference = self.env.ref(
+            'zhr_ajustes.hr_contract_reference_settlement',
+            raise_if_not_found=False,
+        )
+        if settlement_reference and reference == settlement_reference:
+            return True
+        normalized_name = unicodedata.normalize(
+            'NFKD',
+            reference.name or '',
+        ).encode('ascii', 'ignore').decode('ascii').strip().lower()
+        return normalized_name == 'finiquito'
 
     def _is_renewal_annex_reference(self, reference):
         if not reference:
@@ -661,8 +785,44 @@ class HrContract(models.Model):
             },
         }
 
-    def action_duplicate_with_new_reference(self, date_start, name, reference_id=False):
+    def action_duplicate_with_new_reference(
+        self,
+        date_start,
+        name,
+        reference_id=False,
+        fecha_finiquito=False,
+        departure_reason_id=False,
+    ):
         self.ensure_one()
+        is_settlement_reference = self._is_settlement_reference(reference_id)
+        if is_settlement_reference:
+            settlement_date = fields.Date.to_date(fecha_finiquito or date_start)
+            if not settlement_date:
+                raise ValidationError('Debe indicar la fecha de termino.')
+            if not departure_reason_id:
+                raise ValidationError('Debe indicar el motivo de salida.')
+            if settlement_date < self.date_start:
+                raise ValidationError(
+                    'La fecha de termino no puede ser anterior a la fecha de '
+                    'inicio del contrato.'
+                )
+            preserved_date = (
+                self.fecha_contrato
+                or self._get_preserved_contract_date(self.employee_id.id)
+                or self.date_start
+            )
+            return self.with_context(skip_preserve_contract_date=True).copy({
+                'name': name,
+                'fecha_contrato': preserved_date,
+                'date_start': settlement_date,
+                'date_end': settlement_date,
+                'fecha_finiquito': settlement_date,
+                'departure_reason_id': departure_reason_id or False,
+                'state': 'cancel',
+                'kanban_state': 'normal',
+                'reference_id': reference_id or False,
+            })
+
         if date_start <= self.date_start:
             raise ValidationError(
                 'La nueva fecha de inicio debe ser posterior a la fecha '
@@ -732,10 +892,16 @@ class HrContract(models.Model):
     # ✅ NUEVO MÉTODO
     def action_print_anexo_planta(self):
         self.ensure_one()
-
-        return self.env.ref(
-            'zhr_ajustes.action_report_anexo_planta'
-        ).report_action(self)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Imprimir Anexo Planta',
+            'res_model': 'hr.contract.plant.annex.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_contract_id': self.id,
+            },
+        }
 
     def action_print_pacto_he(self):
         self.ensure_one()

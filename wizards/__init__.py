@@ -3,3 +3,4 @@ from . import employee_reactivation_wizard
 from . import hr_contract_actualizacion_wizard
 from . import hr_contract_duplicate_wizard
 from . import hr_contract_mass_print_wizard
+from . import hr_contract_plant_annex_wizard
