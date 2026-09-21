@@ -28,6 +28,7 @@ class HrContractMassPrintWizard(models.TransientModel):
     actualizacion_report_type = fields.Selection(
         [
             ('actualizacion', 'Anexo Actualizacion'),
+            ('modificacion', 'Anexo Modificacion'),
             ('renovacion', 'Anexo Renovacion'),
         ],
         string='Tipo de actualizacion',
@@ -37,14 +38,24 @@ class HrContractMassPrintWizard(models.TransientModel):
     show_sueldo_base = fields.Boolean(string='Sueldo base', default=True)
     show_cargo_actual = fields.Boolean(string='Cargo actual', default=True)
     show_jornada_trabajo = fields.Boolean(string='Jornada de trabajo', default=True)
+    show_payment_concepts = fields.Boolean(
+        string='Conceptos de pago',
+        default=False,
+    )
 
     @api.onchange('actualizacion_report_type')
     def _onchange_actualizacion_report_type(self):
         for wizard in self:
-            show_options = wizard.actualizacion_report_type == 'actualizacion'
+            show_options = wizard.actualizacion_report_type in (
+                'actualizacion',
+                'modificacion',
+            )
             wizard.show_sueldo_base = show_options
             wizard.show_cargo_actual = show_options
             wizard.show_jornada_trabajo = show_options
+            wizard.show_payment_concepts = (
+                wizard.actualizacion_report_type == 'modificacion'
+            )
 
     def action_print_contract(self):
         return self._generate_merged_pdf('contract')
@@ -139,9 +150,11 @@ class HrContractMassPrintWizard(models.TransientModel):
             'show_sueldo_base': self.show_sueldo_base,
             'show_cargo_actual': self.show_cargo_actual,
             'show_jornada_trabajo': self.show_jornada_trabajo,
+            'show_payment_concepts': self.show_payment_concepts,
         })
         report_xml_id = {
             'actualizacion': 'zhr_ajustes.action_report_actualizacion',
+            'modificacion': 'zhr_ajustes.action_report_modificacion',
             'renovacion': 'zhr_ajustes.action_report_renovacion',
         }[self.actualizacion_report_type]
         return report_xml_id, wizard

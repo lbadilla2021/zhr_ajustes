@@ -25,6 +25,8 @@
                     <field name="show_sueldo_base"/>
                     <field name="show_cargo_actual"/>
                     <field name="show_jornada_trabajo"/>
+                    <field name="show_payment_concepts"
+                           invisible="actualizacion_report_type != 'modificacion'"/>
                 </group>
 
                 <footer>

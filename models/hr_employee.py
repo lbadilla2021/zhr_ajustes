@@ -1,3 +1,4 @@
+import base64
 import re
 
 import unicodedata
@@ -6,10 +7,29 @@ from lxml import etree
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import AccessError, ValidationError
+from odoo.tools import file_open
 
 
 EMPLOYEE_READONLY_GROUP = 'zhr_ajustes.group_zhr_employee_readonly'
 HR_PRIVATE_GROUP = 'hr.group_hr_user'
+EMPLOYMENT_CERTIFICATE_ASSETS = {
+    'signature': (
+        'zhr_ajustes/static/src/img/employment_certificate_signature.png',
+        'image/png',
+    ),
+    'barca_stamp': (
+        'zhr_ajustes/static/src/img/employment_certificate_stamp_barca.jpg',
+        'image/jpeg',
+    ),
+    'indoor_stamp': (
+        'zhr_ajustes/static/src/img/employment_certificate_stamp_indoor.jpg',
+        'image/jpeg',
+    ),
+}
+EMPLOYMENT_CERTIFICATE_COMPANY_STAMPS = {
+    'barca spa': 'barca_stamp',
+    'indoor spa': 'indoor_stamp',
+}
 CUSTOM_PRIVATE_EMPLOYEE_FIELDS = {
     'rut_dv',
     'apellido_paterno',
@@ -656,6 +676,38 @@ class HrEmployee(models.Model):
                 'default_employee_id': self.id,
             },
         }
+
+    def action_print_employment_certificate(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Certificado Laboral',
+            'res_model': 'hr.employee.employment.certificate.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_employee_id': self.id,
+            },
+        }
+
+    @api.model
+    def _get_employment_certificate_asset_data_uri(self, asset_key):
+        asset_path, mimetype = EMPLOYMENT_CERTIFICATE_ASSETS[asset_key]
+        with file_open(asset_path, 'rb') as asset_file:
+            encoded_asset = base64.b64encode(asset_file.read()).decode()
+        return f'data:{mimetype};base64,{encoded_asset}'
+
+    def get_employment_certificate_signature_uri(self):
+        self.ensure_one()
+        return self._get_employment_certificate_asset_data_uri('signature')
+
+    def get_employment_certificate_stamp_uri(self):
+        self.ensure_one()
+        company_name = (self.company_id.name or '').strip().casefold()
+        asset_key = EMPLOYMENT_CERTIFICATE_COMPANY_STAMPS.get(company_name)
+        if not asset_key:
+            return False
+        return self._get_employment_certificate_asset_data_uri(asset_key)
 
     def action_open_reactivation_wizard(self):
         self.ensure_one()

@@ -68,6 +68,13 @@
                         groups="hr.group_hr_user"
                         invisible="state == 'inactive'"/>
 
+                <button name="action_print_employment_certificate"
+                        string="Certificado Laboral"
+                        type="object"
+                        icon="fa-file-pdf-o"
+                        class="btn-secondary"
+                        groups="hr.group_hr_user"/>
+
                 <button name="action_open_reactivation_wizard"
                         string="Dar de Alta"
                         type="object"

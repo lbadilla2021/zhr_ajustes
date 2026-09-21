@@ -4,3 +4,6 @@ from . import test_study_level
 from . import test_job_classification
 from . import test_hr_city
 from . import test_plant_annex
+from . import test_employment_certificate
+from . import test_contract_modification_annex
+from . import test_payment_concept

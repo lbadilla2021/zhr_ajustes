@@ -18,6 +18,15 @@
         <field name="print_report_name">'Actualizacion Contrato - %s' % (object.contract_id.employee_id.name)</field>
     </record>
 
+    <record id="action_report_modificacion" model="ir.actions.report">
+        <field name="name">Anexo Modificacion de Contrato</field>
+        <field name="model">hr.contract.actualizacion.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zhr_ajustes.report_modificacion</field>
+        <field name="report_file">zhr_ajustes.report_modificacion</field>
+        <field name="print_report_name">'Modificacion Contrato - %s' % (object.contract_id.employee_id.name)</field>
+    </record>
+
     <template id="report_renovacion">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="wizard">
@@ -168,6 +177,100 @@
                         </li>
                         </t>
                         </p>
+                        <br/>
+
+                        <p style="margin:0; text-align:justify;"><strong>SEGUNDO: </strong>
+                        Se deja constancia que todas las otras obligaciones del cargo, asi como los beneficios, bonos y clausulas derivadas del contrato original,
+                        salvo los indicados en este anexo, suscrito el <span t-esc="contract.format_date_es(contract.employee_id.fecha_contrato)"/>, se
+                        mantienen vigentes Se deja constancia que la fecha de ingreso del trabajador es <span t-esc="contract.format_date_es(contract.employee_id.fecha_contrato)"/>.
+                        </p>
+                        <br/>
+
+                        <p style="margin:0; text-align:justify;"><strong>TERCERO: </strong>
+                        El presente anexo de contrato se firma en dos ejemplares quedando uno en poder de cada parte.
+                        </p>
+
+                        <br/><br/><br/>
+
+                        <div style="width:100%; margin-top:50px;">
+                            <div style="width:49%; display:inline-block; text-align:center;">
+                                ___________________________<br/>
+                                <span t-esc="contract.employee_id.name"/><br/>
+                                R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>
+                            </div>
+
+                            <div style="width:49%; display:inline-block; text-align:center; float:right;">
+                                ___________________________<br/>
+                                <span t-esc="company.name"/><br/>
+                                R.U.T.: <span t-esc="company.vat"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_modificacion">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="wizard">
+                <t t-set="contract" t-value="wizard.contract_id"/>
+                <t t-set="company" t-value="contract.company_id"/>
+                <t t-call="web.basic_layout">
+                    <div class="page">
+                        <p style="text-align:center;">ANEXO MODIFICACIÓN AL CONTRATO DE TRABAJO</p>
+
+                        <p style="text-align:justify;">
+                        En Cabrero, a
+                        <span t-esc="contract.format_date_es(contract.date_start)"/>
+                        entre <strong><span t-esc="company.name"/>,
+                        R.U.T.: <span t-esc="company.vat"/>,</strong>,
+                        representada legalmente por <strong> don Claudio Barrales Espinoza, RUT 12.702.854-0</strong>
+                        con domicilio en Lote 4 Sector la Quinta S/N, Cabrero,
+                        y don <strong><span t-esc="contract.employee_id.name"/>,
+                        R.U.T.: <span t-esc="(contract.employee_id.identification_id or '') + (('-' + contract.employee_id.rut_dv) if contract.employee_id.identification_id and contract.employee_id.rut_dv else '')"/>,</strong>
+                        de nacionalidad chilena, fecha nacimiento
+                        <span t-esc="contract.format_date_es(contract.employee_id.birthday)"/>
+                        domiciliado en
+                        <span t-esc="contract.employee_id.private_street"/>,
+                        de estado civil <span t-esc="contract.employee_id.get_marital_label()"/>,
+                        en adelante el trabajador, todos ya individualizados en contrato de origen,
+                        acuerdan modificar el citado instrumento, en los siguientes terminos:
+                        </p>
+
+                        <p style="margin:0; text-align:justify;"><strong>PRIMERO: </strong>
+                        A partir de <span t-esc="contract.format_date_es(contract.date_start)"/>,
+                        el trabajador y el Empleador acuerdan los siguientes cambios contractuales:
+                        </p>
+                        <ul style="margin-top:0; text-align:justify;">
+                            <t t-if="wizard.show_sueldo_base">
+                                <li><strong>Sueldo base</strong>: El sueldo base es
+                                <strong>$<span t-esc="'{:,}'.format(int(contract.wage)).replace(',', '.')"/>.-
+                                (<span t-esc="contract.wage_text"/>)</strong>.
+                                </li>
+                            </t>
+                            <t t-if="wizard.show_cargo_actual">
+                                <li><strong>Cargo</strong>: El cargo a desempeñar es
+                                <strong><span t-esc="contract.job_id.name or ''"/></strong>.
+                                </li>
+                            </t>
+                            <t t-if="wizard.show_jornada_trabajo">
+                                <li><strong>Jornada de Trabajo</strong>: La jornada de trabajo es de
+                                <strong><span t-esc="(contract.schedule_details or '').replace('será', 'es')"/></strong>.
+                                </li>
+                            </t>
+                            <t t-if="wizard.show_payment_concepts and contract.employee_payment_concept_ids">
+                                <li><strong>Beneficios</strong>: Se incorporan los siguientes beneficios o se modifican sus valores:
+                                    <ul style="margin-top:0;">
+                                        <t t-foreach="contract.employee_payment_concept_ids" t-as="payment_line">
+                                            <li><strong><span t-esc="payment_line.payment_concept_id.name"/></strong>:
+                                            <span t-esc="payment_line.payment_concept_id.description or ''"/>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </li>
+                            </t>
+                        </ul>
                         <br/>
 
                         <p style="margin:0; text-align:justify;"><strong>SEGUNDO: </strong>

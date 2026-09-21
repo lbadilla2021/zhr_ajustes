@@ -8,6 +8,9 @@
             <list>
                 <field name="name"/>
                 <field name="description"/>
+                <field name="target_group"/>
+                <field name="value_text"/>
+                <field name="modification_date"/>
                 <field name="active"/>
             </list>
         </field>
@@ -22,9 +25,13 @@
                     <group>
                         <field name="name"/>
                         <field name="description"/>
+                        <field name="target_group"/>
+                        <field name="value_text"/>
+                        <field name="modification_date"/>
                         <field name="active"/>
                     </group>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>

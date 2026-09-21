@@ -1,7 +1,7 @@
 {
     'name': 'Barca Ajustes Modulo HR',
-    'version': '18.0.2.8.1',
-    'depends': ['hr', 'hr_contract', 'hr_skills', 'account'],
+    'version': '18.0.2.15.1',
+    'depends': ['hr', 'hr_contract', 'hr_skills', 'account', 'mail'],
     'data': [
         'security/res_groups.xml',
         'security/ir.model.access.csv',
@@ -23,6 +23,7 @@
         'report/report_anexo_planta.xml',
         'report/report_actualizacion.xml',
         'report/report_pacto_he.xml',
+        'report/report_certificado_laboral.xml',
         'views/hr_accreditation_views.xml',
         'views/it_funcion_views.xml',
         'views/hr_assigned_resource_views.xml',
@@ -50,6 +51,7 @@
         'views/hr_contract_actualizacion_wizard_views.xml',
         'views/hr_contract_mass_print_wizard_views.xml',
         'views/hr_employee_termination_wizard_views.xml',
+        'views/hr_employee_employment_certificate_wizard_views.xml',
         'views/hr_employee_reactivation_wizard_views.xml',
         'views/hr_lugares_trabajo_views.xml',
         'views/hr_fecha_pago_views.xml',

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_report_certificado_laboral" model="ir.actions.report">
+        <field name="name">Certificado Laboral</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="paperformat_id" eval="False"/>
+        <field name="report_name">zhr_ajustes.report_certificado_laboral</field>
+        <field name="report_file">zhr_ajustes.report_certificado_laboral</field>
+        <field name="print_report_name">'Certificado Laboral - %s' % (object.name)</field>
+    </record>
+
+    <template id="report_certificado_laboral">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="employee">
+                <t t-set="company" t-value="employee.company_id"/>
+                <t t-call="web.basic_layout">
+                    <div class="page">
+                        <p style="text-align:center;">
+                            <b>CERTIFICADO LABORAL</b>
+                        </p>
+
+                        <br/><br/>
+
+                        <p style="text-align:justify;">
+                            De nuestra consideración,
+                        </p><br/>
+
+                        <p style="text-align:justify;">
+                            Por la presente, nuestra empresa <b><span t-esc="company.name"/></b>,
+                            R.U.T.: <span t-esc="company.vat or ''"/>, certifica que
+                            don(a) <b><span t-esc="employee.name"/></b>,
+                            R.U.T.:
+                            <span t-esc="(employee.identification_id or '') + (('-' + employee.rut_dv) if employee.identification_id and employee.rut_dv else '')"/>,
+                            es actualmente trabajador en nuestra empresa.
+                        </p>
+
+                        <p style="text-align:justify;">
+                            Actualmente se desempeña en el cargo de <b><span t-esc="employee.job_id.name or ''"/></b>.
+                            Se certifica además que su contrato es de carácter 
+                            <t t-set="current_contract" t-value="employee.contract_ids.sorted(key=lambda c: (c.date_start, c.id), reverse=True)[:1]"/>
+                            <span t-esc="current_contract.contract_type_id.name if current_contract else ''"/>, desarrollando sus funciones desde el
+                            <span t-esc="current_contract.format_date_es(employee.fecha_contrato) if current_contract else ''"/>.
+                        </p>
+
+                        <t t-set="additional_clause" t-value="employee.env.context.get('employment_certificate_additional_clause') or ''"/>
+                        <p t-if="additional_clause"
+                           class="employment-certificate-additional-clause"
+                           style="text-align:justify; white-space:pre-line;"><span t-esc="additional_clause"/></p>
+
+                        <p style="text-align:justify;">
+                            Se emite el presente certificado a solicitud del interesado
+                            para ser presentado en
+                            <b><span t-esc="employee.env.context.get('employment_certificate_presentation_place') or ''"/></b>.
+                        </p><br/>
+
+                        <p style="text-align:justify;">
+                            Sin otro particular,
+                        </p>
+
+                        <t t-set="signature_uri" t-value="employee.get_employment_certificate_signature_uri()"/>
+                        <t t-set="stamp_uri" t-value="employee.get_employment_certificate_stamp_uri()"/>
+                        <div class="employment-certificate-signature-block"
+                             style="position:relative; width:360px; height:180px; margin:35px auto 0; text-align:center;">
+                            <img class="employment-certificate-signature"
+                                 t-att-src="signature_uri"
+                                 alt="Firma"
+                                 style="position:absolute; left:102px; top:-10px; width:155px; height:138px; object-fit:contain; z-index:2;"/>
+                            <img t-if="stamp_uri"
+                                 class="employment-certificate-company-stamp"
+                                 t-att-src="stamp_uri"
+                                 t-att-alt="'Timbre %s' % company.name"
+                                 style="position:absolute; right:43px; top:5px; width:100px; height:100px; object-fit:contain; z-index:1;"/>
+                            <div style="position:absolute; left:45px; right:45px; top:110px; border-top:1px solid #333; z-index:3;"></div>
+                            <div style="position:absolute; left:0; right:0; top:116px;">
+                                Departamento de Personal<br/>
+                                <span t-esc="company.name"/><br/>
+                                R.U.T.: <span t-esc="company.vat or ''"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

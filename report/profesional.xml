@@ -55,7 +55,7 @@
     <p style="text-align:justify;">
     El Trabajador se compromete a ejecutar la labor de <strong><span t-esc="contract.job_id.name"/></strong>,
     o labores similares, en instalaciones de <span t-esc="company.name"/>, ubicado en Lote 4 Sector la Quinta, Cabrero pudiendo 
-    ser trasladado a otro domicilio por el ejercicio de sus funciones, dentro de la RegiÃ³n, por causa justificada, 
+    ser trasladado a otro domicilio por el ejercicio de sus funciones, dentro de la Región, por causa justificada, 
     sin que ello importe menoscabo para el trabajador.
     </p>
     </t>
