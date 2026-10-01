@@ -101,7 +101,7 @@
                     <p style="text-align:justify;">
                         <b>SEGUNDO:</b> El presente acuerdo tiene una duración de tres
                         meses a contar de esta fecha y en consecuencia expira el día
-                        <span t-esc="doc.format_date_es(doc.date_end)"/> o en la fecha de término de contrato
+                        <span t-esc="doc.format_date_es(doc.fecha_finiquito)"/> o en la fecha de término de contrato
                         si fuera anterior a esta.
                     </p>
 

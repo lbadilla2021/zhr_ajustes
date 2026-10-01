@@ -235,7 +235,7 @@ class HrEmployee(models.Model):
         ),
     )
     fecha_finiquito = fields.Date(
-        string='Fecha Termino',
+        string='Fecha Termino Contrato',
         help=(
             'Fecha documental de termino del trabajador. Se actualiza desde '
             'el boton Dar de Baja usando la fecha de salida digitada.'

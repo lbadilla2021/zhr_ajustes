@@ -214,7 +214,7 @@
                                     </t>
                                     <t t-else="">
                                         hasta el <strong>
-                                            <span t-esc="contract.format_date_es(contract.date_end)"/>.
+                                            <span t-esc="contract.format_date_es(contract.fecha_finiquito)"/>.
                                         </strong>
                                     </t>
 

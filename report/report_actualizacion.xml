@@ -64,7 +64,7 @@
                                 por tiempo indefinido.
                             </t>
                             <t t-else="">
-                                hasta <span t-esc="contract.format_date_es(contract.date_end)"/>.
+                                hasta <span t-esc="contract.format_date_es(contract.fecha_finiquito)"/>.
                             </t>
                         </p>
                         <br/>
@@ -105,7 +105,7 @@
                         <p style="margin:0; text-align:justify;"><strong>TERCERO: </strong>
                         El presente Anexo de Contrato de trabajo se firma en dos ejemplares, quedando uno en poder del trabajador, y otro para el empleador,
                         dejandose expresa constancia que el trabajador ha recibido uno de ellos al firmar este documento. Se deja constancia que el trabajador
-                        ingreso al servicio el <span t-esc="contract.format_date_es(contract.employee_id.first_contract_date)"/>.
+                        ingreso al servicio el <span t-esc="contract.format_date_es(contract.employee_id.fecha_contrato)"/>.
                         </p>
 
                         <br/><br/><br/>

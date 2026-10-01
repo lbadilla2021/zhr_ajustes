@@ -38,7 +38,7 @@ class HrContract(models.Model):
         ),
     )
     fecha_finiquito = fields.Date(
-        string='Fecha Termino',
+        string='Fecha Termino Contrato',
         help=(
             'Fecha documental de termino. Se actualiza al dar de baja al '
             'empleado para contratos vigentes o vencidos, y tambien puede '

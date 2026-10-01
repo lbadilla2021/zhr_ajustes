@@ -150,7 +150,7 @@
                        string="Fecha Contrato"
                        optional="show"/>
                 <field name="fecha_finiquito"
-                       string="Fecha Termino"
+                       string="Fecha Termino Contrato"
                        optional="show"/>
             </xpath>
             <xpath expr="//field[@name='date_start']" position="attributes">
